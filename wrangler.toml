@@ -5,5 +5,5 @@ pages_build_output_dir = "./"
 [[d1_databases]]
 binding = "DB"
 database_name = "timeslot_db"
-database_id = "56f7151f-cc48-49e7-b960-3653d4f16246"
+database_id = "56f7151f-cc48-49e7-8960-3653d4f16246"
 migrations_dir = "migrations"
