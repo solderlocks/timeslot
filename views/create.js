@@ -22,7 +22,7 @@ export async function renderCreateView(container) {
                 </label>
                 
                 <fieldset>
-                    <legend>Proposed Time Slots (UTC normalized)</legend>
+                    <legend>Proposed Time Slots</legend>
                     <div id="slots-container">
                         <div class="slot-row">
                             <input type="datetime-local" class="slot-input" required>
@@ -69,6 +69,19 @@ export async function renderCreateView(container) {
             <button type="button" class="outline secondary remove-btn" style="flex: 0 0 auto;">×</button>
         `;
         slotsContainer.appendChild(newRow);
+        
+        // Focus the new input
+        newRow.querySelector('input').focus();
+    };
+
+    /**
+     * Keyboard Interaction: Enter key on slot input adds a new slot.
+     */
+    slotsContainer.onkeydown = (e) => {
+        if (e.key === 'Enter' && e.target.classList.contains('slot-input')) {
+            e.preventDefault();
+            addSlotBtn.click();
+        }
     };
 
     /**

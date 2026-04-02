@@ -46,11 +46,52 @@ header nav {
   text-align: center;
   border-bottom: 1px solid var(--muted-border-color);
   border-right: 1px solid var(--muted-border-color);
+  background: var(--matrix-bg);
 }
 
 .matrix-table th:last-child, 
 .matrix-table td:last-child {
   border-right: none;
+}
+
+/* Sticky Headers & Columns for Mobile/Large Grids */
+.matrix-table th:first-child, 
+.matrix-table td:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--matrix-bg);
+    z-index: 10;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.matrix-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    background: var(--matrix-bg);
+}
+
+.matrix-table thead th:first-child {
+    z-index: 12;
+}
+
+/* Premium Optimal Badge */
+.optimal-badge {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+    box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
+}
+
+.optimal-column {
+    background: var(--highlight-color) !important;
 }
 
 /* Success View Animations */

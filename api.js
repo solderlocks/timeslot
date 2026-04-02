@@ -47,6 +47,33 @@ export const formatDate = (utcISO) => {
 };
 
 /**
+ * Formats a start and optional end time into a human-readable range.
+ * Example: "Jun 01, 14:00 – 15:30"
+ */
+export const formatRange = (startUTC, endUTC) => {
+    if (!startUTC) return '';
+    const start = new Date(startUTC);
+    const startStr = start.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    
+    if (!endUTC) return startStr;
+    
+    const end = new Date(endUTC);
+    const timeStr = end.toLocaleString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    
+    return `${startStr} – ${timeStr}`;
+};
+
+/**
  * Validates that a date is not in the past relative to the current local time.
  */
 export const isPastDate = (isoString) => {

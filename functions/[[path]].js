@@ -119,26 +119,39 @@ api.get('/polls/:id', async (c) => {
                     status: row.status
                 });
 
-                // Consensus Engine: Yes=2, Maybe=1, No=0
-                const score = row.status === 2 ? 2 : (row.status === 1 ? 1 : 0);
-                scores[row.option_id] += score;
             }
         });
 
-        // 4. Calculate Optimal IDs & Rankings
-        const rankings = Object.entries(scores)
-            .map(([id, score]) => ({ option_id: id, score }))
-            .sort((a, b) => b.score - a.score);
+        const responses = Object.values(responsesMap);
 
-        const maxScore = rankings[0]?.score || 0;
+        // 4. Calculate Consensus Scores with Yes-Priority tie-breaking
+        const rankings = options.results.map(opt => {
+            const votes = responses.flatMap(r => r.votes.filter(v => v.option_id === opt.id));
+            const yesCount = votes.filter(v => v.status === 2).length;
+            const totalScore = votes.reduce((sum, v) => sum + (v.status === 2 ? 2 : (v.status === 1 ? 1 : 0)), 0);
+            
+            return {
+                option_id: opt.id,
+                score: totalScore,
+                yes_count: yesCount
+            };
+        });
+
+        // Sort by Score DESC, then Yes Count DESC
+        rankings.sort((a, b) => b.score - a.score || b.yes_count - a.yes_count);
+
+        const maxScore = rankings.length > 0 ? rankings[0].score : 0;
+        const maxYesCount = rankings.length > 0 ? rankings[0].yes_count : 0;
+        
+        // An option is "optimal" if it matches BOTH top score and top yes_count in that score bracket
         const optimal_option_ids = rankings
-            .filter(r => r.score === maxScore && maxScore > 0)
+            .filter(r => r.score === maxScore && r.yes_count === maxYesCount && maxScore > 0)
             .map(r => r.option_id);
 
         return c.json({
             ...poll,
             options: options.results,
-            responses: Object.values(responsesMap),
+            responses: responses,
             metadata: {
                 optimal_option_ids,
                 rankings

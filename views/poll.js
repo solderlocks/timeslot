@@ -2,7 +2,7 @@
  * views/poll.js: The high-density Matrix Grid and Voting View.
  */
 
-import { API, formatDate } from '../api.js';
+import { API, formatDate, formatRange } from '../api.js';
 
 export async function renderPollView(container, pollId, urlEditToken) {
     // 1. Initial Data Fetch
@@ -33,7 +33,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         <h2>${poll.title}</h2>
                         <p>${poll.description || 'No description provided.'}</p>
                     </div>
-                    <button class="outline secondary" id="share-poll-btn" style="width: auto;">Share Link</button>
+                    <button class="outline secondary" id="share-link-btn" style="width: auto;">Share Link</button>
                 </div>
             </header>
 
@@ -42,12 +42,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <thead>
                         <tr>
                             <th style="text-align: left; min-width: 150px;">Participants</th>
-                            ${poll.options.map(opt => `
-                                <th class="${poll.metadata.optimal_option_ids.includes(opt.id) ? 'optimal-column' : ''}">
-                                    ${formatDate(opt.start_time)}
-                                    ${poll.metadata.optimal_option_ids.includes(opt.id) ? '<br><small>(Optimal)</small>' : ''}
-                                </th>
-                            `).join('')}
+                            ${poll.options.map(opt => {
+                                const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
+                                return `
+                                    <th class="${isOptimal ? 'optimal-column' : ''}">
+                                        ${formatRange(opt.start_time, opt.end_time)}
+                                        ${isOptimal ? '<br><span class="optimal-badge">Optimal</span>' : ''}
+                                    </th>
+                                `;
+                            }).join('')}
                         </tr>
                     </thead>
                     <tbody>
@@ -137,13 +140,13 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
     // 4. Interaction Logic
     const voteForm = container.querySelector('#vote-form');
-    const shareBtn = container.querySelector('#share-poll-btn');
+    const shareBtn = container.querySelector('#share-link-btn');
 
     shareBtn.onclick = () => {
-        const url = window.location.origin + '?id=' + pollId;
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(window.location.href);
+        const originalText = shareBtn.innerText;
         shareBtn.innerText = 'Copied!';
-        setTimeout(() => shareBtn.innerText = 'Share Link', 2000);
+        setTimeout(() => shareBtn.innerText = originalText, 2000);
     };
 
     voteForm.onsubmit = async (e) => {

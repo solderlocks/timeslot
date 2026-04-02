@@ -136,3 +136,18 @@ dist
 .pnp.*
 
 .gemini/
+.wrangler/
+.wrangler/*
+.wrangler/tmp/*
+.wrangler
+.wrangler/tmp/bundle-cC1waD/checked-fetch.js
+.wrangler/tmp/bundle-cC1waD/middleware-insertion-facade.js
+.wrangler/tmp/bundle-cC1waD/middleware-loader.entry.ts
+.wrangler/tmp/bundle-gIjW92/checked-fetch.js
+.wrangler/tmp/bundle-gIjW92/middleware-insertion-facade.js
+.wrangler/tmp/bundle-gIjW92/middleware-loader.entry.ts
+.wrangler/tmp/dev-6oWsm7/functionsWorker-0.12673805966017493.js
+.wrangler/tmp/dev-6oWsm7/functionsWorker-0.12673805966017493.js.map
+.wrangler/tmp/pages-uRF3Nw/functionsWorker-0.12673805966017493.mjs
+.wrangler/tmp/pages-uRF3Nw/functionsWorker-0.12673805966017493.mjs.map
+.wrangler/v3/d1/miniflare-D1DatabaseObject/e7352547963de7050bd7d94658afc4fe78b61811b7815da12d90be8e863abf4d.sqlite
