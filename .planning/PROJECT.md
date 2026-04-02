@@ -16,12 +16,12 @@ Instant, frictionless group scheduling without the friction of accounts, logins,
 
 ### Active
 
-- [ ] **Create Poll**: Capture title, optional description, and dynamic datetime range options.
-- [ ] **Matrix Grid (The "Grid")**: Interactive voting interface displaying all participants and their binary (Yes/No) status.
+- [ ] **Create Poll**: Capture title, optional description, and dynamic datetime range options. Use `p_` prefix for Poll IDs.
+- [ ] **Matrix Grid (The "Grid")**: Interactive voting interface with a dedicated `.matrix-table` density layer for high-information density.
+- [ ] **Server-Side Consensus**: API-driven "Optimal Time" calculation using weighted scores (Yes=2, If Need Be=1) with ranked metadata.
 - [ ] **Automatic UTC Contract**: Frontend-only local-to-UTC conversion; backend treats UTC as the only truth.
-- [ ] **Edit Identity**: Persistent access to individual responses via unguessable tokens (NanoID) instead of accounts.
-- [ ] **Optimal Time Highlighting**: Visual indicators for time slots that work for the maximum number of participants.
-- [ ] **Cloudflare Native Infrastructure**: Implementation using Cloudflare Pages, Workers (with Hono), and D1 SQL storage.
+- [ ] **Edit Identity**: Persistent access to individual responses via `e_` prefixed unguessable tokens. Tokens are strictly excluded from public GET responses.
+- [ ] **Cloudflare Native Infrastructure**: Implementation using Cloudflare Pages, Workers (with Hono), and D1 SQL storage with `db.batch()` atomicity.
 
 ### Out of Scope
 
@@ -41,8 +41,8 @@ Instant, frictionless group scheduling without the friction of accounts, logins,
 
 - **Tech Stack**: Vanilla JS, HTML5, Pico.css (CDN), Cloudflare Workers (Hono), Cloudflare D1 — Zero build steps required.
 - **Data Integrity**: UTC ISO 8601 is the mandatory format for all storage and transmission.
-- **Design Language**: "Tight and clean" custom CSS layered on top of Pico.css to provide a premium feel without heavy assets.
-- **Identity**: NanoID (21-character strings) for all primary keys to ensure unguessable URLs.
+- **Design Language**: "Tight and clean" custom CSS with a specific `.matrix-table` density layer (0.25rem padding, 0.85rem font) for usability.
+- **Identity Security**: Prefixed identifiers (`p_`, `e_`) to prevent token leakage and improve self-documentation.
 
 ## Key Decisions
 
