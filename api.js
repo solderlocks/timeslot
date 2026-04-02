@@ -1,0 +1,103 @@
+/**
+ * api.js: The technical contract for local <-> UTC conversion and D1 API interactions.
+ */
+
+const BASE_URL = '/api';
+
+/**
+ * Normalizes a datetime-local value (formatted as YYYY-MM-DDTHH:mm) to a UTC ISO string.
+ * This handles the "wall time" problem by converting the input to a local Date object,
+ * then serializing to ISO 8601 (which is always UTC).
+ */
+export const toUTC = (localISO) => {
+    if (!localISO) return null;
+    const date = new Date(localISO);
+    if (isNaN(date.getTime())) return null;
+    return date.toISOString();
+};
+
+/**
+ * Converts a UTC ISO string back to a format suitable for <input type="datetime-local">.
+ * Format: YYYY-MM-DDTHH:mm
+ */
+export const toLocal = (utcISO) => {
+    if (!utcISO) return '';
+    const date = new Date(utcISO);
+    
+    // Adjusted ISO string to local datetime format (manual formatting for precision)
+    const offset = date.getTimezoneOffset() * 60000;
+    const localDate = new Date(date.getTime() - offset);
+    return localDate.toISOString().slice(0, 16);
+};
+
+/**
+ * Formats a UTC ISO string to a human-readable local string for table headers.
+ * Example: "Jun 01, 14:00"
+ */
+export const formatDate = (utcISO) => {
+    if (!utcISO) return '';
+    const date = new Date(utcISO);
+    return date.toLocaleString('en-US', {
+        month: 'short',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+};
+
+/**
+ * Validates that a date is not in the past relative to the current local time.
+ */
+export const isPastDate = (isoString) => {
+    if (!isoString) return false;
+    const date = new Date(isoString);
+    return date.getTime() < Date.now();
+};
+
+/**
+ * D1 API Wrappers
+ */
+export const API = {
+    async createPoll(payload) {
+        const res = await fetch(`${BASE_URL}/polls`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Failed to create poll');
+        return res.json();
+    },
+
+    async getPoll(id) {
+        const res = await fetch(`${BASE_URL}/polls/${id}`);
+        if (!res.ok) throw new Error('Poll not found');
+        return res.json();
+    },
+
+    async submitVote(pollId, payload) {
+        const res = await fetch(`${BASE_URL}/polls/${pollId}/vote`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Failed to submit vote');
+        return res.json();
+    },
+
+    async getResponse(pollId, editToken) {
+        const res = await fetch(`${BASE_URL}/polls/${pollId}/response/${editToken}`);
+        if (!res.ok) throw new Error('Response not found');
+        return res.json();
+    },
+
+    async updateResponse(pollId, editToken, payload) {
+        const res = await fetch(`${BASE_URL}/polls/${pollId}/response/${editToken}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Failed to update response');
+        return res.json();
+    }
+};

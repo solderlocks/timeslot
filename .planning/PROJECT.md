@@ -17,11 +17,11 @@ Instant, frictionless group scheduling without the friction of accounts, logins,
 ### Active
 
 - [ ] **Create Poll**: Capture title, optional description, and dynamic datetime range options. Use `p_` prefix for Poll IDs.
-- [ ] **Matrix Grid (The "Grid")**: Interactive voting interface with a dedicated `.matrix-table` density layer for high-information density.
-- [ ] **Server-Side Consensus**: API-driven "Optimal Time" calculation using weighted scores (Yes=2, If Need Be=1) with ranked metadata.
+- [ ] **Matrix Grid (The "Grid")**: Interactive voting interface with a dedicated `.matrix-table` density layer. Automatically detects returning voters via `localStorage` mapping (`p_ID -> e_ID`) to toggle "Edit" vs "New" response flows.
+- [ ] **Server-Side Consensus**: API-driven "Optimal Time" calculation using weighted scores (Yes=2, Maybe=1). Implemented via **Cloudflare Pages Functions** for same-origin simplicity.
 - [ ] **Automatic UTC Contract**: Frontend-only local-to-UTC conversion; backend treats UTC as the only truth.
 - [ ] **Edit Identity**: Persistent access to individual responses via `e_` prefixed unguessable tokens. Tokens are strictly excluded from public GET responses.
-- [ ] **Cloudflare Native Infrastructure**: Implementation using Cloudflare Pages, Workers (with Hono), and D1 SQL storage with `db.batch()` atomicity.
+- [ ] **Cloudflare Native Infrastructure**: Implementation using Cloudflare Pages, **Pages Functions** (`/functions`), and a single production D1 SQL storage instance.
 
 ### Out of Scope
 
@@ -39,8 +39,8 @@ Instant, frictionless group scheduling without the friction of accounts, logins,
 
 ## Constraints
 
-- **Tech Stack**: Vanilla JS, HTML5, Pico.css (CDN), Cloudflare Workers (Hono), Cloudflare D1 — Zero build steps required.
-- **Data Integrity**: UTC ISO 8601 is the mandatory format for all storage and transmission.
+- **Tech Stack**: Vanilla JS, HTML5, Pico.css `@2.0.6` (Hardcoded CDN), Cloudflare Pages Functions (Hono), Cloudflare D1 — Zero build steps.
+- **Environment**: Single production D1 database. Local development/testing via `wrangler dev`. No staging/preview databases.
 - **Design Language**: "Tight and clean" custom CSS with a specific `.matrix-table` density layer (0.25rem padding, 0.85rem font) for usability.
 - **Identity Security**: Prefixed identifiers (`p_`, `e_`) to prevent token leakage and improve self-documentation.
 

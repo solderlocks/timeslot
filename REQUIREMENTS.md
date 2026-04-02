@@ -1,5 +1,5 @@
 # REQUIREMENTS.md
-## Project: whenfree.ink
+## Project: timeslot.ink
 
 **Mission:** Build a stateless, serverless, open-source group scheduling utility — a FOSS replacement for Doodle's core use case.
 

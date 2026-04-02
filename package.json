@@ -1,0 +1,16 @@
+{
+  "name": "timeslot-ink",
+  "version": "1.0.0",
+  "description": "Stateless scheduling utility",
+  "main": "functions/[[path]].js",
+  "scripts": {
+    "dev": "wrangler pages dev . --d1 DB --local --persist-to=.wrangler/state/v3/d1"
+  },
+  "dependencies": {
+    "hono": "^4.12.9",
+    "nanoid": "^5.1.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.79.0"
+  }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>timeslot.ink | Stateless Group Scheduling</title>
+    <meta name="description" content="A stateless, serverless group scheduling utility. No accounts, no tracking, just dates.">
+    
+    <!-- Pico.css @2.0.6 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css">
+    
+    <!-- Custom Design System -->
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <ul>
+                <li><strong><a href="/" class="contrast">timeslot.ink</a></strong></li>
+            </ul>
+            <ul>
+                <li><a href="/" id="nav-create" class="secondary">New Poll</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container" id="app">
+        <!-- View is injected here by app.js -->
+        <article aria-busy="true"></article>
+    </main>
+
+    <footer class="container">
+        <small>Shared with ❤️ | <a href="https://github.com/solderlocks/timeslot" target="_blank" rel="noopener">Source</a></small>
+    </footer>
+
+    <!-- Native ES6 Modules -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
