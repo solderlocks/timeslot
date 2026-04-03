@@ -294,18 +294,17 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     let result;
                     if (activeEditToken && userResponse) {
                         result = await API.updateResponse(pollId, activeEditToken, { voter_name: voterName, votes });
-                        // Update local object
-                        userResponse.votes = votes;
-                        const idx = poll.responses.findIndex(r => r.id === userResponse.id);
-                        if (idx !== -1) poll.responses[idx].votes = votes;
                     } else {
                         result = await API.submitVote(pollId, { voter_name: voterName, votes });
-                        pollsMap[pollId] = result.edit_token;
-                        localStorage.setItem('polls_map', JSON.stringify(pollsMap));
-                        // Re-fetch or update poll object locally to show the new response
-                        poll.responses.push({ voter_name: voterName, votes });
-                        userResponse = { voter_name: voterName, votes };
+                        localStorage.setItem('polls_map', JSON.stringify({ ...pollsMap, [pollId]: result.edit_token }));
                     }
+
+                    // CRITICAL: Re-fetch the full poll object to get updated consensus scores and optimal slots
+                    const updatedPoll = await API.getPoll(pollId);
+                    Object.assign(poll, updatedPoll);
+
+                    // Update local userResponse reference from the fresh data
+                    userResponse = poll.responses.find(r => r.voter_name === voterName) || { voter_name: voterName, votes };
 
                     // Transition to Group mode
                     currentMode = 'group';
