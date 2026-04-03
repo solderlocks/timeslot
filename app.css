@@ -213,83 +213,35 @@ header nav {
 }
 
 /* Progressive Triage & Popover UI */
-.triage-cell {
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    min-height: 48px;
+/* Matrix Status Styling */
+.matrix-cell {
+    padding: 0 !important; /* Full cell background */
+    height: 48px;
+    vertical-align: middle;
+}
+
+.matrix-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.25rem;
-    border-radius: 4px;
-    margin: 2px;
+    height: 100%;
+    width: 100%;
+    font-size: 1.1rem;
 }
 
-.triage-cell:hover {
-    background: rgba(0,0,0,0.03);
+.matrix-cell.status-0 {
+    background-color: #fee2e2 !important; /* Red 100 */
+    color: #ef4444;
 }
 
-.triage-cell[data-status="0"] { 
-    background-color: rgba(239, 68, 68, 0.12) !important; 
-    color: #ef4444; 
+.matrix-cell.status-2 {
+    background-color: #fef3c7 !important; /* Amber 100 */
+    color: #f59e0b;
 }
 
-.triage-cell[data-status="2"] { 
-    background-color: rgba(245, 158, 11, 0.12) !important; 
-    color: #f59e0b; 
-}
-
-.triage-dash {
-    opacity: 0.15;
+.matrix-cell.status-1 .muted-dash {
+    opacity: 0.2;
     font-size: 0.8rem;
-}
-
-/* Triage Popover */
-.triage-popover {
-    position: fixed; /* Using fixed for body-level positioning */
-    z-index: 2000;
-    background: white;
-    border: 1px solid var(--muted-border-color);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.95);
-    animation: popover-in 0.15s cubic-bezier(0, 0, 0.2, 1);
-}
-
-@keyframes popover-in {
-    from { opacity: 0; transform: scale(0.9) translateY(4px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-.triage-popover button {
-    appearance: none;
-    background: transparent;
-    border: none;
-    padding: 0.85rem 1.15rem;
-    cursor: pointer;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    transition: background 0.2s;
-    font-weight: 500;
-}
-
-.triage-popover button:hover {
-    background: var(--highlight-color);
-}
-
-.triage-popover .popover-clear { 
-    color: var(--muted-color); 
-    border-right: 1px solid var(--muted-border-color); 
-}
-
-.triage-popover .popover-prefer { 
-    color: #f59e0b; 
 }
 
 /* Legacy Support & Misc */
@@ -397,6 +349,25 @@ header nav {
     gap: 2px;
 }
 
+.day-group-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--muted-border-color) !important;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted-color);
+    padding: 8px 4px !important;
+}
+
+.time-header {
+    padding: 8px 4px !important;
+}
+
+.day-boundary {
+    border-right: 2px solid var(--muted-border-color) !important;
+}
+
 .pill-stack {
     display: flex;
     flex-direction: column;
@@ -407,41 +378,59 @@ header nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     background: var(--bg-color);
     border: 1px solid var(--muted-border-color);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    transition: all 0.2s ease;
     font-weight: 500;
 }
 
-.time-pill:hover:not(:disabled) {
-    border-color: var(--primary-color);
+.pill-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: 1px solid var(--muted-border-color);
+    background: var(--matrix-bg);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-bottom: 0;
+}
+
+.action-btn:hover {
     background: var(--highlight-color);
 }
 
-.time-pill[data-status="0"] {
-    background: rgba(239, 68, 68, 0.08);
-    border-color: rgba(239, 68, 68, 0.3);
-    color: #b91c1c;
+.veto-btn.active {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: white;
 }
 
-.time-pill[data-status="2"] {
-    background: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.3);
-    color: #b45309;
+.prefer-btn.active {
+    background: #f59e0b;
+    border-color: #f59e0b;
+    color: white;
 }
 
-.time-pill .pill-icon {
-    font-size: 1rem;
-    width: 20px;
-    text-align: right;
+.action-btn:not(.active) {
+    opacity: 0.4;
 }
 
-.time-pill .pill-icon .triage-dash {
-    opacity: 0.3;
+.action-btn.active {
+    opacity: 1;
 }
+
 
 .time-pill:disabled {
     cursor: default;
@@ -492,41 +481,6 @@ header nav {
     background: transparent;
 }
 
-/* Heatmap Blocks (Matrix Only) */
-.vote-cell {
-    padding: 6px !important;
-}
-
-.heatmap-block {
-    width: 24px;
-    height: 24px;
-    margin: 0 auto;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-}
-
-.heatmap-block[data-status="0"] {
-    background-color: #fca5a5; /* Red 300 */
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-}
-
-.heatmap-block[data-status="2"] {
-    background-color: #fcd34d; /* Amber 300 */
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
-}
-
-.heatmap-block[data-status="1"],
-.heatmap-block:not([data-status]),
-.heatmap-block[data-status="null"] {
-    width: 8px;
-    height: 8px;
-    background-color: var(--muted-color);
-    opacity: 0.4;
-    border-radius: 50%;
-}
 
 /* Vertical Column Highlighting */
 .optimal-column {

@@ -118,17 +118,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                         const vote = userResponse ? userResponse.votes.find(v => v.option_id === opt.id) : null;
                                         const status = vote ? vote.status : 1;
                                         const { time } = formatDate(opt.start_time);
-                                        const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
                                         return `
                                             <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
                                                 <input type="hidden" name="pill_${opt.id}" value="${status}">
-                                                <span class="pill-label">
-                                                    ${time}
-                                                    ${isOptimal ? '<span class="optimal-badge" style="margin-left: 0.5rem; vertical-align: middle;">Optimal</span>' : ''}
-                                                </span>
-                                                <span class="pill-icon">
-                                                    ${status === 0 ? '❌' : (status === 2 ? '⭐' : '<span class="triage-dash">➖</span>')}
-                                                </span>
+                                                <span class="pill-label">${time}</span>
+                                                <div class="pill-actions">
+                                                    <button type="button" class="action-btn veto-btn ${status === 0 ? 'active' : ''}" title="Impossible">❌</button>
+                                                    <button type="button" class="action-btn prefer-btn ${status === 2 ? 'active' : ''}" title="Preferred">⭐</button>
+                                                </div>
                                             </div>
                                         `;
                                     }).join('')}
@@ -140,7 +137,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <div style="display: flex; justify-content: center; margin-top: 2rem;">
                     <button type="submit" id="submit-vote-btn" class="primary" style="width: auto; padding: 0.8rem 2.5rem;">
-                        ${userResponse ? 'Update My Response' : 'Submit My Response'}
+                        ${userResponse ? 'Update My Response' : 'Save My Response'}
                     </button>
                 </div>
             </form>
@@ -148,6 +145,27 @@ export async function renderPollView(container, pollId, urlEditToken) {
     }
 
     function renderGroupMatrix() {
+        // Group options by day for the top-tier header
+        const dayGroups = [];
+        let currentDayLabel = null;
+        let currentGroup = null;
+
+        poll.options.forEach((opt, idx) => {
+            const { weekday, date } = formatDate(opt.start_time);
+            const label = `${weekday}, ${date}`;
+            if (label !== currentDayLabel) {
+                currentDayLabel = label;
+                currentGroup = { label, options: [], startIndex: idx };
+                dayGroups.push(currentGroup);
+            }
+            currentGroup.options.push(opt);
+        });
+
+        // Helper to check if an option is the last in its day group
+        const isLastInDay = (optionId) => {
+            return dayGroups.some(group => group.options[group.options.length - 1].id === optionId);
+        };
+
         return `
             <div class="read-only-matrix fade-in">
                 <p class="timezone-subtitle">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
@@ -155,16 +173,22 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <table class="matrix-table">
                         <thead>
                             <tr>
-                                <th class="sticky-column" style="text-align: left; min-width: 150px; vertical-align: bottom;">Participants</th>
+                                <th rowspan="2" class="sticky-column" style="text-align: left; min-width: 150px; vertical-align: middle; border-bottom: 2px solid var(--muted-border-color);">Participants</th>
+                                ${dayGroups.map(group => `
+                                    <th colspan="${group.options.length}" class="day-group-header ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
+                                        ${group.label}
+                                    </th>
+                                `).join('')}
+                            </tr>
+                            <tr>
                                 ${poll.options.map(opt => {
-                                    const { weekday, date, time } = formatDate(opt.start_time);
+                                    const { time } = formatDate(opt.start_time);
                                     const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
+                                    const isBoundary = isLastInDay(opt.id);
                                     return `
-                                        <th class="${isOptimal ? 'optimal-column' : ''}">
+                                        <th class="${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''} time-header">
                                             <div class="header-stack">
                                                 ${isOptimal ? '<span class="optimal-header-badge">⭐ Best</span>' : ''}
-                                                <div class="weekday">${weekday}</div>
-                                                <div class="date">${date}</div>
                                                 <div class="time">${time}</div>
                                             </div>
                                         </th>
@@ -178,11 +202,18 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                     <td class="sticky-column" style="text-align: left;"><strong>${res.voter_name}</strong></td>
                                     ${poll.options.map(opt => {
                                         const vote = res.votes.find(v => v.option_id === opt.id);
-                                        const status = vote ? vote.status : null;
+                                        const status = vote ? vote.status : 1;
                                         const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
+                                        const isBoundary = isLastInDay(opt.id);
+                                        
+                                        let icon = '';
+                                        if (status === 0) icon = '❌';
+                                        else if (status === 2) icon = '⭐';
+                                        else icon = '<span class="muted-dash">➖</span>';
+
                                         return `
-                                            <td class="vote-cell ${isOptimal ? 'optimal-column' : ''}">
-                                                <div class="heatmap-block" data-status="${status}"></div>
+                                            <td class="matrix-cell status-${status} ${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''}">
+                                                <div class="matrix-icon">${icon}</div>
                                             </td>
                                         `;
                                     }).join('')}
@@ -195,7 +226,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 ${poll.options.map(opt => {
                                     const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
                                     const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
-                                    return `<td class="${isOptimal ? 'optimal-column' : ''}"><strong>${rank ? rank.score : 0}</strong></td>`;
+                                    const isBoundary = isLastInDay(opt.id);
+                                    return `<td class="${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''}"><strong>${rank ? rank.score : 0}</strong></td>`;
                                 }).join('')}
                             </tr>
                         </tfoot>
@@ -238,33 +270,23 @@ export async function renderPollView(container, pollId, urlEditToken) {
             const availabilityForm = container.querySelector('#availability-form');
             const submitBtn = availabilityForm.querySelector('#submit-vote-btn');
 
-            const updateSummary = () => {
-                if (!submitBtn) return;
-                const statusValues = Array.from(availabilityForm.querySelectorAll('input[type="hidden"]')).map(i => parseInt(i.value));
-                const vetoes = statusValues.filter(v => v === 0).length;
-                const stars = statusValues.filter(v => v === 2).length;
-
-                let text = "Confirm: ";
-                if (vetoes === 0 && stars === 0) text += "No Conflicts";
-                else if (vetoes > 0 && stars > 0) text += `${vetoes} Conflicts, ${stars} Preferred`;
-                else if (vetoes > 0) text += `${vetoes} Conflict${vetoes > 1 ? 's' : ''}`;
-                else if (stars > 0) text += `${stars} Preferred`;
-                
-                submitBtn.innerText = text;
-            };
-
-            updateSummary();
-
             availabilityForm.querySelectorAll('.time-pill').forEach(pill => {
-                pill.onclick = () => {
-                    if (pill.hasAttribute('disabled')) return;
-                    const status = parseInt(pill.querySelector('input').value);
-                    if (status === 1) {
-                        updatePillStatus(pill, 0);
-                        updateSummary();
-                    } else {
-                        showPillPopover(pill, updateSummary);
-                    }
+                const input = pill.querySelector('input');
+                const vetoBtn = pill.querySelector('.veto-btn');
+                const preferBtn = pill.querySelector('.prefer-btn');
+
+                vetoBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const currentStatus = parseInt(input.value);
+                    const newStatus = currentStatus === 0 ? 1 : 0;
+                    updatePillUI(pill, newStatus);
+                };
+
+                preferBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    const currentStatus = parseInt(input.value);
+                    const newStatus = currentStatus === 2 ? 1 : 2;
+                    updatePillUI(pill, newStatus);
                 };
             });
 
@@ -312,46 +334,18 @@ export async function renderPollView(container, pollId, urlEditToken) {
         }
     }
 
-    function updatePillStatus(pill, status) {
+    function updatePillUI(pill, status) {
+        const input = pill.querySelector('input');
+        const vetoBtn = pill.querySelector('.veto-btn');
+        const preferBtn = pill.querySelector('.prefer-btn');
+
         pill.dataset.status = status;
-        pill.querySelector('input').value = status;
-        const iconContainer = pill.querySelector('.pill-icon');
-        iconContainer.innerHTML = status === 0 ? '❌' : (status === 2 ? '⭐' : '<span class="triage-dash">➖</span>');
+        input.value = status;
+
+        vetoBtn.classList.toggle('active', status === 0);
+        preferBtn.classList.toggle('active', status === 2);
     }
 
-    function showPillPopover(pill, onUpdate) {
-        document.querySelectorAll('.triage-popover').forEach(p => p.remove());
-        const popover = document.createElement('div');
-        popover.className = 'triage-popover';
-        popover.innerHTML = `
-            <button type="button" class="popover-clear" data-val="1">➖ Clear Selection</button>
-            <button type="button" class="popover-prefer" data-val="2">⭐ Mark as Preferred</button>
-        `;
-        document.body.appendChild(popover);
-
-        const rect = pill.getBoundingClientRect();
-        popover.style.left = `${rect.left + (rect.width / 2) - (popover.offsetWidth / 2)}px`;
-        popover.style.top = `${rect.top - popover.offsetHeight - 8}px`; // Above the pill
-
-        const onOutsideClick = (e) => {
-            if (!popover.contains(e.target)) {
-                popover.remove();
-                document.removeEventListener('mousedown', onOutsideClick);
-            }
-        };
-
-        popover.querySelectorAll('button').forEach(btn => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                updatePillStatus(pill, parseInt(btn.dataset.val));
-                onUpdate();
-                popover.remove();
-                document.removeEventListener('mousedown', onOutsideClick);
-            };
-        });
-
-        setTimeout(() => document.addEventListener('mousedown', onOutsideClick), 10);
-    }
 
     function showSuccessReceipt(votes, editToken) {
         const vetoes = votes.filter(v => v.status === 0).length;
