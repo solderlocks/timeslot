@@ -31,13 +31,14 @@ header nav {
 
 /* Premium Matrix Table Density Overrides */
 .matrix-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid var(--muted-border-color);
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  font-size: 0.875rem; /* UI-08 refinement */
+    border-collapse: separate;
+    border-spacing: 0;
+    width: max-content;
+    min-width: 100%;
+    border: 1px solid var(--muted-border-color);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    font-size: 0.875rem; /* UI-08 refinement */
 }
 
 .matrix-table th, 
@@ -321,4 +322,255 @@ header nav {
     border: 1px solid var(--muted-border-color);
     border-radius: var(--border-radius);
     text-align: center;
+}
+
+/* Dual-Mode Toggle (Segmented Control) */
+.mode-toggle {
+    display: flex;
+    background: var(--muted-border-color);
+    padding: 0.25rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mode-toggle button {
+    border: none;
+    background: transparent;
+    padding: 0.5rem 1.5rem;
+    border-radius: 9px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--muted-color);
+    margin-bottom: 0;
+}
+
+.mode-toggle button[data-active="true"] {
+    background: var(--matrix-bg);
+    color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Day Box Dashboard */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.day-card {
+    background: var(--matrix-bg);
+    border: 1px solid var(--muted-border-color);
+    border-radius: 16px;
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: transform 0.2s;
+}
+
+.day-header {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--muted-border-color);
+    padding-bottom: 0.5rem;
+}
+
+.day-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+.day-header .date-label {
+    font-size: 0.8rem;
+    color: var(--muted-color);
+}
+
+/* Time Pills */
+.header-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.pill-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.time-pill {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: var(--bg-color);
+    border: 1px solid var(--muted-border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+}
+
+.time-pill:hover:not(:disabled) {
+    border-color: var(--primary-color);
+    background: var(--highlight-color);
+}
+
+.time-pill[data-status="0"] {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #b91c1c;
+}
+
+.time-pill[data-status="2"] {
+    background: rgba(245, 158, 11, 0.08);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #b45309;
+}
+
+.time-pill .pill-icon {
+    font-size: 1rem;
+    width: 20px;
+    text-align: right;
+}
+
+.time-pill .pill-icon .triage-dash {
+    opacity: 0.3;
+}
+
+.time-pill:disabled {
+    cursor: default;
+    opacity: 0.7;
+}
+
+/* Success Receipt Banner */
+.success-receipt {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    animation: slideInDown 0.4s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.success-receipt h3 {
+    color: #047857;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.success-receipt .edit-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+/* Responsive Matrix Tweaks */
+.read-only-matrix .active-row {
+    display: none;
+}
+
+.read-only-matrix .triage-cell {
+    cursor: default;
+}
+
+.read-only-matrix .triage-cell:hover {
+    background: transparent;
+}
+
+/* Heatmap Blocks (Matrix Only) */
+.vote-cell {
+    padding: 6px !important;
+}
+
+.heatmap-block {
+    width: 24px;
+    height: 24px;
+    margin: 0 auto;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.heatmap-block[data-status="0"] {
+    background-color: #fca5a5; /* Red 300 */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.heatmap-block[data-status="2"] {
+    background-color: #fcd34d; /* Amber 300 */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.heatmap-block[data-status="1"],
+.heatmap-block:not([data-status]),
+.heatmap-block[data-status="null"] {
+    width: 8px;
+    height: 8px;
+    background-color: var(--muted-color);
+    opacity: 0.4;
+    border-radius: 50%;
+}
+
+/* Vertical Column Highlighting */
+.optimal-column {
+    background-color: rgba(99, 102, 241, 0.06) !important;
+    border-left: 1px solid rgba(99, 102, 241, 0.2) !important;
+    border-right: 1px solid rgba(99, 102, 241, 0.2) !important;
+}
+
+.sticky-column.optimal-column {
+    background-color: var(--matrix-bg) !important; /* Keep sticky column clean */
+}
+
+.optimal-header-badge {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    letter-spacing: 0.05em;
+}
+
+/* Toast Notification */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card-bg);
+    color: var(--text-color);
+    padding: 12px 24px;
+    border-radius: 30px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border: 1px solid var(--primary-color);
+    z-index: 2000;
+    font-weight: 600;
+    font-size: 0.9rem;
+    animation: toast-in-out 3s ease-in-out forwards;
+    pointer-events: none;
+}
+
+@keyframes toast-in-out {
+    0% { transform: translate(-50%, -100%); opacity: 0; }
+    10% { transform: translate(-50%, 0); opacity: 1; }
+    90% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -100%); opacity: 0; }
 }
