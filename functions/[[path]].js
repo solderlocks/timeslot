@@ -129,24 +129,23 @@ api.get('/polls/:id', async (c) => {
             const votes = responses.flatMap(r => r.votes.filter(v => v.option_id === opt.id));
             
             const vetoCount = votes.filter(v => v.status === 0).length;
-            const preferredCount = votes.filter(v => v.status === 2).length;
-            const okCount = votes.filter(v => v.status === 1).length;
+            // Treat status 2 (old Preferred) as OK (1) for compatibility/transition
+            const okCount = votes.filter(v => v.status === 1 || v.status === 2).length;
             
-            // Scoring: Veto=0, OK=1, Preferred=2
-            // If there's even one Veto, the score is functionally 0 for 'Optimal' calculation
-            const rawScore = (preferredCount * 2) + (okCount * 1);
-            const finalScore = vetoCount > 0 ? 0 : rawScore;
+            // Scoring: Any Veto (0) disqualifies the slot from being optimal.
+            // Otherwise, we count the number of OKs.
+            const finalScore = vetoCount > 0 ? 0 : okCount;
             
             return {
                 option_id: opt.id,
                 score: finalScore,
                 veto_count: vetoCount,
-                preferred_count: preferredCount
+                ok_count: okCount
             };
         });
 
-        // Sort by Score DESC, then Preferred Count DESC
-        rankings.sort((a, b) => b.score - a.score || b.preferred_count - a.preferred_count);
+        // Sort by Score DESC (highest number of OKs without vetoes)
+        rankings.sort((a, b) => b.score - a.score);
 
         const maxScore = rankings.length > 0 ? rankings[0].score : 0;
         

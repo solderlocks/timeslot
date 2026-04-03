@@ -116,15 +116,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 <div class="pill-stack">
                                     ${options.map(opt => {
                                         const vote = userResponse ? userResponse.votes.find(v => v.option_id === opt.id) : null;
-                                        const status = vote ? vote.status : 1;
+                                        const status = (vote && vote.status === 0) ? 0 : 1; // Default to 1 (OK)
                                         const { time } = formatDate(opt.start_time);
                                         return `
                                             <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
                                                 <input type="hidden" name="pill_${opt.id}" value="${status}">
                                                 <span class="pill-label">${time}</span>
-                                                <div class="pill-actions">
-                                                    <button type="button" class="action-btn veto-btn ${status === 0 ? 'active' : ''}" title="Impossible">❌</button>
-                                                    <button type="button" class="action-btn prefer-btn ${status === 2 ? 'active' : ''}" title="Preferred">⭐</button>
+                                                <div class="pill-icon">
+                                                    ${status === 1 ? '<span class="chk-icon">☑</span>' : '<span class="veto-icon">❌</span>'}
                                                 </div>
                                             </div>
                                         `;
@@ -137,7 +136,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <div style="display: flex; justify-content: center; margin-top: 2rem;">
                     <button type="submit" id="submit-vote-btn" class="primary" style="width: auto; padding: 0.8rem 2.5rem;">
-                        ${userResponse ? 'Update My Response' : 'Save My Response'}
+                        ${userResponse ? 'Update Response' : 'Save Response'}
                     </button>
                 </div>
             </form>
@@ -208,7 +207,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                         
                                         let icon = '';
                                         if (status === 0) icon = '❌';
-                                        else if (status === 2) icon = '⭐';
                                         else icon = '<span class="muted-dash">➖</span>';
 
                                         return `
@@ -271,21 +269,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
             const submitBtn = availabilityForm.querySelector('#submit-vote-btn');
 
             availabilityForm.querySelectorAll('.time-pill').forEach(pill => {
-                const input = pill.querySelector('input');
-                const vetoBtn = pill.querySelector('.veto-btn');
-                const preferBtn = pill.querySelector('.prefer-btn');
-
-                vetoBtn.onclick = (e) => {
-                    e.stopPropagation();
+                pill.onclick = () => {
+                    const input = pill.querySelector('input');
                     const currentStatus = parseInt(input.value);
-                    const newStatus = currentStatus === 0 ? 1 : 0;
-                    updatePillUI(pill, newStatus);
-                };
-
-                preferBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    const currentStatus = parseInt(input.value);
-                    const newStatus = currentStatus === 2 ? 1 : 2;
+                    const newStatus = currentStatus === 1 ? 0 : 1;
                     updatePillUI(pill, newStatus);
                 };
             });
@@ -336,21 +323,22 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
     function updatePillUI(pill, status) {
         const input = pill.querySelector('input');
-        const vetoBtn = pill.querySelector('.veto-btn');
-        const preferBtn = pill.querySelector('.prefer-btn');
+        const iconContainer = pill.querySelector('.pill-icon');
 
         pill.dataset.status = status;
         input.value = status;
-
-        vetoBtn.classList.toggle('active', status === 0);
-        preferBtn.classList.toggle('active', status === 2);
+        
+        if (status === 1) {
+            iconContainer.innerHTML = '<span class="chk-icon">☑</span>';
+        } else {
+            iconContainer.innerHTML = '<span class="veto-icon">❌</span>';
+        }
     }
 
 
     function showSuccessReceipt(votes, editToken) {
-        const vetoes = votes.filter(v => v.status === 0).length;
-        const stars = votes.filter(v => v.status === 2).length;
-        const open = votes.length - vetoes - stars;
+        const conflicts = votes.filter(v => v.status === 0).length;
+        const available = votes.length - conflicts;
 
         const container_receipt = container.querySelector('#success-receipt-container');
         const submitBtn = container.querySelector('#submit-vote-btn');
@@ -358,7 +346,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
         submitBtn.style.display = 'none';
         pills.forEach(p => {
-            p.setAttribute('disabled', 'true');
             p.style.pointerEvents = 'none';
             p.style.opacity = '0.7';
         });
@@ -366,7 +353,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         container_receipt.innerHTML = `
             <div class="success-receipt fade-in">
                 <h3>✅ Response Saved!</h3>
-                <p>You flagged ${vetoes} conflict${vetoes !== 1 ? 's' : ''} and ${stars} preferred time${stars !== 1 ? 's' : ''}. ${open} slot${open !== 1 ? 's' : ''} remain open.
+                <p>You flagged ${conflicts} conflict${conflicts !== 1 ? 's' : ''}. ${available} slot${available !== 1 ? 's' : ''} are marked as available.
                 <span class="edit-link" id="edit-response-link">Edit Response</span></p>
             </div>
         `;
