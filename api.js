@@ -31,19 +31,18 @@ export const toLocal = (utcISO) => {
 };
 
 /**
- * Formats a UTC ISO string to a human-readable local string for table headers.
- * Example: "Jun 01, 14:00"
+ * Formats a UTC ISO string to structured local date components for stacked rendering.
+ * Returns: { weekday: "Tue", date: "Apr 4", time: "1:30 PM" }
  */
 export const formatDate = (utcISO) => {
-    if (!utcISO) return '';
+    if (!utcISO) return { weekday: '', date: '', time: '' };
     const date = new Date(utcISO);
-    return date.toLocaleString('en-US', {
-        month: 'short',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    });
+    
+    return {
+        weekday: date.toLocaleString('en-US', { weekday: 'short' }),
+        date: date.toLocaleString('en-US', { month: 'short', day: 'numeric' }),
+        time: date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+    };
 };
 
 /**

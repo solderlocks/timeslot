@@ -124,28 +124,35 @@ api.get('/polls/:id', async (c) => {
 
         const responses = Object.values(responsesMap);
 
-        // 4. Calculate Consensus Scores with Yes-Priority tie-breaking
+        // 4. Calculate Consensus Scores with Veto-based Triage
         const rankings = options.results.map(opt => {
             const votes = responses.flatMap(r => r.votes.filter(v => v.option_id === opt.id));
-            const yesCount = votes.filter(v => v.status === 2).length;
-            const totalScore = votes.reduce((sum, v) => sum + (v.status === 2 ? 2 : (v.status === 1 ? 1 : 0)), 0);
+            
+            const vetoCount = votes.filter(v => v.status === 0).length;
+            const preferredCount = votes.filter(v => v.status === 2).length;
+            const okCount = votes.filter(v => v.status === 1).length;
+            
+            // Scoring: Veto=0, OK=1, Preferred=2
+            // If there's even one Veto, the score is functionally 0 for 'Optimal' calculation
+            const rawScore = (preferredCount * 2) + (okCount * 1);
+            const finalScore = vetoCount > 0 ? 0 : rawScore;
             
             return {
                 option_id: opt.id,
-                score: totalScore,
-                yes_count: yesCount
+                score: finalScore,
+                veto_count: vetoCount,
+                preferred_count: preferredCount
             };
         });
 
-        // Sort by Score DESC, then Yes Count DESC
-        rankings.sort((a, b) => b.score - a.score || b.yes_count - a.yes_count);
+        // Sort by Score DESC, then Preferred Count DESC
+        rankings.sort((a, b) => b.score - a.score || b.preferred_count - a.preferred_count);
 
         const maxScore = rankings.length > 0 ? rankings[0].score : 0;
-        const maxYesCount = rankings.length > 0 ? rankings[0].yes_count : 0;
         
-        // An option is "optimal" if it matches BOTH top score and top yes_count in that score bracket
+        // An option is "optimal" if it has ZERO vetoes and matches the top score
         const optimal_option_ids = rankings
-            .filter(r => r.score === maxScore && r.yes_count === maxYesCount && maxScore > 0)
+            .filter(r => r.score === maxScore && r.veto_count === 0 && maxScore > 0)
             .map(r => r.option_id);
 
         return c.json({

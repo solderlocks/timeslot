@@ -4,7 +4,7 @@
   "description": "Stateless scheduling utility",
   "main": "functions/[[path]].js",
   "scripts": {
-    "dev": "wrangler pages dev . --d1 DB --local --persist-to=.wrangler/state/v3/d1"
+    "dev": "wrangler pages dev . --d1 DB --local --persist-to=.data"
   },
   "dependencies": {
     "hono": "^4.12.9",

@@ -147,3 +147,178 @@ header nav {
     margin: 1.5rem 0;
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
+
+/* Timezone Reassurance */
+.timezone-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted-color);
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+/* Premium Matrix Table Mobile Architecture */
+.matrix-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--muted-border-color);
+    margin-bottom: 1rem;
+    background: var(--matrix-bg);
+}
+
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  border: none; /* Managed by wrapper */
+}
+
+.matrix-table th, 
+.matrix-table td {
+  padding: 0.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--muted-border-color);
+  border-right: 1px solid var(--muted-border-color);
+  background: var(--matrix-bg);
+  min-width: 95px; /* Enforced Density */
+}
+
+.matrix-table th:last-child, 
+.matrix-table td:last-child {
+  border-right: none;
+}
+
+/* Sticky Column Logic */
+.sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: var(--matrix-bg) !important;
+    min-width: 130px !important; /* Name column needs more space */
+    border-right: 2px solid var(--primary-color) !important;
+    box-shadow: 4px 0 8px rgba(0,0,0,0.05);
+}
+
+.matrix-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    background: var(--matrix-bg);
+    border-bottom: 2px solid var(--muted-border-color);
+}
+
+.matrix-table thead th.sticky-column {
+    z-index: 12;
+}
+
+/* Progressive Triage & Popover UI */
+.triage-cell {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    border-radius: 4px;
+    margin: 2px;
+}
+
+.triage-cell:hover {
+    background: rgba(0,0,0,0.03);
+}
+
+.triage-cell[data-status="0"] { 
+    background-color: rgba(239, 68, 68, 0.12) !important; 
+    color: #ef4444; 
+}
+
+.triage-cell[data-status="2"] { 
+    background-color: rgba(245, 158, 11, 0.12) !important; 
+    color: #f59e0b; 
+}
+
+.triage-dash {
+    opacity: 0.15;
+    font-size: 0.8rem;
+}
+
+/* Triage Popover */
+.triage-popover {
+    position: fixed; /* Using fixed for body-level positioning */
+    z-index: 2000;
+    background: white;
+    border: 1px solid var(--muted-border-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    overflow: hidden;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.95);
+    animation: popover-in 0.15s cubic-bezier(0, 0, 0.2, 1);
+}
+
+@keyframes popover-in {
+    from { opacity: 0; transform: scale(0.9) translateY(4px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.triage-popover button {
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 0.85rem 1.15rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: background 0.2s;
+    font-weight: 500;
+}
+
+.triage-popover button:hover {
+    background: var(--highlight-color);
+}
+
+.triage-popover .popover-clear { 
+    color: var(--muted-color); 
+    border-right: 1px solid var(--muted-border-color); 
+}
+
+.triage-popover .popover-prefer { 
+    color: #f59e0b; 
+}
+
+/* Legacy Support & Misc */
+.optimal-badge {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.25rem;
+}
+
+.optimal-column {
+    background: var(--highlight-color) !important;
+}
+
+/* Active Row Overlay */
+.matrix-table .active-row td {
+    background-color: var(--highlight-color) !important;
+}
+
+.edit-link-footer {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--matrix-bg);
+    border: 1px solid var(--muted-border-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+}

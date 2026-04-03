@@ -151,3 +151,5 @@ dist
 .wrangler/tmp/pages-uRF3Nw/functionsWorker-0.12673805966017493.mjs
 .wrangler/tmp/pages-uRF3Nw/functionsWorker-0.12673805966017493.mjs.map
 .wrangler/v3/d1/miniflare-D1DatabaseObject/e7352547963de7050bd7d94658afc4fe78b61811b7815da12d90be8e863abf4d.sqlite
+
+.data

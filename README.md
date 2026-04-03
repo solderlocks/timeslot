@@ -40,14 +40,14 @@ npm install
 
 ### 2. Database Initialization (Local)
 
-Timeslot uses Cloudflare D1. You must initialize the local database schema before running for the first time:
+Timeslot uses Cloudflare D1. You must initialize the local database schema before running for the first time. We use a dedicated `.data` directory for persistence to ensure consistency:
 
 ```bash
-# Create the local schema
-npx wrangler d1 execute DB --local --file=schema.sql
+# Create the local schema in the .data directory
+npx wrangler d1 execute DB --local --persist-to=.data --file=schema.sql
 
 # (Optional) Seed the database with test data
-npx wrangler d1 execute DB --local --file=seed.sql
+npx wrangler d1 execute DB --local --persist-to=.data --file=seed.sql
 ```
 
 ### 3. Running Locally
@@ -58,7 +58,27 @@ Start the development server:
 npm run dev
 ```
 
-The application will be available at `http://localhost:8788`. This command runs Wrangler in "Pages Dev" mode, simulating both the static frontend and the D1-backed API functions locally.
+The application will be available at `http://localhost:8888` (or `8788` if configured). This command runs Wrangler in "Pages Dev" mode, simulating both the static frontend and the D1-backed API functions locally using the `.data` directory for storage.
+
+---
+
+## Troubleshooting D1 Locally
+
+If you see `D1_ERROR: no such table: polls`, it usually means Wrangler is looking at a different persistence directory than where you initialized the schema.
+
+1.  **Check Persistence**: Ensure both your `wrangler d1 execute` and `wrangler pages dev` commands use the same `--persist-to=.data` flag.
+2.  **Clear State**: If things are hopelessly desynchronized, run:
+    ```bash
+    rm -rf .data
+    npm run dev
+    # In a separate terminal while dev is running:
+    npx wrangler d1 execute DB --local --persist-to=.data --file=schema.sql
+    ```
+3.  **Port Busy**: If you see `Address already in use`, kill the process on port 8888:
+    ```bash
+    lsof -i :8888
+    kill -9 <PID>
+    ```
 
 ---
 
