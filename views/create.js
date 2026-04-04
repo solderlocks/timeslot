@@ -135,7 +135,10 @@ export async function renderCreateView(container) {
             }
         });
 
-        if (!isValid) return;
+        if (!isValid) {
+            window.showToast("Please fix the highlighted errors (e.g. title or past dates).");
+            return;
+        }
 
         try {
             const submitBtn = form.querySelector('#submit-poll-btn');

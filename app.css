@@ -59,8 +59,8 @@ fieldset>legend {
 
 h1,
 .poll-title {
-    font-family: var(--font-serif-2);
-    font-weight: 400;
+    /* font-family: var(--font-serif-2); */
+    font-weight: 700;
     color: var(--text-main);
     margin-top: 1rem;
 }
@@ -229,6 +229,26 @@ a.button.primary:hover,
 
     .success-view-poll-btn {
         width: 100% !important;
+    }
+
+    /* Mobile Sticky CTA: Floating then Docking */
+    .sticky-cta-wrapper {
+        position: sticky;
+        bottom: 0;
+        margin: 2rem -1.5rem -1.5rem -1.5rem;
+        padding: 1rem 1.5rem 1.5rem 1.5rem;
+        background: var(--bg-color);
+        /* Match page background for a seamless float */
+        border-top: 1px solid var(--muted-border-color);
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    [data-theme="dark"] .sticky-cta-wrapper {
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+        background: rgba(12, 14, 18, 0.9);
     }
 }
 
@@ -458,6 +478,13 @@ a.button.primary:hover,
     color: var(--text-main);
     opacity: 0.4;
     /* Soften the sea of checks */
+}
+
+.matrix-block[data-status="1"]::after {
+    content: "✓";
+    font-size: 1.0rem;
+    color: #AAA;
+    font-weight: 800;
 }
 
 /* Optimal Indicators */

@@ -6,6 +6,35 @@ import { renderCreateView } from './views/create.js';
 import { renderPollView } from './views/poll.js';
 import { renderSuccessView } from './views/success.js';
 
+/**
+ * Global Toast Utility
+ */
+window.showToast = function(message) {
+    const existing = document.querySelector('.toast-notification');
+    if (existing) existing.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification fade-in';
+    toast.innerHTML = `
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" aria-label="Close">×</button>
+    `;
+    document.body.appendChild(toast);
+    
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.onclick = () => {
+        toast.classList.add('fade-out');
+        setTimeout(() => toast.remove(), 500);
+    };
+
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 500);
+        }
+    }, 4000);
+};
+
 const app = document.getElementById('app');
 
 /**

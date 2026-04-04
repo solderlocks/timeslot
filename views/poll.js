@@ -31,28 +31,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
     // 3. UI State
     let currentMode = userResponse ? 'group' : 'availability';
 
-    function showToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'toast-notification fade-in';
-        toast.innerHTML = `
-            <span class="toast-message">${message}</span>
-            <button class="toast-close" aria-label="Close">×</button>
-        `;
-        document.body.appendChild(toast);
-        
-        const closeBtn = toast.querySelector('.toast-close');
-        closeBtn.onclick = () => {
-            toast.classList.add('fade-out');
-            setTimeout(() => toast.remove(), 3000);
-        };
-
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.classList.add('fade-out');
-                setTimeout(() => toast.remove(), 3000);
-            }
-        }, 4000);
-    }
 
     function renderPage() {
         container.innerHTML = `
@@ -152,10 +130,12 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <hr>
 
-                <div class="submit-container">
-                    <button type="submit" id="submit-vote-btn" class="primary save-btn">
-                        ${userResponse ? 'Update Response' : 'Save Response'}
-                    </button>
+                <div class="sticky-cta-wrapper">
+                    <div class="submit-container">
+                        <button type="submit" id="submit-vote-btn" class="primary save-btn">
+                            ${userResponse ? 'Update Response' : 'Save Response'}
+                        </button>
+                    </div>
                 </div>
             </form>
         `;
@@ -384,7 +364,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     // Transition to Group mode
                     currentMode = 'group';
                     renderPage();
-                    showToast("Response Saved. Viewing group consensus.");
+                    window.showToast("Response Saved. Viewing group consensus.");
                 } catch (err) {
                     console.error(err);
                     alert('Submission failed: ' + err.message);
