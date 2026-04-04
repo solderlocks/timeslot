@@ -51,13 +51,37 @@ window.onpopstate = router;
 
 // Global navigation handler
 document.addEventListener('click', e => {
-    if (e.target.matches('[data-link]')) {
-        e.preventDefault();
-        const href = e.target.getAttribute('href');
-        history.pushState(null, '', href);
-        router();
+    if (e.target.matches('[data-link]') || e.target.closest('#nav-create')) {
+        const target = e.target.matches('[data-link]') ? e.target : e.target.closest('#nav-create');
+        if (target.pathname === window.location.pathname && target.search === window.location.search) {
+             // Already here
+        } else {
+            e.preventDefault();
+            const href = target.getAttribute('href');
+            history.pushState(null, '', href);
+            router();
+        }
+    }
+
+    // Global Theme Toggle
+    if (e.target.closest('#theme-toggle')) {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeToggleLabel(newTheme);
     }
 });
+
+function updateThemeToggleLabel(theme) {
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.innerHTML = theme === 'dark' ? '🌙 Dark' : '☀️ Light';
+    }
+}
+
+// Initial label sync
+updateThemeToggleLabel(document.documentElement.getAttribute('data-theme'));
 
 // Initial route
 router();

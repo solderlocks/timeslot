@@ -87,10 +87,17 @@ article, .day-card {
 }
 
 .new-poll-btn {
-    border-radius: 20px !important;
-    padding: 0.2rem 1rem !important;
-    font-size: 0.85rem !important;
+    padding: 0.2rem 0 !important;
+    font-size: 0.9rem !important;
     font-weight: 600 !important;
+    color: var(--text-main) !important;
+    text-decoration: underline !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+[data-theme="dark"] .new-poll-btn {
+    color: var(--text-main) !important;
 }
 
 .no-margin {
@@ -125,13 +132,14 @@ article, .day-card {
 .save-btn {
     width: auto !important;
     padding: 0.6rem 2.5rem !important;
-    border-radius: 30px !important;
+    border-radius: 10px !important; /* Match tabs */
     font-weight: 700 !important;
     background-color: var(--tab-active-bg) !important;
     color: var(--tab-active-text) !important;
     border: none !important;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     transition: transform 0.2s, box-shadow 0.2s !important;
+    margin-top: 2rem;
 }
 
 .save-btn:hover {
@@ -363,6 +371,11 @@ article, .day-card {
     padding: 12px 8px !important;
     color: var(--text-main);
     font-weight: 600;
+    white-space: nowrap;
+}
+
+.score-row {
+    display: none !important;
 }
 
 .day-group-header {
@@ -437,12 +450,48 @@ article, .day-card {
     background: var(--muted-border-color);
 }
 
-/* Animations */
-.fade-in {
-  animation: fadeIn 0.3s ease-out;
+/* Creation View Fixes */
+.slot-row {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.5rem;
+    flex-wrap: nowrap !important;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.slot-row input {
+    flex: 1 !important;
+    margin-bottom: 0 !important;
+}
+
+.slot-row button.remove-btn {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 0 0 auto !important;
+}
+
+/* Subtle Action Buttons */
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.header-actions button {
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 6px !important;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.header-actions button:hover {
+    opacity: 1;
+}
+
+.header-actions .icon-btn {
+    padding: 0.3rem 0.5rem !important;
 }

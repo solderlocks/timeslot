@@ -39,7 +39,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
     function renderPage() {
         container.innerHTML = `
             <article class="fade-in">
-                <header style="padding: 1rem 0;">
+                <header>
                     <div class="poll-header-row">
                         <div>
                             <h2 class="poll-title" style="margin: 0; font-size: 1.5rem;">${poll.title}</h2>
@@ -71,16 +71,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     ${currentMode === 'availability' ? renderAvailabilityDashboard() : renderGroupMatrix()}
                 </div>
             </article>
-
-            <footer class="app-footer fade-in">
-                <div class="footer-content">
-                    <small>Shared with ❤️ | <a href="https://github.com/solderlocks/timeslot" target="_blank" rel="noopener">Source</a></small>
-                    <span class="footer-separator">•</span>
-                    <span class="footer-theme-toggle" id="theme-toggle">
-                        ${document.documentElement.getAttribute('data-theme') === 'dark' ? '🌙 Dark' : '☀️ Light'}
-                    </span>
-                </div>
-            </footer>
         `;
 
         attachListeners();
@@ -211,7 +201,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
             return `
                                             <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
                                                 <div class="matrix-block" data-status="${status}">
-                                                    ${status === 1 ? '✅' : '❌'}
+                                                    ${status === 0 ? '❌' : ''}
                                                 </div>
                                             </td>
                                         `;
@@ -219,7 +209,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 </tr>
                             `).join('')}
                         </tbody>
-                        <tfoot>
+                        <tfoot class="score-row">
                             <tr>
                                 <td class="sticky-column voter-name-cell"><strong>Scores</strong></td>
                                 ${poll.options.map(opt => {
@@ -245,15 +235,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         }
 
         const themeBtn = container.querySelector('#theme-toggle');
-        if (themeBtn) {
-            themeBtn.onclick = () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                renderPage();
-            };
-        }
+        // Theme toggle is now handled globally in app.js
 
         const toggleBtns = container.querySelectorAll('.mode-toggle button');
         toggleBtns.forEach(btn => {
