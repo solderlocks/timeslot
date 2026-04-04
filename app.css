@@ -43,6 +43,8 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     font-family: var(--font-sans);
+    font-size: 0.95rem;
+    /* Tighter typography */
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease;
     margin: 0;
@@ -54,10 +56,11 @@ h1,
     font-family: var(--font-serif);
     font-weight: 700;
     color: var(--text-main);
+    margin-top: 1rem;
 }
 
 .poll-title-compact {
-    margin: 0 !important;
+
     font-size: 1.5rem !important;
 }
 
@@ -90,6 +93,10 @@ header.container {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
+}
+
+nav ul:last-of-type {
+    margin-right: 0;
 }
 
 [data-theme="light"] article,
@@ -138,18 +145,10 @@ header.container {
 
 .voter-name-input {
     max-width: 400px;
+    height: 48px !important;
+    /* Standardize with datetime-local */
 }
 
-@media (max-width: 600px) {
-    .voter-name-input {
-        max-width: 100%;
-        width: 100%;
-    }
-
-    .save-btn {
-        width: 100% !important;
-    }
-}
 
 .instruction-text {
     color: var(--muted-color);
@@ -158,23 +157,50 @@ header.container {
     margin-bottom: 1.5rem;
 }
 
+/* Primary Global Button Style (Overriding Pico.css) */
+button.primary,
+.button.primary,
+a.button.primary,
 .save-btn {
     width: auto !important;
     padding: 0.6rem 2.5rem !important;
     border-radius: 10px !important;
-    /* Match tabs */
     font-weight: 700 !important;
     background-color: var(--tab-active-bg) !important;
     color: var(--tab-active-text) !important;
     border: none !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s !important;
-    margin-top: 2rem;
+    margin-top: 1rem;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    line-height: normal;
+    /* Pico override */
 }
 
+button.primary:hover,
+.button.primary:hover,
+a.button.primary:hover,
 .save-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    background-color: var(--tab-active-bg) !important;
+    /* Ensure state sticks */
+}
+
+@media (max-width: 600px) {
+    .voter-name-input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .save-btn,
+    button.primary,
+    .button.primary,
+    a.button.primary {
+        width: 100% !important;
+    }
 }
 
 /* Dual-Mode Toggle (Segmented Control) */
@@ -221,7 +247,7 @@ header.container {
 
 @media (max-width: 600px) {
     .dashboard-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+        /* grid-template-columns: repeat(2, 1fr) !important; */
         gap: 0.5rem;
     }
 }
@@ -326,7 +352,7 @@ header.container {
     border-bottom: 1px solid var(--muted-border-color);
     border-right: 1px solid var(--muted-border-color);
     background: transparent;
-    min-width: 100px;
+    min-width: 80px;
 }
 
 .matrix-table th:last-child,
@@ -340,8 +366,14 @@ header.container {
     left: 0;
     z-index: 10;
     background: var(--matrix-bg) !important;
-    min-width: 150px !important;
+    min-width: 100px !important;
+    /* Fixed width */
     text-align: left !important;
+}
+
+[data-theme="light"] .sticky-column {
+    background: #ffffff !important;
+    /* Force full opacity on sticky column */
 }
 
 .participants-header {
@@ -512,7 +544,6 @@ header.container {
 .slot-row input {
     flex: 1 !important;
     margin-bottom: 0 !important;
-    height: 48px !important;
 }
 
 .slot-row button.remove-btn {
@@ -523,6 +554,8 @@ header.container {
     align-items: center !important;
     justify-content: center !important;
     flex: 0 0 auto !important;
+    border: none !important;
+    /* Eliminate border */
 }
 
 /* Embedded Input Buttons (Success View) */
@@ -542,6 +575,8 @@ header.container {
 .embedded-icon-btn {
     position: absolute;
     right: 4px;
+    top: 4px;
+    /* Align within input height */
     width: 40px !important;
     height: 40px !important;
     padding: 0 !important;

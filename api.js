@@ -39,8 +39,8 @@ export const formatDate = (utcISO) => {
     const date = new Date(utcISO);
     
     return {
-        weekday: date.toLocaleString('en-US', { weekday: 'short' }),
-        date: date.toLocaleString('en-US', { month: 'short', day: 'numeric' }),
+        weekday: date.toLocaleString('en-US', { weekday: 'long' }),
+        date: date.toLocaleString('en-US', { month: 'short', day: '2-digit' }),
         time: date.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
     };
 };

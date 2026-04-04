@@ -1,35 +1,40 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>timeslot.ink | Stateless Group Scheduling</title>
-    
+    <title>timeslot.ink | Group Scheduling</title>
+
     <!-- Theme Initialization: Fast apply to prevent flashing -->
     <script>
-        (function() {
+        (function () {
             const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', savedTheme);
         })();
     </script>
-    
+
     <!-- External Tooltips -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
     <link rel="icon"
-    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐝</text></svg>">
-    <meta name="description" content="A stateless, serverless group scheduling utility. No accounts, no tracking, just dates.">
-    
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐝</text></svg>">
+    <meta name="description"
+        content="A stateless, serverless group scheduling utility. No accounts, no tracking, just dates.">
+
     <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+        rel="stylesheet">
 
     <!-- Pico.css @2.0.6 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.0.6/css/pico.min.css">
-    
+
     <!-- Custom Design System -->
     <link rel="stylesheet" href="app.css">
 </head>
+
 <body>
     <header class="container">
         <nav>
@@ -49,7 +54,8 @@
 
     <footer class="app-footer container">
         <div class="footer-content">
-            <small>Shared with ❤️ | <a href="https://github.com/solderlocks/timeslot" target="_blank" rel="noopener">Source</a></small>
+            <small>Shared with ❤️ | <a href="https://github.com/solderlocks/timeslot" target="_blank"
+                    rel="noopener">Source</a></small>
             <span class="footer-separator">•</span>
             <span class="footer-theme-toggle" id="theme-toggle">
                 ☀️ Light
@@ -60,4 +66,5 @@
     <!-- Native ES6 Modules -->
     <script type="module" src="app.js"></script>
 </body>
+
 </html>

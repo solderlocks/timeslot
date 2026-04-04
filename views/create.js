@@ -8,8 +8,12 @@ export async function renderCreateView(container) {
     container.innerHTML = `
         <article class="fade-in">
             <header>
-                <h2>Create Your Poll</h2>
-                <p>Stateless. Serverless. Seamless. No accounts required.</p>
+                <div class="poll-header-row">
+                    <div>
+                        <h2 class="poll-title poll-title-compact">Create Your Poll</h2>
+                        <p class="poll-description-muted">Propose some time slots and share the link.</p>
+                    </div>
+                </div>
             </header>
             
             <form id="create-poll-form">
@@ -36,7 +40,7 @@ export async function renderCreateView(container) {
                 
                 <hr>
                 
-                <button type="submit" id="submit-poll-btn" class="primary">Create My Poll</button>
+                <button type="submit" id="submit-poll-btn" class="primary">Create Poll</button>
             </form>
         </article>
     `;
@@ -51,11 +55,11 @@ export async function renderCreateView(container) {
     addSlotBtn.onclick = () => {
         const lastInput = slotsContainer.querySelector('.slot-row:last-child input');
         let nextValue = '';
-        
+
         if (lastInput && lastInput.value) {
             const lastDate = new Date(lastInput.value);
             lastDate.setHours(lastDate.getHours() + 1);
-            
+
             // Format to YYYY-MM-DDTHH:mm for datetime-local
             const offset = lastDate.getTimezoneOffset() * 60000;
             const localDate = new Date(lastDate.getTime() - offset);
@@ -69,7 +73,7 @@ export async function renderCreateView(container) {
             <button type="button" class="outline secondary remove-btn">×</button>
         `;
         slotsContainer.appendChild(newRow);
-        
+
         // Focus the new input
         newRow.querySelector('input').focus();
     };
@@ -90,9 +94,11 @@ export async function renderCreateView(container) {
     slotsContainer.onclick = (e) => {
         if (e.target.closest('.remove-btn')) {
             const row = e.target.closest('.slot-row');
-            // Keep at least one slot
             if (slotsContainer.children.length > 1) {
                 row.remove();
+            } else {
+                // Clear value of the first/only slot instead of removing it
+                row.querySelector('input').value = '';
             }
         }
     };
@@ -104,7 +110,7 @@ export async function renderCreateView(container) {
         e.preventDefault();
         const inputs = slotsContainer.querySelectorAll('.slot-input');
         const titleInput = form.querySelector('#title');
-        
+
         let isValid = true;
 
         // Reset all aria-invalid states
@@ -143,7 +149,7 @@ export async function renderCreateView(container) {
             };
 
             const poll = await API.createPoll(payload);
-            
+
             // Navigate to Success view
             window.location.search = `?success=${poll.id}`;
         } catch (err) {
