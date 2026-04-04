@@ -54,7 +54,18 @@ h1,
     font-family: var(--font-serif);
     font-weight: 700;
     color: var(--text-main);
-    margin-bottom: 1rem;
+}
+
+.poll-title-compact {
+    margin: 0 !important;
+    font-size: 1.5rem !important;
+}
+
+.poll-description-muted {
+    margin: 0 !important;
+    font-size: 0.9rem !important;
+    color: var(--muted-color) !important;
+    font-style: italic !important;
 }
 
 h2,
@@ -72,6 +83,13 @@ article,
     background-color: var(--matrix-bg) !important;
     color: var(--text-main) !important;
     border: 1px solid var(--muted-border-color) !important;
+}
+
+article,
+header.container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 [data-theme="light"] article,
@@ -197,13 +215,13 @@ article,
 /* Dashboard Grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
 }
 
 @media (max-width: 600px) {
     .dashboard-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        grid-template-columns: repeat(2, 1fr) !important;
         gap: 0.5rem;
     }
 }
@@ -401,6 +419,24 @@ article,
     border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
+.matrix-controls {
+    margin-bottom: 2rem !important;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state-text {
+    color: var(--muted-color);
+}
+
 .day-boundary {
     border-right: 2px solid var(--muted-border-color) !important;
 }
@@ -476,16 +512,54 @@ article,
 .slot-row input {
     flex: 1 !important;
     margin-bottom: 0 !important;
+    height: 48px !important;
 }
 
 .slot-row button.remove-btn {
-    width: 44px !important;
-    height: 44px !important;
+    width: 48px !important;
+    height: 48px !important;
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     flex: 0 0 auto !important;
+}
+
+/* Embedded Input Buttons (Success View) */
+.input-with-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-with-button input {
+    padding-right: 48px !important;
+    /* Make room for icon */
+    margin-bottom: 0 !important;
+}
+
+.embedded-icon-btn {
+    position: absolute;
+    right: 4px;
+    width: 40px !important;
+    height: 40px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--muted-color) !important;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    box-shadow: none !important;
+}
+
+.embedded-icon-btn:hover {
+    opacity: 1;
+    transform: none !important;
 }
 
 /* Subtle Action Buttons */
@@ -508,4 +582,21 @@ article,
 
 .header-actions .icon-btn {
     padding: 0.3rem 0.5rem !important;
+}
+
+/* Success View Layout Utilities */
+.success-link-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.success-link-display {
+    flex: 1;
+}
+
+.success-view-poll-btn {
+    margin-bottom: 0 !important;
+    flex: 0 0 auto !important;
 }

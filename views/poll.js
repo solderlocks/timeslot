@@ -12,7 +12,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
     // 2. Check for Edit Context
     const pollsMap = JSON.parse(localStorage.getItem('polls_map') || '{}');
     const storedEditToken = pollsMap[pollId];
-    const activeEditToken = urlEditToken || storedEditToken;
+    let activeEditToken = urlEditToken || storedEditToken;
 
     let userResponse = null;
     let tokenError = false;
@@ -22,6 +22,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         } catch (e) {
             console.warn('Invalid or expired edit token');
             tokenError = true;
+            activeEditToken = null; // Reset token if invalid
         }
     }
 
@@ -42,8 +43,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <header>
                     <div class="poll-header-row">
                         <div>
-                            <h2 class="poll-title" style="margin: 0; font-size: 1.5rem;">${poll.title}</h2>
-                            <p style="margin: 0; font-size: 0.9rem; color: var(--muted-color); font-style: italic;">${poll.description || 'No description provided.'}</p>
+                            <h2 class="poll-title poll-title-compact">${poll.title}</h2>
+                            <p class="poll-description-muted">${poll.description || 'No description provided.'}</p>
                         </div>
                         <div class="header-actions">
                             ${activeEditToken ? `
@@ -112,8 +113,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 </div>
                                 <div class="pill-stack">
                                     ${options.map(opt => {
-                const vote = userResponse ? userResponse.votes.find(v => v.option_id === opt.id) : null;
-                const status = (vote && vote.status === 0) ? 0 : 1; // Default to 1 (OK)
+                const votes = userResponse && userResponse.votes ? userResponse.votes : [];
+                const vote = votes.find(v => v.option_id === opt.id);
+                const status = (vote && vote.status === 0) ? 0 : 1; 
                 const { time } = formatDate(opt.start_time);
                 return `
                                             <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
@@ -162,9 +164,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
             return dayGroups.some(group => group.options[group.options.length - 1].id === optionId);
         };
 
-        return `
-            <div class="read-only-matrix fade-in">
-                <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
+        const matrixContent = poll.responses.length === 0
+            ? `
+                <div class="empty-state fade-in">
+                    <div class="empty-state-icon">🗓️</div>
+                    <h3>No responses yet</h3>
+                    <p class="empty-state-text">Share the link above with your group to start finding the perfect time.</p>
+                </div>
+            `
+            : `
                 <div class="matrix-table-wrapper">
                     <table class="matrix-table">
                         <thead>
@@ -221,6 +229,12 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         </tfoot>
                     </table>
                 </div>
+            `;
+
+        return `
+            <div class="read-only-matrix fade-in">
+                <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
+                ${matrixContent}
             </div>
         `;
     }
@@ -298,19 +312,21 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     submitBtn.disabled = true;
 
                     let result;
-                    if (activeEditToken && userResponse) {
+                    if (activeEditToken) {
                         result = await API.updateResponse(pollId, activeEditToken, { voter_name: voterName, votes });
                     } else {
                         result = await API.submitVote(pollId, { voter_name: voterName, votes });
-                        localStorage.setItem('polls_map', JSON.stringify({ ...pollsMap, [pollId]: result.edit_token }));
+                        activeEditToken = result.edit_token; // Update the session token
+                        localStorage.setItem('polls_map', JSON.stringify({ ...pollsMap, [pollId]: activeEditToken }));
                     }
 
-                    // CRITICAL: Re-fetch the full poll object to get updated consensus scores and optimal slots
-                    const updatedPoll = await API.getPoll(pollId);
+                    // CRITICAL: Re-fetch the full poll object with cache-busting to get updated votes/consensus
+                    const updatedPoll = await API.getPoll(`${pollId}?cb=${Date.now()}`);
                     Object.assign(poll, updatedPoll);
 
-                    // Update local userResponse reference from the fresh data
-                    userResponse = poll.responses.find(r => r.voter_name === voterName) || { voter_name: voterName, votes };
+                    // Update userResponse from the fresh, confirmed server data
+                    userResponse = poll.responses.find(r => r.edit_token === activeEditToken) || 
+                                   poll.responses.find(r => r.voter_name === voterName);
 
                     // Transition to Group mode
                     currentMode = 'group';

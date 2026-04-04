@@ -26,11 +26,11 @@ export async function renderCreateView(container) {
                     <div id="slots-container">
                         <div class="slot-row">
                             <input type="datetime-local" class="slot-input" required>
-                            <button type="button" class="outline secondary remove-btn" style="flex: 0 0 auto;">×</button>
+                            <button type="button" class="outline secondary remove-btn">×</button>
                         </div>
                     </div>
-                    <footer style="margin-top: 1rem;">
-                        <button type="button" id="add-slot-btn" class="secondary outline">+ Add another slot</button>
+                    <footer class="slot-footer">
+                        <button type="button" id="add-slot-btn" class="new-poll-btn">+ Add another slot</button>
                     </footer>
                 </fieldset>
                 
@@ -66,7 +66,7 @@ export async function renderCreateView(container) {
         newRow.className = 'slot-row';
         newRow.innerHTML = `
             <input type="datetime-local" class="slot-input" value="${nextValue}" required>
-            <button type="button" class="outline secondary remove-btn" style="flex: 0 0 auto;">×</button>
+            <button type="button" class="outline secondary remove-btn">×</button>
         `;
         slotsContainer.appendChild(newRow);
         
