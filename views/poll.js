@@ -48,17 +48,17 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         </div>
                         <div class="header-actions">
                             ${activeEditToken ? `
-                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
+                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
                                     🔗
                                 </button>
                             ` : ''}
-                            <button class="outline secondary share-btn" id="share-link-btn" data-tippy-content="Copy Shareable Poll Link">Share Poll</button>
+                            <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">Share Poll</button>
                         </div>
                     </div>
 
                     <div class="mode-toggle">
                         <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">My Availability</button>
-                        <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Grid</button>
+                        <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Responses</button>
                     </div>
                 </header>
 
@@ -91,7 +91,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         return `
             <form id="availability-form" class="fade-in">
                 <div id="success-receipt-container"></div>
-
+                <p class="instruction-text">Select the times that conflict with your schedule.</p>
                 <div class="voter-input-group">
                     <label for="voter-name">Your Name</label>
                     <input type="text" id="voter-name" name="voter_name" 
@@ -99,8 +99,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
                            placeholder="Enter your name" required 
                            class="voter-name-input">
                 </div>
-
-                <p class="instruction-text">Select the times that conflict with your schedule.</p>
 
                 <div class="dashboard-grid">
                     ${Object.entries(dayGroups).map(([dateLabel, options]) => {
@@ -132,6 +130,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         `;
         }).join('')}
                 </div>
+
+                <hr>
 
                 <div class="submit-container">
                     <button type="submit" id="submit-vote-btn" class="primary save-btn">
@@ -240,16 +240,48 @@ export async function renderPollView(container, pollId, urlEditToken) {
     }
 
     function attachListeners() {
-        // Tooltips
+        // Tooltips Initialization
         if (window.tippy) {
-            window.tippy('[data-tippy-content]', {
+            // Standard tooltips
+            window.tippy(container.querySelectorAll('[data-tippy-content]'), {
                 arrow: true,
                 theme: 'translucent',
             });
-        }
 
-        const themeBtn = container.querySelector('#theme-toggle');
-        // Theme toggle is now handled globally in app.js
+            // Special handling for dynamic "Copied" feedback
+            const shareBtnEl = container.querySelector('#share-link-btn');
+            const copyEditBtnEl = container.querySelector('#copy-edit-link-btn');
+
+            if (shareBtnEl) {
+                window.tippy(shareBtnEl, {
+                    content: 'Copy Shareable Poll Link',
+                    hideOnClick: false,
+                    onShow(instance) {
+                        if (instance.props.content === 'Poll Link Copied!') {
+                            setTimeout(() => {
+                                instance.hide();
+                                setTimeout(() => instance.setContent('Copy Shareable Poll Link'), 500);
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+
+            if (copyEditBtnEl) {
+                window.tippy(copyEditBtnEl, {
+                    content: 'Copy Private Edit Link',
+                    hideOnClick: false,
+                    onShow(instance) {
+                        if (instance.props.content === 'Edit Link Copied!') {
+                            setTimeout(() => {
+                                instance.hide();
+                                setTimeout(() => instance.setContent('Copy Private Edit Link'), 500);
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        }
 
         const toggleBtns = container.querySelectorAll('.mode-toggle button');
         toggleBtns.forEach(btn => {
@@ -263,9 +295,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
         shareBtn.onclick = () => {
             const pollUrl = `${window.location.origin}?id=${pollId}`;
             navigator.clipboard.writeText(pollUrl);
-            const originalText = shareBtn.innerText;
-            shareBtn.innerText = 'Copied!';
-            setTimeout(() => shareBtn.innerText = originalText, 2000);
+            if (shareBtn._tippy) {
+                shareBtn._tippy.setContent('Poll Link Copied!');
+                shareBtn._tippy.show();
+            }
         };
 
         const copyEditBtn = container.querySelector('#copy-edit-link-btn');
@@ -273,13 +306,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
             copyEditBtn.onclick = () => {
                 const editUrl = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
                 navigator.clipboard.writeText(editUrl);
-
                 if (copyEditBtn._tippy) {
                     copyEditBtn._tippy.setContent('Edit Link Copied!');
                     copyEditBtn._tippy.show();
-                    setTimeout(() => {
-                        copyEditBtn._tippy.setContent('Copy Private Edit Link');
-                    }, 2000);
                 }
             };
         }

@@ -43,7 +43,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     font-family: var(--font-sans);
-    font-size: 0.95rem;
+    font-size: 0.90rem;
     /* Tighter typography */
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease;
@@ -68,7 +68,6 @@ h1,
     margin: 0 !important;
     font-size: 0.9rem !important;
     color: var(--muted-color) !important;
-    font-style: italic !important;
 }
 
 h2,
@@ -105,6 +104,8 @@ nav ul:last-of-type {
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    /* box-shadow: 0 0px 10px 0px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05) !important; */
 }
 
 [data-theme="dark"] article,
@@ -248,6 +249,7 @@ a.button.primary:hover,
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
+    margin-bottom: 2rem;
 }
 
 @media (max-width: 600px) {
@@ -264,13 +266,12 @@ a.button.primary:hover,
 
 .day-header {
     margin-bottom: 1rem;
-    border-bottom: 1px solid var(--muted-border-color);
     padding-bottom: 0.5rem;
 }
 
 .day-header h4 {
     margin: 0;
-    font-size: 0.95rem;
+    font-size: 0.90rem;
     font-weight: 700;
     color: var(--text-main);
 }

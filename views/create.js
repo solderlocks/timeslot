@@ -11,7 +11,7 @@ export async function renderCreateView(container) {
                 <div class="poll-header-row">
                     <div>
                         <h2 class="poll-title poll-title-compact">Create Your Poll</h2>
-                        <p class="poll-description-muted">Propose some time slots and share the link.</p>
+                        <p class="poll-description-muted">Propose time slots and share the link.</p>
                     </div>
                 </div>
             </header>

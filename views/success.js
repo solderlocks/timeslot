@@ -10,7 +10,7 @@ export async function renderSuccessView(container, pollId) {
             <header>
                 <div class="poll-header-row">
                     <div>
-                        <h2 class="poll-title poll-title-compact">Poll Created!</h2>
+                        <h2 class="poll-title poll-title-compact">Poll Created</h2>
                         <p class="poll-description-muted">Your stateless poll is live. Shared with your group to start collecting responses.</p>
                     </div>
                 </div>
@@ -22,7 +22,7 @@ export async function renderSuccessView(container, pollId) {
                 <div class="success-link-row">
                     <div class="input-with-button success-link-display">
                         <input type="text" id="poll-url-display" value="${participantUrl}" readonly>
-                        <button type="button" id="copy-poll-btn" class="embedded-icon-btn" data-tippy-content="Copy Link">📋</button>
+                        <button type="button" id="copy-poll-btn" class="embedded-icon-btn">📋</button>
                     </div>
                     <a href="${participantUrl}" class="button primary success-view-poll-btn">View Poll ></a>
                 </div>
@@ -31,26 +31,33 @@ export async function renderSuccessView(container, pollId) {
     `;
 
     /**
-     * Clipboard API Utility with Visual Feedback.
+     * Clipboard API Utility with Tippy Feedback.
      */
-    const copyToClipboard = async (text, button) => {
+    const copyBtn = container.querySelector('#copy-poll-btn');
+    if (window.tippy) {
+        window.tippy(copyBtn, {
+            content: 'Copy Link',
+            hideOnClick: false,
+            onShow(instance) {
+                if (instance.props.content === 'Copied!') {
+                    setTimeout(() => {
+                        instance.hide();
+                        setTimeout(() => instance.setContent('Copy Link'), 500);
+                    }, 2000);
+                }
+            }
+        });
+    }
+
+    copyBtn.onclick = async () => {
         try {
-            await navigator.clipboard.writeText(text);
-            const originalText = button.innerText;
-            button.innerText = 'Copied!';
-            button.classList.add('copied');
-            
-            setTimeout(() => {
-                button.innerText = originalText;
-                button.classList.remove('copied');
-            }, 2000);
+            await navigator.clipboard.writeText(participantUrl);
+            if (copyBtn._tippy) {
+                copyBtn._tippy.setContent('Copied!');
+                copyBtn._tippy.show();
+            }
         } catch (err) {
             console.error('Failed to copy', err);
-            alert('Failed to copy to clipboard.');
         }
-    };
-
-    container.querySelector('#copy-poll-btn').onclick = (e) => {
-        copyToClipboard(participantUrl, e.target);
     };
 }
