@@ -24,7 +24,10 @@ export async function renderSuccessView(container, pollId) {
                         <input type="text" id="poll-url-display" value="${participantUrl}" readonly>
                         <button type="button" id="copy-poll-btn" class="embedded-icon-btn">📋</button>
                     </div>
-                    <a href="${participantUrl}" class="button primary success-view-poll-btn">View Poll ></a>
+                    <a href="${participantUrl}" class="button primary success-view-poll-btn">
+                        <span>View Poll</span>
+                        <span class="chevron-right">›</span>
+                    </a>
                 </div>
             </section>
         </article>

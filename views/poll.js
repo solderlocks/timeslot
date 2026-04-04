@@ -8,6 +8,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
     // 1. Initial Data Fetch
     container.innerHTML = `<article aria-busy="true"></article>`;
     const poll = await API.getPoll(pollId);
+    // Enforce chronological order for options
+    poll.options.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 
     // 2. Check for Edit Context
     const pollsMap = JSON.parse(localStorage.getItem('polls_map') || '{}');
@@ -31,10 +33,25 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
     function showToast(message) {
         const toast = document.createElement('div');
-        toast.className = 'toast-notification';
-        toast.textContent = message;
+        toast.className = 'toast-notification fade-in';
+        toast.innerHTML = `
+            <span class="toast-message">${message}</span>
+            <button class="toast-close" aria-label="Close">×</button>
+        `;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.onclick = () => {
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 3000);
+        };
+
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }, 4000);
     }
 
     function renderPage() {
@@ -52,7 +69,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                     🔗
                                 </button>
                             ` : ''}
-                            <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">Share Poll</button>
+                            <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">
+                                <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -280,6 +299,11 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         }
                     }
                 });
+            }
+
+            // Initialize icons
+            if (window.lucide) {
+                window.lucide.createIcons();
             }
         }
 
