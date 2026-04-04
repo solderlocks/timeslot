@@ -8,7 +8,6 @@
   --primary-color: #6366f1; /* Modern Indigo */
   --primary-hover: #4f46e5;
   --conflict-red: #ef4444;
-  --conflict-bg: #fef2f2;
 }
 
 /* Light Mode: Warm Glass */
@@ -19,6 +18,8 @@
   --muted-color: #64748b;
   --muted-border-color: rgba(0, 0, 0, 0.05); /* Ultra faint */
   --highlight-color: rgba(99, 102, 241, 0.08);
+  --conflict-bg: #fef2f2;
+  --conflict-text: #991b1b;
 }
 
 /* Dark Mode: High Contrast Slate */
@@ -29,6 +30,8 @@
   --muted-color: #94a3b8;
   --muted-border-color: rgba(255, 255, 255, 0.05); /* Ultra faint */
   --highlight-color: rgba(99, 102, 241, 0.2);
+  --conflict-bg: rgba(239, 68, 68, 0.15);
+  --conflict-text: #fca5a5;
 }
 
 /* Force Light Theme */
@@ -217,7 +220,7 @@ article, .day-card {
 .time-pill[data-status="0"] {
     background-color: var(--conflict-bg);
     border-color: var(--conflict-red);
-    color: #991b1b; /* Dark red text */
+    color: var(--conflict-text);
 }
 
 .pill-icon {
