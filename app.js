@@ -2,12 +2,13 @@
  * app.js: The reactive router and state manager for timeslot.ink
  */
 
+import { renderLandingView } from './views/landing.js';
 import { renderCreateView } from './views/create.js';
 import { renderPollView } from './views/poll.js';
 import { renderSuccessView } from './views/success.js';
 
 /**
- * Global Toast Utility
+ * Global Utilities
  */
 window.showToast = function(message) {
     const existing = document.querySelector('.toast-notification');
@@ -35,6 +36,24 @@ window.showToast = function(message) {
     }, 4000);
 };
 
+window.openPhilosophyModal = function() {
+    const modal = document.getElementById('philosophy-modal');
+    if (modal) modal.showModal();
+};
+
+window.closePhilosophyModal = function() {
+    const modal = document.getElementById('philosophy-modal');
+    if (modal) modal.close();
+};
+
+// Initialize Modal Close Buttons
+document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.getElementById('close-philosophy-modal');
+    const closeBtn2 = document.getElementById('close-philosophy-btn');
+    if (closeBtn) closeBtn.onclick = window.closePhilosophyModal;
+    if (closeBtn2) closeBtn2.onclick = window.closePhilosophyModal;
+});
+
 const app = document.getElementById('app');
 
 /**
@@ -44,22 +63,25 @@ async function router() {
     const params = new URLSearchParams(window.location.search);
     const pollId = params.get('id');
     const successId = params.get('success');
-    const editToken = params.get('edit'); // Optional for returning user
+    const editToken = params.get('edit');
+    const path = window.location.pathname;
 
     // Clear main container
     app.innerHTML = '';
 
     try {
         if (successId) {
-            // View S: Intermediate Success
             await renderSuccessView(app, successId);
         } else if (pollId) {
-            // View B: Poll View (Implementation in Phase 4)
-            // For now, we'll implement a simple placeholder or the real one
             await renderPollView(app, pollId, editToken);
-        } else {
-            // View A: Create Poll (Default)
+        } else if (path === '/create') {
             await renderCreateView(app);
+        } else if (path === '/') {
+            await renderLandingView(app);
+        } else {
+            // Fallback to landing if path unknown
+            history.replaceState(null, '', '/');
+            await renderLandingView(app);
         }
     } catch (err) {
         console.error(err);

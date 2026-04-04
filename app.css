@@ -169,6 +169,31 @@ nav ul:last-of-type {
     font-size: 0.9rem;
     font-style: italic;
     margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.philosophy-trigger {
+    width: 20px !important;
+    height: 20px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    font-size: 0.7rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: 0.5rem;
+    opacity: 0.5;
+    background: transparent !important;
+    border: 1px solid var(--muted-color) !important;
+    color: var(--muted-color) !important;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.philosophy-trigger:hover {
+    opacity: 1;
+    background: var(--highlight-color) !important;
 }
 
 /* Primary Global Button Style (Overriding Pico.css) */
@@ -409,7 +434,7 @@ a.button.primary:hover,
 
 .matrix-table th,
 .matrix-table td {
-    padding: 0.75rem;
+    padding: 0.25rem 0.5rem;
     text-align: center;
     border-bottom: 1px solid var(--muted-border-color);
     border-right: 1px solid var(--muted-border-color);
@@ -428,9 +453,32 @@ a.button.primary:hover,
     left: 0;
     z-index: 10;
     background: var(--matrix-bg) !important;
-    min-width: 100px !important;
-    /* Fixed width */
+    min-width: 120px !important;
     text-align: left !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.name-initial {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .name-full {
+        display: none;
+    }
+
+    .name-initial {
+        display: inline;
+        font-weight: 700;
+    }
+
+    .sticky-column {
+        min-width: 40px !important;
+        max-width: 40px !important;
+        text-align: center !important;
+    }
 }
 
 [data-theme="light"] .sticky-column {
@@ -783,4 +831,61 @@ a.button.primary:hover,
     margin-bottom: 0 !important;
     flex: 0 0 auto !important;
     margin-top: 0 !important;
+}
+
+/* Landing Page Styles */
+.landing-hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.hero-content {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.hero-headline {
+    font-size: clamp(2.5rem, 10vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+}
+
+.hero-subheadline {
+    font-size: 1.25rem;
+    color: var(--muted-color);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.hero-cta {
+    padding: 1.2rem 3.5rem !important;
+    font-size: 1.25rem !important;
+    margin-top: 0 !important;
+}
+
+.philosophy-link {
+    color: var(--muted-color);
+    text-decoration: underline;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.philosophy-link:hover {
+    color: var(--text-main);
 }

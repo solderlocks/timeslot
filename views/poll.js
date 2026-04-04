@@ -88,7 +88,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
         return `
             <form id="availability-form" class="fade-in">
                 <div id="success-receipt-container"></div>
-                <p class="instruction-text">Select the times that conflict with your schedule.</p>
+                <p class="instruction-text">
+                    Select the times that conflict with your schedule.
+                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="What is the Subtractive Method?">?</button>
+                </p>
                 <div class="voter-input-group">
                     <label for="voter-name">Your Name</label>
                     <input type="text" id="voter-name" name="voter_name" 
@@ -200,7 +203,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         <tbody>
                             ${poll.responses.map(res => `
                                 <tr class="matrix-row">
-                                    <td class="sticky-column voter-name-cell"><strong>${res.voter_name}</strong></td>
+                                    <td class="sticky-column voter-name-cell">
+                                        <span class="name-full"><strong>${res.voter_name}</strong></span>
+                                        <span class="name-initial"><strong>${res.voter_name.charAt(0).toUpperCase()}</strong></span>
+                                    </td>
                                     ${poll.options.map(opt => {
                 const vote = res.votes.find(v => v.option_id === opt.id);
                 const status = vote ? vote.status : 1;
@@ -281,10 +287,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 });
             }
 
-            // Initialize icons
             if (window.lucide) {
                 window.lucide.createIcons();
             }
+        }
+
+        const philBtn = container.querySelector('#open-philosophy-btn-poll');
+        if (philBtn) {
+            philBtn.onclick = () => window.openPhilosophyModal();
         }
 
         const toggleBtns = container.querySelectorAll('.mode-toggle button');
