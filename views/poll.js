@@ -39,17 +39,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
     function renderPage() {
         container.innerHTML = `
             <article class="fade-in">
-                <header>
+                <header style="padding: 1rem 0;">
                     <div class="poll-header-row">
                         <div>
-                            <hgroup>
-                                <h2>${poll.title}</h2>
-                                <p>${poll.description || 'No description provided.'}</p>
-                            </hgroup>
+                            <h2 class="poll-title" style="margin: 0; font-size: 1.5rem;">${poll.title}</h2>
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--muted-color); font-style: italic;">${poll.description || 'No description provided.'}</p>
                         </div>
-                        <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                        <div class="header-actions">
                             ${activeEditToken ? `
-                                <button class="outline secondary share-btn" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
+                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
                                     🔗
                                 </button>
                             ` : ''}
@@ -75,7 +73,13 @@ export async function renderPollView(container, pollId, urlEditToken) {
             </article>
 
             <footer class="app-footer fade-in">
-                <span class="footer-theme-toggle">Change Theme</span>
+                <div class="footer-content">
+                    <small>Shared with ❤️ | <a href="https://github.com/solderlocks/timeslot" target="_blank" rel="noopener">Source</a></small>
+                    <span class="footer-separator">•</span>
+                    <span class="footer-theme-toggle" id="theme-toggle">
+                        ${document.documentElement.getAttribute('data-theme') === 'dark' ? '🌙 Dark' : '☀️ Light'}
+                    </span>
+                </div>
             </footer>
         `;
 
@@ -206,7 +210,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
             const isBoundary = isLastInDay(opt.id);
             return `
                                             <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
-                                                <div class="matrix-block" data-status="${status}"></div>
+                                                <div class="matrix-block" data-status="${status}">
+                                                    ${status === 1 ? '✅' : '❌'}
+                                                </div>
                                             </td>
                                         `;
         }).join('')}
@@ -238,7 +244,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
             });
         }
 
-        const themeBtn = container.querySelector('.footer-theme-toggle');
+        const themeBtn = container.querySelector('#theme-toggle');
         if (themeBtn) {
             themeBtn.onclick = () => {
                 const currentTheme = document.documentElement.getAttribute('data-theme');
