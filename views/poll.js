@@ -8,7 +8,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
     // 1. Initial Data Fetch
     container.innerHTML = `<article aria-busy="true"></article>`;
     const poll = await API.getPoll(pollId);
-    
+
     // 2. Check for Edit Context
     const pollsMap = JSON.parse(localStorage.getItem('polls_map') || '{}');
     const storedEditToken = pollsMap[pollId];
@@ -48,16 +48,18 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             </hgroup>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
-                            <button class="outline secondary share-btn" id="theme-toggle-btn" title="Toggle Theme">
-                                ${document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'}
-                            </button>
-                            <button class="outline secondary share-btn" id="share-link-btn">Share Poll</button>
+                            ${activeEditToken ? `
+                                <button class="outline secondary share-btn" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
+                                    🔗
+                                </button>
+                            ` : ''}
+                            <button class="outline secondary share-btn" id="share-link-btn" data-tippy-content="Copy Shareable Poll Link">Share Poll</button>
                         </div>
                     </div>
 
                     <div class="mode-toggle">
                         <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">My Availability</button>
-                        <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Responses</button>
+                        <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Grid</button>
                     </div>
                 </header>
 
@@ -70,17 +72,11 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <div id="view-content">
                     ${currentMode === 'availability' ? renderAvailabilityDashboard() : renderGroupMatrix()}
                 </div>
-
-                ${activeEditToken && !tokenError ? `
-                    <div class="edit-link-footer fade-in">
-                        <p class="edit-link-title"><strong>Want to change your votes later from another device?</strong><br>Save your private edit link below.</p>
-                        <div class="edit-link-copy-group">
-                            <input type="text" readonly value="${window.location.origin}?id=${pollId}&edit=${activeEditToken}" class="no-margin">
-                            <button class="secondary outline share-btn no-margin" id="copy-edit-link-btn">Copy Link</button>
-                        </div>
-                    </div>
-                ` : ''}
             </article>
+
+            <footer class="app-footer fade-in">
+                <span class="footer-theme-toggle">Change Theme</span>
+            </footer>
         `;
 
         attachListeners();
@@ -113,8 +109,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <div class="dashboard-grid">
                     ${Object.entries(dayGroups).map(([dateLabel, options]) => {
-                        const { weekday } = formatDate(options[0].start_time);
-                        return `
+            const { weekday } = formatDate(options[0].start_time);
+            return `
                             <div class="day-card">
                                 <div class="day-header">
                                     <h4>${weekday}</h4>
@@ -122,10 +118,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 </div>
                                 <div class="pill-stack">
                                     ${options.map(opt => {
-                                        const vote = userResponse ? userResponse.votes.find(v => v.option_id === opt.id) : null;
-                                        const status = (vote && vote.status === 0) ? 0 : 1; // Default to 1 (OK)
-                                        const { time } = formatDate(opt.start_time);
-                                        return `
+                const vote = userResponse ? userResponse.votes.find(v => v.option_id === opt.id) : null;
+                const status = (vote && vote.status === 0) ? 0 : 1; // Default to 1 (OK)
+                const { time } = formatDate(opt.start_time);
+                return `
                                             <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
                                                 <input type="hidden" name="pill_${opt.id}" value="${status}">
                                                 <span class="pill-label">${time}</span>
@@ -134,11 +130,11 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                                 </div>
                                             </div>
                                         `;
-                                    }).join('')}
+            }).join('')}
                                 </div>
                             </div>
                         `;
-                    }).join('')}
+        }).join('')}
                 </div>
 
                 <div class="submit-container">
@@ -174,7 +170,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
         return `
             <div class="read-only-matrix fade-in">
-                <p class="timezone-subtitle">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
+                <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
                 <div class="matrix-table-wrapper">
                     <table class="matrix-table">
                         <thead>
@@ -188,16 +184,16 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             </tr>
                             <tr>
                                 ${poll.options.map(opt => {
-                                    const { time } = formatDate(opt.start_time);
-                                    const isBoundary = isLastInDay(opt.id);
-                                    return `
+            const { time } = formatDate(opt.start_time);
+            const isBoundary = isLastInDay(opt.id);
+            return `
                                         <th class="${isBoundary ? 'day-boundary' : ''} time-header">
                                             <div class="header-stack">
                                                 <div class="time">${time}</div>
                                             </div>
                                         </th>
                                     `;
-                                }).join('')}
+        }).join('')}
                             </tr>
                         </thead>
                         <tbody>
@@ -205,15 +201,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 <tr class="matrix-row">
                                     <td class="sticky-column voter-name-cell"><strong>${res.voter_name}</strong></td>
                                     ${poll.options.map(opt => {
-                                        const vote = res.votes.find(v => v.option_id === opt.id);
-                                        const status = vote ? vote.status : 1;
-                                        const isBoundary = isLastInDay(opt.id);
-                                        return `
+            const vote = res.votes.find(v => v.option_id === opt.id);
+            const status = vote ? vote.status : 1;
+            const isBoundary = isLastInDay(opt.id);
+            return `
                                             <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
                                                 <div class="matrix-block" data-status="${status}"></div>
                                             </td>
                                         `;
-                                    }).join('')}
+        }).join('')}
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -221,10 +217,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             <tr>
                                 <td class="sticky-column voter-name-cell"><strong>Scores</strong></td>
                                 ${poll.options.map(opt => {
-                                    const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
-                                    const isBoundary = isLastInDay(opt.id);
-                                    return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
-                                }).join('')}
+            const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
+            const isBoundary = isLastInDay(opt.id);
+            return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
+        }).join('')}
                             </tr>
                         </tfoot>
                     </table>
@@ -234,14 +230,22 @@ export async function renderPollView(container, pollId, urlEditToken) {
     }
 
     function attachListeners() {
-        const themeBtn = container.querySelector('#theme-toggle-btn');
+        // Tooltips
+        if (window.tippy) {
+            window.tippy('[data-tippy-content]', {
+                arrow: true,
+                theme: 'translucent',
+            });
+        }
+
+        const themeBtn = container.querySelector('.footer-theme-toggle');
         if (themeBtn) {
             themeBtn.onclick = () => {
                 const currentTheme = document.documentElement.getAttribute('data-theme');
                 const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
                 document.documentElement.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
-                renderPage(); // Refresh to update icon
+                renderPage();
             };
         }
 
@@ -267,9 +271,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
             copyEditBtn.onclick = () => {
                 const editUrl = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
                 navigator.clipboard.writeText(editUrl);
-                const originalText = copyEditBtn.innerText;
-                copyEditBtn.innerText = 'Copied!';
-                setTimeout(() => copyEditBtn.innerText = originalText, 2000);
+                
+                if (copyEditBtn._tippy) {
+                    copyEditBtn._tippy.setContent('Edit Link Copied!');
+                    copyEditBtn._tippy.show();
+                    setTimeout(() => {
+                        copyEditBtn._tippy.setContent('Copy Private Edit Link');
+                    }, 2000);
+                }
             };
         }
 
@@ -335,7 +344,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
         pill.dataset.status = status;
         input.value = status;
-        
+
         if (status === 1) {
             iconContainer.innerHTML = '<span class="chk-icon-outline">○</span>';
         } else {
