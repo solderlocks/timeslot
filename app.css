@@ -1,71 +1,80 @@
 /* Global Variables */
 :root {
-  --border-radius: 12px;
-  --primary-color: #1a1d23; /* Charcoal */
-  --primary-hover: #000000;
-  --conflict-red: #ef4444;
-  --font-serif: "Playfair Display", serif;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+    --border-radius: 12px;
+    --primary-color: #1a1d23;
+    /* Charcoal */
+    --primary-hover: #000000;
+    --conflict-red: #ef4444;
+    --font-serif: "Playfair Display", serif;
+    --font-sans: "Inter", system-ui, -apple-system, sans-serif;
 }
 
 /* Light Mode: Warm Glass */
 [data-theme="light"] {
-  --bg-color: #f4f3f1;
-  --matrix-bg: rgba(255, 255, 255, 0.85);
-  --text-main: #1a1d23; /* Off-black */
-  --muted-color: #64748b;
-  --muted-border-color: rgba(0, 0, 0, 0.08);
-  --highlight-color: rgba(0, 0, 0, 0.05);
-  --conflict-bg: #fef2f2;
-  --conflict-text: #991b1b;
-  --tab-active-bg: #1a1d23;
-  --tab-active-text: #ffffff;
+    --bg-color: #f4f3f1;
+    --matrix-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #1a1d23;
+    /* Off-black */
+    --muted-color: #64748b;
+    --muted-border-color: rgba(0, 0, 0, 0.08);
+    --highlight-color: rgba(0, 0, 0, 0.05);
+    --conflict-bg: #fef2f2;
+    --conflict-text: #991b1b;
+    --tab-active-bg: #1a1d23;
+    --tab-active-text: #ffffff;
 }
 
 /* Dark Mode: High Contrast Slate */
 [data-theme="dark"] {
-  --bg-color: #0c0e12;
-  --matrix-bg: #1a1d23;
-  --text-main: #f8fafc;
-  --muted-color: #94a3b8;
-  --muted-border-color: rgba(255, 255, 255, 0.08);
-  --highlight-color: rgba(255, 255, 255, 0.1);
-  --conflict-bg: rgba(239, 68, 68, 0.2);
-  --conflict-text: #fca5a5;
-  --tab-active-bg: #f8fafc;
-  --tab-active-text: #1a1d23;
+    --bg-color: #0c0e12;
+    --matrix-bg: #1a1d23;
+    --text-main: #f8fafc;
+    --muted-color: #94a3b8;
+    --muted-border-color: rgba(255, 255, 255, 0.08);
+    --highlight-color: rgba(255, 255, 255, 0.1);
+    --conflict-bg: rgba(239, 68, 68, 0.2);
+    --conflict-text: #fca5a5;
+    --tab-active-bg: #f8fafc;
+    --tab-active-text: #1a1d23;
 }
 
 /* Force Light Theme */
 body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  transition: background-color 0.3s ease;
-  margin: 0;
-  padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease;
+    margin: 0;
+    padding: 0;
 }
 
-h1, .poll-title {
+h1,
+.poll-title {
     font-family: var(--font-serif);
     font-weight: 700;
     color: var(--text-main);
+    margin-bottom: 1rem;
 }
 
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-main);
     font-weight: 600;
     letter-spacing: -0.01em;
 }
 
-article, .day-card {
+article,
+.day-card {
     background-color: var(--matrix-bg) !important;
     color: var(--text-main) !important;
     border: 1px solid var(--muted-border-color) !important;
 }
 
-[data-theme="light"] article, 
+[data-theme="light"] article,
 [data-theme="light"] .day-card {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -83,7 +92,8 @@ article, .day-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem; /* Tighter */
+    margin-bottom: 1rem;
+    /* Tighter */
 }
 
 .new-poll-btn {
@@ -117,6 +127,7 @@ article, .day-card {
         max-width: 100%;
         width: 100%;
     }
+
     .save-btn {
         width: 100% !important;
     }
@@ -132,30 +143,30 @@ article, .day-card {
 .save-btn {
     width: auto !important;
     padding: 0.6rem 2.5rem !important;
-    border-radius: 10px !important; /* Match tabs */
+    border-radius: 10px !important;
+    /* Match tabs */
     font-weight: 700 !important;
     background-color: var(--tab-active-bg) !important;
     color: var(--tab-active-text) !important;
     border: none !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s !important;
     margin-top: 2rem;
 }
 
 .save-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Dual-Mode Toggle (Segmented Control) */
 .mode-toggle {
     display: flex;
-    background: rgba(0, 0, 0, 0.05); /* Subtle background */
+    background: rgba(0, 0, 0, 0.05);
+    /* Subtle background */
     padding: 0.25rem;
     border-radius: 12px;
-    margin-bottom: 2rem;
     width: fit-content;
-    margin-left: auto;
     margin-right: auto;
     border: 1px solid var(--muted-border-color);
 }
@@ -189,6 +200,7 @@ article, .day-card {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.75rem;
 }
+
 @media (max-width: 600px) {
     .dashboard-grid {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -230,7 +242,8 @@ article, .day-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.6rem 0.8rem; /* Tighter */
+    padding: 0.6rem 0.8rem;
+    /* Tighter */
     background: var(--matrix-bg);
     border: 1px solid var(--muted-border-color);
     border-radius: var(--border-radius);
@@ -288,7 +301,7 @@ article, .day-card {
     font-size: 0.875rem;
 }
 
-.matrix-table th, 
+.matrix-table th,
 .matrix-table td {
     padding: 0.75rem;
     text-align: center;
@@ -298,7 +311,7 @@ article, .day-card {
     min-width: 100px;
 }
 
-.matrix-table th:last-child, 
+.matrix-table th:last-child,
 .matrix-table td:last-child {
     border-right: none;
 }
@@ -351,7 +364,8 @@ article, .day-card {
 .matrix-block[data-status="1"] {
     background-color: var(--highlight-color);
     color: var(--text-main);
-    opacity: 0.4; /* Soften the sea of checks */
+    opacity: 0.4;
+    /* Soften the sea of checks */
 }
 
 /* Optimal Indicators */
@@ -398,7 +412,7 @@ article, .day-card {
     padding: 1.5rem;
     border-radius: 12px;
     margin-bottom: 2rem;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .success-receipt h3 {
