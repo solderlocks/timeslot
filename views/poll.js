@@ -40,14 +40,19 @@ export async function renderPollView(container, pollId, urlEditToken) {
         container.innerHTML = `
             <article class="fade-in">
                 <header>
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <div class="poll-header-row">
                         <div>
                             <hgroup>
                                 <h2>${poll.title}</h2>
                                 <p>${poll.description || 'No description provided.'}</p>
                             </hgroup>
                         </div>
-                        <button class="outline secondary" id="share-link-btn" style="width: auto;">Share Poll</button>
+                        <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                            <button class="outline secondary share-btn" id="theme-toggle-btn" title="Toggle Theme">
+                                ${document.documentElement.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'}
+                            </button>
+                            <button class="outline secondary share-btn" id="share-link-btn">Share Poll</button>
+                        </div>
                     </div>
 
                     <div class="mode-toggle">
@@ -68,10 +73,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 ${activeEditToken && !tokenError ? `
                     <div class="edit-link-footer fade-in">
-                        <p style="margin-bottom: 0.75rem;"><strong>Want to change your votes later from another device?</strong><br>Save your private edit link below.</p>
-                        <div style="display: flex; gap: 0.5rem; max-width: 500px; margin: 0 auto;">
-                            <input type="text" readonly value="${window.location.origin}?id=${pollId}&edit=${activeEditToken}" style="margin-bottom: 0;">
-                            <button class="secondary outline" id="copy-edit-link-btn" style="width: auto; margin-bottom: 0;">Copy Link</button>
+                        <p class="edit-link-title"><strong>Want to change your votes later from another device?</strong><br>Save your private edit link below.</p>
+                        <div class="edit-link-copy-group">
+                            <input type="text" readonly value="${window.location.origin}?id=${pollId}&edit=${activeEditToken}" class="no-margin">
+                            <button class="secondary outline share-btn no-margin" id="copy-edit-link-btn">Copy Link</button>
                         </div>
                     </div>
                 ` : ''}
@@ -96,13 +101,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
             <form id="availability-form" class="fade-in">
                 <div id="success-receipt-container"></div>
 
-                <div style="margin-bottom: 2rem;">
+                <div class="voter-input-group">
                     <label for="voter-name">Your Name</label>
                     <input type="text" id="voter-name" name="voter_name" 
                            value="${voterName}" 
                            placeholder="Enter your name" required 
-                           style="max-width: 400px;">
+                           class="voter-name-input">
                 </div>
+
+                <p class="instruction-text">Select the times that conflict with your schedule.</p>
 
                 <div class="dashboard-grid">
                     ${Object.entries(dayGroups).map(([dateLabel, options]) => {
@@ -123,7 +130,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                                 <input type="hidden" name="pill_${opt.id}" value="${status}">
                                                 <span class="pill-label">${time}</span>
                                                 <div class="pill-icon">
-                                                    ${status === 1 ? '<span class="chk-icon">☑</span>' : '<span class="veto-icon">❌</span>'}
+                                                    ${status === 1 ? '<span class="chk-icon-outline">○</span>' : '<span class="veto-icon">❌</span>'}
                                                 </div>
                                             </div>
                                         `;
@@ -134,8 +141,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     }).join('')}
                 </div>
 
-                <div style="display: flex; justify-content: center; margin-top: 2rem;">
-                    <button type="submit" id="submit-vote-btn" class="primary" style="width: auto; padding: 0.8rem 2.5rem;">
+                <div class="submit-container">
+                    <button type="submit" id="submit-vote-btn" class="primary save-btn">
                         ${userResponse ? 'Update Response' : 'Save Response'}
                     </button>
                 </div>
@@ -172,7 +179,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <table class="matrix-table">
                         <thead>
                             <tr>
-                                <th rowspan="2" class="sticky-column" style="text-align: left; min-width: 150px; vertical-align: middle; border-bottom: 2px solid var(--muted-border-color);">Participants</th>
+                                <th rowspan="2" class="sticky-column participants-header">Participants</th>
                                 ${dayGroups.map(group => `
                                     <th colspan="${group.options.length}" class="day-group-header ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
                                         ${group.label}
@@ -182,12 +189,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             <tr>
                                 ${poll.options.map(opt => {
                                     const { time } = formatDate(opt.start_time);
-                                    const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
                                     const isBoundary = isLastInDay(opt.id);
                                     return `
-                                        <th class="${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''} time-header">
+                                        <th class="${isBoundary ? 'day-boundary' : ''} time-header">
                                             <div class="header-stack">
-                                                ${isOptimal ? '<span class="optimal-header-badge">⭐ Best</span>' : ''}
                                                 <div class="time">${time}</div>
                                             </div>
                                         </th>
@@ -197,21 +202,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         </thead>
                         <tbody>
                             ${poll.responses.map(res => `
-                                <tr>
-                                    <td class="sticky-column" style="text-align: left;"><strong>${res.voter_name}</strong></td>
+                                <tr class="matrix-row">
+                                    <td class="sticky-column voter-name-cell"><strong>${res.voter_name}</strong></td>
                                     ${poll.options.map(opt => {
                                         const vote = res.votes.find(v => v.option_id === opt.id);
                                         const status = vote ? vote.status : 1;
-                                        const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
                                         const isBoundary = isLastInDay(opt.id);
-                                        
-                                        let icon = '';
-                                        if (status === 0) icon = '❌';
-                                        else icon = '<span class="muted-dash">➖</span>';
-
                                         return `
-                                            <td class="matrix-cell status-${status} ${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''}">
-                                                <div class="matrix-icon">${icon}</div>
+                                            <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
+                                                <div class="matrix-block" data-status="${status}"></div>
                                             </td>
                                         `;
                                     }).join('')}
@@ -220,12 +219,11 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td class="sticky-column" style="text-align: left;"><strong>Scores</strong></td>
+                                <td class="sticky-column voter-name-cell"><strong>Scores</strong></td>
                                 ${poll.options.map(opt => {
                                     const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
-                                    const isOptimal = poll.metadata?.optimal_option_ids?.includes(opt.id);
                                     const isBoundary = isLastInDay(opt.id);
-                                    return `<td class="${isOptimal ? 'optimal-column' : ''} ${isBoundary ? 'day-boundary' : ''}"><strong>${rank ? rank.score : 0}</strong></td>`;
+                                    return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
                                 }).join('')}
                             </tr>
                         </tfoot>
@@ -236,6 +234,17 @@ export async function renderPollView(container, pollId, urlEditToken) {
     }
 
     function attachListeners() {
+        const themeBtn = container.querySelector('#theme-toggle-btn');
+        if (themeBtn) {
+            themeBtn.onclick = () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                renderPage(); // Refresh to update icon
+            };
+        }
+
         const toggleBtns = container.querySelectorAll('.mode-toggle button');
         toggleBtns.forEach(btn => {
             btn.onclick = () => {
@@ -328,7 +337,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         input.value = status;
         
         if (status === 1) {
-            iconContainer.innerHTML = '<span class="chk-icon">☑</span>';
+            iconContainer.innerHTML = '<span class="chk-icon-outline">○</span>';
         } else {
             iconContainer.innerHTML = '<span class="veto-icon">❌</span>';
         }
