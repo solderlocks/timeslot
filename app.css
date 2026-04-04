@@ -201,6 +201,11 @@ a.button.primary:hover,
     a.button.primary {
         width: 100% !important;
     }
+
+    .success-link-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 /* Dual-Mode Toggle (Segmented Control) */
@@ -511,7 +516,7 @@ a.button.primary:hover,
 }
 
 .footer-separator {
-    color: var(--muted-border-color);
+    color: var(--primary-color);
 }
 
 .footer-theme-toggle {
@@ -590,6 +595,7 @@ a.button.primary:hover,
     opacity: 0.6;
     transition: opacity 0.2s;
     box-shadow: none !important;
+    margin-top: 0.25rem;
 }
 
 .embedded-icon-btn:hover {
@@ -634,4 +640,5 @@ a.button.primary:hover,
 .success-view-poll-btn {
     margin-bottom: 0 !important;
     flex: 0 0 auto !important;
+    margin-top: 0;
 }

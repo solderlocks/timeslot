@@ -115,7 +115,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                     ${options.map(opt => {
                 const votes = userResponse && userResponse.votes ? userResponse.votes : [];
                 const vote = votes.find(v => v.option_id === opt.id);
-                const status = (vote && vote.status === 0) ? 0 : 1; 
+                const status = (vote && vote.status === 0) ? 0 : 1;
                 const { time } = formatDate(opt.start_time);
                 return `
                                             <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
@@ -186,16 +186,16 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             </tr>
                             <tr>
                                 ${poll.options.map(opt => {
-            const { time } = formatDate(opt.start_time);
-            const isBoundary = isLastInDay(opt.id);
-            return `
+                const { time } = formatDate(opt.start_time);
+                const isBoundary = isLastInDay(opt.id);
+                return `
                                         <th class="${isBoundary ? 'day-boundary' : ''} time-header">
                                             <div class="header-stack">
                                                 <div class="time">${time}</div>
                                             </div>
                                         </th>
                                     `;
-        }).join('')}
+            }).join('')}
                             </tr>
                         </thead>
                         <tbody>
@@ -203,17 +203,17 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 <tr class="matrix-row">
                                     <td class="sticky-column voter-name-cell"><strong>${res.voter_name}</strong></td>
                                     ${poll.options.map(opt => {
-            const vote = res.votes.find(v => v.option_id === opt.id);
-            const status = vote ? vote.status : 1;
-            const isBoundary = isLastInDay(opt.id);
-            return `
+                const vote = res.votes.find(v => v.option_id === opt.id);
+                const status = vote ? vote.status : 1;
+                const isBoundary = isLastInDay(opt.id);
+                return `
                                             <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
                                                 <div class="matrix-block" data-status="${status}">
                                                     ${status === 0 ? '❌' : ''}
                                                 </div>
                                             </td>
                                         `;
-        }).join('')}
+            }).join('')}
                                 </tr>
                             `).join('')}
                         </tbody>
@@ -221,10 +221,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             <tr>
                                 <td class="sticky-column voter-name-cell"><strong>Scores</strong></td>
                                 ${poll.options.map(opt => {
-            const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
-            const isBoundary = isLastInDay(opt.id);
-            return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
-        }).join('')}
+                const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
+                const isBoundary = isLastInDay(opt.id);
+                return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
+            }).join('')}
                             </tr>
                         </tfoot>
                     </table>
@@ -273,7 +273,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
             copyEditBtn.onclick = () => {
                 const editUrl = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
                 navigator.clipboard.writeText(editUrl);
-                
+
                 if (copyEditBtn._tippy) {
                     copyEditBtn._tippy.setContent('Edit Link Copied!');
                     copyEditBtn._tippy.show();
@@ -325,8 +325,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     Object.assign(poll, updatedPoll);
 
                     // Update userResponse from the fresh, confirmed server data
-                    userResponse = poll.responses.find(r => r.edit_token === activeEditToken) || 
-                                   poll.responses.find(r => r.voter_name === voterName);
+                    userResponse = poll.responses.find(r => r.edit_token === activeEditToken) ||
+                        poll.responses.find(r => r.voter_name === voterName);
 
                     // Transition to Group mode
                     currentMode = 'group';

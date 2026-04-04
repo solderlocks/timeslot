@@ -8,8 +8,12 @@ export async function renderSuccessView(container, pollId) {
     container.innerHTML = `
         <article class="fade-in">
             <header>
-                <h2 class="text-green-600">Poll Created!</h2>
-                <p>Your stateless poll is live. Shared with your group to start collecting responses.</p>
+                <div class="poll-header-row">
+                    <div>
+                        <h2 class="poll-title poll-title-compact">Poll Created!</h2>
+                        <p class="poll-description-muted">Your stateless poll is live. Shared with your group to start collecting responses.</p>
+                    </div>
+                </div>
             </header>
             
             <section>
