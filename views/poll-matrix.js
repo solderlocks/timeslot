@@ -113,9 +113,27 @@ export function renderGroupMatrix(poll) {
             </tr>`;
     }).join('');
 
+    // Build minimap (mobile bird's-eye view)
+    const minimapRowLabels = poll.responses.map(res =>
+        `<div class="minimap-row-label">${res.voter_name.charAt(0).toUpperCase()}</div>`
+    ).join('');
+
+    const minimapCols = poll.options.map((opt, colIdx) => {
+        const cells = poll.responses.map(res => {
+            const vote = res.votes.find(v => v.option_id === opt.id);
+            const status = vote ? vote.status : 1;
+            return `<div class="minimap-cell" data-status="${status}"></div>`;
+        }).join('');
+        return `<div class="minimap-col" data-col-index="${colIdx}">${cells}</div>`;
+    }).join('');
+
     return `
         <div class="read-only-matrix fade-in">
             <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
+            <div class="matrix-minimap">
+                <div class="minimap-row-labels">${minimapRowLabels}</div>
+                <div class="minimap-cols">${minimapCols}</div>
+            </div>
             <div class="matrix-table-wrapper">
                 <table class="matrix-table">
                     <thead>

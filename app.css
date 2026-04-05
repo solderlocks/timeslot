@@ -501,6 +501,90 @@ button.margin-0 {
     align-items: center;
 }
 
+/* Matrix Minimap (mobile bird's-eye navigator) */
+.matrix-minimap {
+    display: none;
+    /* desktop: hidden, table is fully visible */
+}
+
+@media (max-width: 600px) {
+    .matrix-minimap {
+        display: flex;
+        gap: 6px;
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background: var(--matrix-bg);
+        border: 1px solid var(--muted-border-color);
+        border-radius: 8px;
+        align-items: stretch;
+        display: none;
+    }
+
+    .minimap-row-labels {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        flex-shrink: 0;
+        padding: 2px 0;
+    }
+
+    .minimap-row-label {
+        height: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 6px;
+        color: var(--muted-color);
+        text-align: right;
+        letter-spacing: 0;
+        user-select: none;
+    }
+
+    .minimap-cols {
+        display: flex;
+        flex: 1;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    .minimap-col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        cursor: pointer;
+        border-radius: 3px;
+        padding: 2px;
+        transition: background 0.15s, transform 0.1s;
+    }
+
+    .minimap-col:hover {
+        background: var(--highlight-color);
+    }
+
+    .minimap-col.active {
+        background: var(--highlight-color);
+        transform: scaleY(1.08);
+    }
+
+    .minimap-cell {
+        height: 6px;
+        border-radius: 1px;
+        width: 100%;
+    }
+
+    .minimap-cell[data-status="0"] {
+        background: var(--conflict-red);
+        opacity: 0.85;
+    }
+
+    .minimap-cell[data-status="1"] {
+        background: var(--muted-border-color);
+        opacity: 0.5;
+    }
+}
+
 /* Matrix (Group View) */
 .matrix-table-wrapper {
     overflow-x: auto;
@@ -529,7 +613,8 @@ button.margin-0 {
     border-bottom: 1px solid var(--muted-border-color);
 }
 
-.striped-day {
+/* 0,2,0 beats .matrix-table td's 0,1,1 — no !important needed */
+.matrix-table .striped-day {
     background-color: var(--striped-day-bg);
 }
 

@@ -91,6 +91,31 @@ export async function renderPollView(container, pollId, urlEditToken) {
             };
         });
 
+        // Minimap scroll-sync (mobile)
+        const minimapCols = container.querySelectorAll('.minimap-cols .minimap-col');
+        if (minimapCols.length) {
+            const wrapper = container.querySelector('.matrix-table-wrapper');
+            // Time headers are in thead's second row (no sticky col in that row)
+            const timeHeaders = container.querySelectorAll('.matrix-table thead tr:last-child th');
+
+            minimapCols.forEach(col => {
+                col.onclick = () => {
+                    const idx = parseInt(col.dataset.colIndex, 10);
+                    const th = timeHeaders[idx];
+                    if (!wrapper || !th) return;
+
+                    // Scroll so the target column is centered in the wrapper
+                    const targetLeft = th.offsetLeft - (wrapper.clientWidth / 2) + (th.offsetWidth / 2);
+                    wrapper.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+
+                    // Brief active flash on the tapped column
+                    minimapCols.forEach(c => c.classList.remove('active'));
+                    col.classList.add('active');
+                    setTimeout(() => col.classList.remove('active'), 600);
+                };
+            });
+        }
+
         // Tooltips
         if (window.tippy) {
             const shareBtnEl = container.querySelector('#share-link-btn');
