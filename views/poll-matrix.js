@@ -130,10 +130,6 @@ export function renderGroupMatrix(poll) {
     return `
         <div class="read-only-matrix fade-in">
             <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
-            <div class="matrix-minimap">
-                <div class="minimap-row-labels">${minimapRowLabels}</div>
-                <div class="minimap-cols">${minimapCols}</div>
-            </div>
             <div class="matrix-table-wrapper">
                 <table class="matrix-table">
                     <thead>
@@ -146,5 +142,18 @@ export function renderGroupMatrix(poll) {
                     <tbody>${responseRows}</tbody>
                 </table>
             </div>
+            <details class="matrix-minimap-container">
+                <summary class="minimap-summary">
+                    <span class="summary-content">
+                        Compact Overview 
+                        <i data-lucide="chevron-up" class="icon-up"></i>
+                        <i data-lucide="chevron-down" class="icon-down"></i>
+                    </span>
+                </summary>
+                <div class="matrix-minimap">
+                    <div class="minimap-row-labels">${minimapRowLabels}</div>
+                    <div class="minimap-cols">${minimapCols}</div>
+                </div>
+            </details>
         </div>`;
 }

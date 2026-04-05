@@ -520,6 +520,11 @@ button.margin-0 {
     /* desktop: hidden, table is fully visible */
 }
 
+.matrix-minimap-container {
+    display: none;
+}
+
+
 @media (max-width: 600px) {
     .matrix-minimap {
         display: flex;
@@ -527,12 +532,78 @@ button.margin-0 {
         width: 100%;
         overflow: hidden;
         margin-bottom: 1rem;
-        padding: 0.5rem;
         background: var(--matrix-bg);
-        border: 1px solid var(--muted-border-color);
         border-radius: 8px;
         align-items: stretch;
+    }
+
+    /* 0,2,0 beats .matrix-minimap-container's 0,1,0 */
+    .matrix-minimap-container {
+        display: block;
+        margin-top: 1.5rem;
+        background: transparent;
+        border: none;
+        padding: 0;
+    }
+
+    .matrix-minimap-container summary.minimap-summary {
+        display: block; /* Hard reset from flex/pico */
+        list-style: none !important;
+        appearance: none !important;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 0.5rem;
+        user-select: none;
+        background: none !important;
+    }
+
+    /* Total blackout of all native/pico markers and icons */
+    .matrix-minimap-container summary::-webkit-details-marker,
+    .matrix-minimap-container summary::marker,
+    .matrix-minimap-container summary::before,
+    .matrix-minimap-container summary::after {
+        display: none !important;
+        content: none !important;
+        background: none !important;
+    }
+
+    .matrix-minimap-container .summary-content {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--pico-color);
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: color 0.1s ease;
+    }
+
+    .matrix-minimap-container summary:hover .summary-content,
+    .matrix-minimap-container[open] .summary-content {
+        color: var(--pico-h2-color);
+    }
+
+    /* Style the Lucide icons */
+    .matrix-minimap-container .summary-content i {
+        width: 16px;
+        height: 16px;
+        opacity: 0.8;
+    }
+
+    /* Chevron Logic: Up when closed, Down when open */
+    .matrix-minimap-container .icon-down {
         display: none;
+    }
+
+    .matrix-minimap-container[open] .icon-up {
+        display: none;
+    }
+
+    .matrix-minimap-container[open] .icon-down {
+        display: inline-block;
+    }
+
+    .matrix-minimap-container .matrix-minimap {
+        padding: 0.5rem 0 0 0;
     }
 
     .minimap-row-labels {
@@ -544,10 +615,10 @@ button.margin-0 {
     }
 
     .minimap-row-label {
-        height: 6px;
+        height: 12px;
         font-size: 12px;
         font-weight: 700;
-        line-height: 6px;
+        line-height: 12px;
         color: var(--muted-color);
         text-align: right;
         letter-spacing: 0;
@@ -582,7 +653,7 @@ button.margin-0 {
     }
 
     .minimap-cell {
-        height: 6px;
+        height: 12px;
         border-radius: 1px;
         width: 100%;
     }
