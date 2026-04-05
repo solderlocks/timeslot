@@ -34,30 +34,36 @@ export async function renderSuccessView(container, pollId) {
     `;
 
     /**
-     * Clipboard API Utility with Tippy Feedback.
+     * Clipboard API Utility with Tippy Feedback on the URL Input.
      */
     const copyBtn = container.querySelector('#copy-poll-btn');
+    const pollUrlDisplay = container.querySelector('#poll-url-display');
+
     if (window.tippy) {
+        // Main feedback tooltip on input
+        window.tippy(pollUrlDisplay, {
+            content: 'Copied!',
+            trigger: 'manual',
+            placement: 'top',
+            onShow(instance) {
+                setTimeout(() => {
+                    instance.hide();
+                }, 2000);
+            }
+        });
+
+        // Hover tooltip on button
         window.tippy(copyBtn, {
             content: 'Copy Link',
-            hideOnClick: false,
-            onShow(instance) {
-                if (instance.props.content === 'Copied!') {
-                    setTimeout(() => {
-                        instance.hide();
-                        setTimeout(() => instance.setContent('Copy Link'), 500);
-                    }, 2000);
-                }
-            }
+            placement: 'top'
         });
     }
 
     copyBtn.onclick = async () => {
         try {
             await navigator.clipboard.writeText(participantUrl);
-            if (copyBtn._tippy) {
-                copyBtn._tippy.setContent('Copied!');
-                copyBtn._tippy.show();
+            if (pollUrlDisplay._tippy) {
+                pollUrlDisplay._tippy.show();
             }
         } catch (err) {
             console.error('Failed to copy', err);

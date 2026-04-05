@@ -54,6 +54,12 @@ body {
     padding: 0;
 }
 
+input[type="text"],
+input[type="datetime-local"],
+textarea {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
 label,
 fieldset>legend {
     font-weight: bold;
@@ -753,6 +759,12 @@ th.time-header {
     flex-wrap: nowrap !important;
 }
 
+@media (max-width: 600px) {
+    .slot-row {
+        gap: 0 !important;
+    }
+}
+
 .slot-row input {
     flex: 1 !important;
     margin-bottom: 0 !important;
@@ -1030,6 +1042,12 @@ th.time-header {
 .philosophy-link:hover {
     color: var(--text-main);
 }
+
+dialog article>header .close,
+dialog article>header :is(a, button)[rel=prev] {
+    margin-top: 0.5rem;
+}
+
 .modal-footer {
     display: flex;
     align-items: center;
@@ -1040,11 +1058,8 @@ th.time-header {
 }
 
 .github-modal-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
     color: var(--muted-color);
-    text-decoration: none;
+    text-decoration: underline;
     font-size: 0.9rem;
     transition: color 0.2s;
 }
