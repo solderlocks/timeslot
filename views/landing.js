@@ -6,15 +6,15 @@ export function renderLandingView(container) {
     container.innerHTML = `
         <article class="fade-in landing-hero">
             <div class="hero-content">
-                <h1 class="hero-headline">Scheduling without the survey.</h1>
+                <h1 class="hero-headline">Subtractive group scheduling. 🐝</h1>
                 <p class="hero-subheadline">
-                    Timeslot is a stateless, subtractive scheduling tool. No accounts, no preferred times, just finding the gaps.
+                    Open-source utility for group scheduling. Mark schedule conflicts, find the viable gaps, and skip the negotiation. No accounts required.
                 </p>
                 
                 <div class="hero-actions">
-                    <a href="/create" class="button primary hero-cta" data-link>Get Started</a>
+                    <a href="/create" class="button primary hero-cta" data-link>Create a Poll</a>
                     <a href="#" id="open-philosophy-link" class="philosophy-link">
-                        Read the Philosophy
+                        How it works
                     </a>
                 </div>
             </div>

@@ -90,7 +90,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <div id="success-receipt-container"></div>
                 <p class="instruction-text">
                     Select the times that conflict with your schedule.
-                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="What is the Subtractive Method?">?</button>
+                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="Subtractive Scheduling">?</button>
                 </p>
                 <div class="voter-input-group">
                     <label for="voter-name">Your Name</label>
@@ -133,12 +133,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <hr>
 
-                <div class="sticky-cta-wrapper">
-                    <div class="submit-container">
-                        <button type="submit" id="submit-vote-btn" class="primary save-btn">
-                            ${userResponse ? 'Update Response' : 'Save Response'}
-                        </button>
-                    </div>
+                <div class="submit-container">
+                    <button type="submit" id="submit-vote-btn" class="primary save-btn">
+                        ${userResponse ? 'Update Response' : 'Save Response'}
+                    </button>
                 </div>
             </form>
         `;
