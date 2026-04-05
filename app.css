@@ -535,6 +535,7 @@ button.margin-0 {
         background: var(--matrix-bg);
         border-radius: 8px;
         align-items: stretch;
+        display: none;
     }
 
     /* 0,2,0 beats .matrix-minimap-container's 0,1,0 */
@@ -547,7 +548,8 @@ button.margin-0 {
     }
 
     .matrix-minimap-container summary.minimap-summary {
-        display: block; /* Hard reset from flex/pico */
+        display: block;
+        /* Hard reset from flex/pico */
         list-style: none !important;
         appearance: none !important;
         cursor: pointer;
