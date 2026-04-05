@@ -196,6 +196,9 @@ input.voter-name-input {
     height: 48px;
 }
 
+.matrix-table td.voter-name-cell {
+    text-align: right;
+}
 
 .instruction-text {
     color: var(--muted-color);
@@ -661,9 +664,11 @@ button.margin-0 {
     background: #ffffff;
 }
 
-.participants-header {
+th.participants-header {
     vertical-align: middle;
     border-bottom: 1px solid var(--muted-border-color);
+    vertical-align: bottom;
+    padding-bottom: 0.5rem;
 }
 
 
@@ -729,7 +734,7 @@ button.margin-0 {
 }
 
 .time-header .time {
-    font-size: 0.75rem;
+    font-size: 0.70rem;
     font-weight: 500;
     color: var(--muted-color);
 }
@@ -745,6 +750,11 @@ button.margin-0 {
     color: var(--text-main);
     border-bottom: 0;
     line-height: 1.2;
+}
+
+th.day-group-header {
+    padding-top: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .matrix-controls {
