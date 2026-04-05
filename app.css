@@ -517,7 +517,7 @@ a.button.primary:hover,
     content: "✓";
     font-size: 1.0rem;
     color: var(--muted-color);
-    font-weight: 500;
+    font-weight: 700;
 }
 
 /* Optimal Indicators */
