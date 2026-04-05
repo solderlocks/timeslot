@@ -23,7 +23,7 @@
     --conflict-text: #991b1b;
     --tab-active-bg: #1a1d23;
     --tab-active-text: #ffffff;
-    --striped-day-bg: #f9f9f9;
+    --striped-day-bg: #f7f7f7;
 }
 
 /* Dark Mode: High Contrast Slate */
@@ -484,7 +484,8 @@ a.button.outline:hover {
 
 .matrix-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 0.875rem;
 }
 
@@ -511,11 +512,7 @@ a.button.outline:hover {
 
 .matrix-table .sticky-column {
     border-right: 1px solid var(--muted-border-color) !important;
-}
-
-.matrix-table th,
-.matrix-table td {
-    border: none;
+    box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.10) !important;
 }
 
 /* Sticky Columns */
@@ -563,9 +560,6 @@ a.button.outline:hover {
     border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
-.voter-name-cell {
-    border-right: 2px solid var(--muted-border-color) !important;
-}
 
 /* Matrix Abstract Cells */
 .matrix-cell {
@@ -642,6 +636,7 @@ th.time-header {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-main);
+    border-bottom: 0;
 }
 
 .matrix-controls {
