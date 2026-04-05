@@ -187,7 +187,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <table class="matrix-table">
                         <thead>
                             <tr>
-                                <th rowspan="2" class="sticky-column participants-header">Participants</th>
+                                <th rowspan="2" class="sticky-column participants-header">Respondents</th>
                                 ${dayGroups.map((group, groupIdx) => `
                                     <th colspan="${group.options.length}" class="day-group-header ${groupIdx % 2 === 0 ? 'striped-day' : ''} ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
                                         ${group.label}

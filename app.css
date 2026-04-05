@@ -576,7 +576,7 @@ a.button.outline:hover {
 
 .matrix-block {
     margin: 0 auto;
-    width: 32px;
+    /* width: 32px; */
     height: 32px;
     border-radius: 4px;
     display: flex;
@@ -584,11 +584,14 @@ a.button.outline:hover {
     justify-content: center;
     font-size: 0.8rem;
     transition: all 0.2s;
+    margin: 0.5rem;
 }
 
 .matrix-block[data-status="0"] {
     background-color: var(--conflict-bg);
+    border-color: var(--conflict-red);
     color: var(--conflict-text);
+    border: 1px solid var(--conflict-red);
 }
 
 .matrix-block[data-status="1"] {
