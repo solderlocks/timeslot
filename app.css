@@ -108,7 +108,7 @@ article,
 }
 
 [data-theme="light"] .day-card {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 article,
@@ -127,7 +127,6 @@ nav ul:last-of-type {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
 }
 
 [data-theme="dark"] article,
@@ -426,6 +425,7 @@ button.margin-0 {
 .day-card {
     border-radius: var(--pico-border-radius);
     padding: 1.0rem;
+    max-width: 400px;
 }
 
 .day-header {
