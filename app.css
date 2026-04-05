@@ -192,7 +192,7 @@ a:hover {
 
 /* Raise specificity over Pico's input rule */
 input.voter-name-input {
-    max-width: 400px;
+    max-width: 500px;
     height: 48px;
 }
 
@@ -435,7 +435,7 @@ button.margin-0 {
 .day-card {
     border-radius: var(--pico-border-radius);
     padding: 1.0rem;
-    max-width: 400px;
+    max-width: 500px;
 }
 
 .day-header {
