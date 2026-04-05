@@ -776,15 +776,15 @@ th.participants-header {
 
 .matrix-block[data-status="1"] {
     /* background-color: var(--highlight-color); */
-    background-color: rgba(0, 255, 0, 0.10);
+    /* background-color: rgba(0, 255, 0, 0.10); */
     opacity: 1;
-    border: 1px solid rgba(0, 100, 0, 0.5);
+    /* border: 1px solid rgba(0, 100, 0, 0.5); */
 }
 
 .matrix-block[data-status="1"]::after {
     content: "✓";
     font-size: 1.0rem;
-    color: rgba(0, 50, 0, 0.7);
+    color: rgba(0, 120, 0, 0.7);
     font-weight: 700;
 }
 
