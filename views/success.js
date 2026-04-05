@@ -52,10 +52,6 @@ export async function renderSuccessView(container, pollId) {
             }
         });
 
-        // Hover tooltip on button
-        window.tippy(copyBtn, {
-            placement: 'top'
-        });
     }
 
     copyBtn.onclick = async () => {
