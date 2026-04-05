@@ -376,6 +376,7 @@ a.button.outline:hover {
     cursor: pointer;
     transition: all 0.2s ease;
     margin-bottom: 0;
+    color: var(--muted-color);
 }
 
 .mode-toggle button:hover:not([data-active="true"]) {
@@ -658,10 +659,10 @@ th.time-header {
 .day-group-header {
     font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0;
     color: var(--text-main);
     border-bottom: 0;
+    line-height: 1.2;
 }
 
 .matrix-controls {
