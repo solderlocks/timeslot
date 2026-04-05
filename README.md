@@ -1,4 +1,4 @@
-# timeslot.ink | Stateless Group Scheduling
+# Stateless Group Scheduling
 
 **timeslot.ink** is a stateless, serverless, and accountless group scheduling utility designed as a lightweight, open-source alternative to Doodle's core functionality.
 
