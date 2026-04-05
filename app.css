@@ -111,8 +111,18 @@ article,
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-article,
-header.container {
+/* Single source of truth for page-width containers.
+   header.container, main.container, footer.container all inherit this. */
+.container {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* article is not a .container but should share the same max-width */
+article {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
@@ -598,6 +608,8 @@ button.margin-0 {
     border-collapse: separate;
     border-spacing: 0;
     font-size: 0.875rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
 .matrix-table th,
