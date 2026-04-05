@@ -44,7 +44,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         <div class="header-actions">
                             ${activeEditToken ? `
                                 <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
-                                    🔗
+                                    <i data-lucide="link-2" style="width: 16px; height: 16px;"></i>
                                 </button>
                             ` : ''}
                             <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">
@@ -90,7 +90,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <div id="success-receipt-container"></div>
                 <p class="instruction-text">
                     Select the times that conflict with your schedule.
-                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="Subtractive Scheduling">?</button>
+                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="Subtractive Scheduling">
+                        <i data-lucide="info"></i>
+                    </button>
                 </p>
                 <div class="voter-input-group">
                     <label for="voter-name">Your Name</label>
@@ -340,8 +342,15 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
             availabilityForm.onsubmit = async (e) => {
                 e.preventDefault();
-                const voterName = availabilityForm.querySelector('#voter-name').value.trim();
-                if (!voterName) return;
+                window.clearFieldErrors(availabilityForm);
+
+                const voterNameInput = availabilityForm.querySelector('#voter-name');
+                const voterName = voterNameInput.value.trim();
+
+                if (!voterName) {
+                    window.showFieldError(voterNameInput, "Please enter your name to save your response.");
+                    return;
+                }
 
                 const votes = poll.options.map(opt => ({
                     option_id: opt.id,

@@ -5,6 +5,11 @@
 import { API, toUTC, isPastDate } from '../api.js';
 
 export async function renderCreateView(container) {
+    // Current local time for min attribute
+    const now = new Date();
+    const offset = now.getTimezoneOffset() * 60000;
+    const minDate = new Date(now.getTime() - offset).toISOString().slice(0, 16);
+
     container.innerHTML = `
         <article class="fade-in">
             <header>
@@ -29,7 +34,7 @@ export async function renderCreateView(container) {
                     <legend>Proposed Time Slots</legend>
                     <div id="slots-container">
                         <div class="slot-row">
-                            <input type="datetime-local" class="slot-input" required>
+                            <input type="datetime-local" class="slot-input" min="${minDate}" required>
                             <button type="button" class="outline secondary remove-btn">×</button>
                         </div>
                     </div>
@@ -69,7 +74,7 @@ export async function renderCreateView(container) {
         const newRow = document.createElement('div');
         newRow.className = 'slot-row';
         newRow.innerHTML = `
-            <input type="datetime-local" class="slot-input" value="${nextValue}" required>
+            <input type="datetime-local" class="slot-input" value="${nextValue}" min="${minDate}" required>
             <button type="button" class="outline secondary remove-btn">×</button>
         `;
         slotsContainer.appendChild(newRow);
@@ -104,39 +109,44 @@ export async function renderCreateView(container) {
     };
 
     /**
-     * Form Submission with Aria-Invalid Validation.
+     * Form Submission with Field-Specific Errors.
      */
     form.onsubmit = async (e) => {
         e.preventDefault();
-        const inputs = slotsContainer.querySelectorAll('.slot-input');
-        const titleInput = form.querySelector('#title');
+        
+        // 1. Clear previous errors
+        window.clearFieldErrors(form);
 
+        const titleInput = form.querySelector('#title');
+        const inputs = slotsContainer.querySelectorAll('.slot-input');
         let isValid = true;
 
-        // Reset all aria-invalid states
-        form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
-
+        // 2. Validate Title
         if (!titleInput.value.trim()) {
-            titleInput.setAttribute('aria-invalid', 'true');
+            window.showFieldError(titleInput, "Title is required.");
             isValid = false;
         }
 
+        // 3. Validate Slots
         const options = [];
         inputs.forEach(input => {
             const utcString = toUTC(input.value);
-            if (!input.value || isPastDate(utcString)) {
-                input.setAttribute('aria-invalid', 'true');
+            if (!input.value) {
+                window.showFieldError(input, "Please select a date and time.");
+                isValid = false;
+            } else if (isPastDate(utcString)) {
+                window.showFieldError(input, "Date cannot be in the past.");
                 isValid = false;
             } else {
                 options.push({
                     start_time: utcString,
-                    end_time: null // We'll add end-time support later if needed, or simple points in time
+                    end_time: null
                 });
             }
         });
 
         if (!isValid) {
-            window.showToast("Please fix the highlighted errors (e.g. title or past dates).");
+            window.showToast("Please fix the highlighted errors.");
             return;
         }
 

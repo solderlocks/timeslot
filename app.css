@@ -57,6 +57,13 @@ fieldset>legend {
     font-weight: bold;
 }
 
+:focus-visible {
+    border: 1px solid #AAA !important;
+    outline: 1px solid white !important;
+    box-shadow: 0 0 0 3px var(--primary-color) !important;
+    border-radius: 4px;
+}
+
 h1,
 .poll-title {
     /* font-family: var(--font-serif-2); */
@@ -97,8 +104,7 @@ article,
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-article,
-header.container {
+article {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
@@ -174,11 +180,10 @@ nav ul:last-of-type {
 }
 
 .philosophy-trigger {
-    width: 20px !important;
-    height: 20px !important;
+    width: 24px !important;
+    height: 24px !important;
     padding: 0 !important;
     border-radius: 50% !important;
-    font-size: 0.7rem !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -189,6 +194,11 @@ nav ul:last-of-type {
     color: var(--muted-color) !important;
     cursor: pointer;
     line-height: 1;
+}
+
+.philosophy-trigger svg {
+    width: 14px;
+    height: 14px;
 }
 
 .philosophy-trigger:hover {
@@ -234,6 +244,42 @@ a.button.primary:hover,
     filter: brightness(0.9);
 }
 
+/* Outline/Secondary Button Style */
+button.outline,
+.button.outline,
+a.button.outline,
+.icon-btn.secondary,
+.share-btn.secondary {
+    background: transparent !important;
+    color: var(--primary-color) !important;
+    border: 1px solid var(--primary-color) !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
+    padding: 0.6rem 1.2rem !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+button.outline:hover,
+.button.outline:hover,
+a.button.outline:hover {
+    background: rgba(26, 29, 35, 0.05) !important;
+    transform: translateY(-1px);
+}
+
+[data-theme="dark"] button.outline,
+[data-theme="dark"] .button.outline,
+[data-theme="dark"] a.button.outline {
+    color: var(--text-main) !important;
+    border-color: var(--text-main) !important;
+}
+
+[data-theme="dark"] button.outline:hover,
+[data-theme="dark"] .button.outline:hover,
+[data-theme="dark"] a.button.outline:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
 @media (max-width: 600px) {
     .voter-name-input {
         max-width: 100%;
@@ -260,6 +306,17 @@ a.button.primary:hover,
 
     .success-view-poll-btn {
         width: 100% !important;
+    }
+
+    .participants-header {
+        font-size: 0 !important;
+        /* Hide text */
+        color: transparent !important;
+    }
+
+    .participants-header::after {
+        content: "";
+        /* Ensure it remains empty */
     }
 }
 
@@ -323,6 +380,13 @@ a.button.primary:hover,
 
     .mode-toggle {
         width: 100%;
+        display: flex;
+    }
+
+    .mode-toggle button {
+        flex: 1;
+        text-align: center;
+        padding: 0.5rem 0.25rem;
     }
 }
 
@@ -408,7 +472,7 @@ a.button.primary:hover,
 .matrix-table-wrapper {
     overflow-x: auto;
     border-radius: var(--border-radius);
-    border: 1px solid var(--muted-border-color);
+    border: none;
     background: var(--matrix-bg);
 }
 
@@ -418,22 +482,25 @@ a.button.primary:hover,
     font-size: 0.875rem;
 }
 
-.matrix-table thead {
-    border-bottom: 1px solid var(--muted-border-color);
-}
-
 .matrix-table th,
 .matrix-table td {
     padding: 0.25rem 0.5rem;
     text-align: center;
     background: transparent;
     min-width: 80px;
-    border: 1px solid var(--muted-border-color) !important;
+}
+
+.matrix-table td {
+    border-bottom: 1px solid var(--muted-border-color) !important;
+}
+
+.matrix-table .sticky-column {
+    border-right: 1px solid var(--muted-border-color) !important;
 }
 
 .matrix-table th:last-child,
 .matrix-table td:last-child {
-    border-right: none;
+    border: none;
 }
 
 /* Sticky Columns */
@@ -447,6 +514,7 @@ a.button.primary:hover,
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    width: 150px;
 }
 
 .name-initial {
@@ -477,7 +545,7 @@ a.button.primary:hover,
 
 .participants-header {
     vertical-align: middle;
-    border-bottom: 2px solid var(--muted-border-color) !important;
+    border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
 .voter-name-cell {
@@ -533,9 +601,10 @@ a.button.primary:hover,
     gap: 2px;
 }
 
-.time-header {
+th.time-header {
     padding: 12px 8px !important;
     white-space: nowrap;
+    border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
 .time-header .time {
@@ -554,7 +623,6 @@ a.button.primary:hover,
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-main);
-    border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
 .matrix-controls {
@@ -573,10 +641,6 @@ a.button.primary:hover,
 
 .empty-state-text {
     color: var(--muted-color);
-}
-
-.day-boundary {
-    border-right: 2px solid var(--muted-border-color) !important;
 }
 
 /* Success Receipt */
@@ -643,7 +707,6 @@ a.button.primary:hover,
     display: flex !important;
     align-items: flex-start !important;
     gap: 0.5rem !important;
-    margin-bottom: 0.5rem;
     flex-wrap: nowrap !important;
 }
 
@@ -729,6 +792,27 @@ a.button.primary:hover,
 
 .header-actions .icon-btn {
     padding: 0.3rem 0.5rem !important;
+}
+
+/* Form Errors */
+.form-error {
+    color: #991b1b;
+    /* Muted darkish red */
+    font-size: 0.75rem;
+    margin-top: -0.75rem;
+    margin-bottom: 1rem;
+    display: block;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+:where(input, select, textarea)[aria-invalid=true] {
+    border-width: 2px;
+}
+
+.slot-row+.form-error {
+    margin-top: -0.25rem;
+    margin-bottom: 0.75rem;
 }
 
 /* Toasts */

@@ -46,6 +46,33 @@ window.closePhilosophyModal = function() {
     if (modal) modal.close();
 };
 
+/**
+ * Reusable Form Validation Helpers
+ */
+window.showFieldError = function(input, message) {
+    // Prevent duplicate errors for the same input
+    const existing = input.parentNode.querySelector(`.form-error[data-for="${input.id || input.name}"]`);
+    if (existing) return;
+
+    input.setAttribute('aria-invalid', 'true');
+    const errorEl = document.createElement('small');
+    errorEl.className = 'form-error fade-in';
+    errorEl.innerText = message;
+    errorEl.setAttribute('data-for', input.id || input.name);
+
+    if (input.classList.contains('slot-input')) {
+        const row = input.closest('.slot-row');
+        row.parentNode.insertBefore(errorEl, row.nextSibling);
+    } else {
+        input.parentNode.insertBefore(errorEl, input.nextSibling);
+    }
+};
+
+window.clearFieldErrors = function(form) {
+    form.querySelectorAll('.form-error').forEach(el => el.remove());
+    form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+};
+
 // Initialize Modal Close Buttons
 document.addEventListener('DOMContentLoaded', () => {
     const closeBtn = document.getElementById('close-philosophy-modal');
