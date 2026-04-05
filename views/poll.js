@@ -1,17 +1,21 @@
 /**
- * views/poll.js: Dual-Mode Architecture (Dashboard vs Matrix)
+ * views/poll.js
+ * Orchestrator for the dual-mode poll view (Availability / Group Matrix).
+ * Handles data fetching, state management, and event binding.
+ * Rendering is delegated to poll-availability.js and poll-matrix.js.
  */
 
-import { API, formatDate, formatRange } from '../api.js';
+import { API, formatDate } from '../api.js';
+import { renderAvailabilityDashboard } from './poll-availability.js';
+import { renderGroupMatrix } from './poll-matrix.js';
 
 export async function renderPollView(container, pollId, urlEditToken) {
-    // 1. Initial Data Fetch
+    // 1. Loading state
     container.innerHTML = `<article aria-busy="true"></article>`;
     const poll = await API.getPoll(pollId);
-    // Enforce chronological order for options
     poll.options.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 
-    // 2. Check for Edit Context
+    // 2. Resolve edit token (URL param takes priority over localStorage)
     const pollsMap = JSON.parse(localStorage.getItem('polls_map') || '{}');
     const storedEditToken = pollsMap[pollId];
     let activeEditToken = urlEditToken || storedEditToken;
@@ -24,13 +28,12 @@ export async function renderPollView(container, pollId, urlEditToken) {
         } catch (e) {
             console.warn('Invalid or expired edit token');
             tokenError = true;
-            activeEditToken = null; // Reset token if invalid
+            activeEditToken = null;
         }
     }
 
-    // 3. UI State
+    // 3. UI state
     let currentMode = userResponse ? 'group' : 'availability';
-
 
     function renderPage() {
         container.innerHTML = `
@@ -39,7 +42,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <div class="poll-header-row">
                         <div>
                             <h2 class="poll-title poll-title-compact">${poll.title}</h2>
-                            <p class="poll-description-muted">${poll.description || 'No description provided.'}</p>
+                            <p class="poll-description-muted">${poll.description || ''}</p>
                         </div>
                         <div class="header-actions">
                             ${activeEditToken ? `
@@ -66,7 +69,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 ` : ''}
 
                 <div id="view-content">
-                    ${currentMode === 'availability' ? renderAvailabilityDashboard() : renderGroupMatrix()}
+                    ${currentMode === 'availability'
+                        ? renderAvailabilityDashboard(poll, userResponse)
+                        : renderGroupMatrix(poll)}
                 </div>
             </article>
         `;
@@ -74,200 +79,20 @@ export async function renderPollView(container, pollId, urlEditToken) {
         attachListeners();
     }
 
-    function renderAvailabilityDashboard() {
-        // Group options by day
-        const dayGroups = {};
-        poll.options.forEach(opt => {
-            const { date } = formatDate(opt.start_time);
-            if (!dayGroups[date]) dayGroups[date] = [];
-            dayGroups[date].push(opt);
-        });
-
-        const voterName = userResponse ? userResponse.voter_name : '';
-
-        return `
-            <form id="availability-form" class="fade-in">
-                <div id="success-receipt-container"></div>
-                <p class="instruction-text">
-                    Select the times that conflict with your schedule.
-                    <button type="button" class="philosophy-trigger philosophy-icon" id="open-philosophy-btn-poll" title="Subtractive Scheduling">
-                        <i data-lucide="info"></i>
-                    </button>
-                </p>
-                <div class="voter-input-group">
-                    <label for="voter-name">Your Name</label>
-                    <input type="text" id="voter-name" name="voter_name" 
-                           value="${voterName}" 
-                           placeholder="Enter your name" required 
-                           class="voter-name-input">
-                </div>
-
-                <div class="dashboard-grid">
-                    ${Object.entries(dayGroups).map(([dateLabel, options]) => {
-            const { weekday } = formatDate(options[0].start_time);
-            return `
-                            <div class="day-card">
-                                <div class="day-header">
-                                    <h4>${weekday}</h4>
-                                    <div class="date-label">${dateLabel}</div>
-                                </div>
-                                <div class="pill-stack">
-                                    ${options.map(opt => {
-                const votes = userResponse && userResponse.votes ? userResponse.votes : [];
-                const vote = votes.find(v => v.option_id === opt.id);
-                const status = (vote && vote.status === 0) ? 0 : 1;
-                const { time } = formatDate(opt.start_time);
-                return `
-                                            <div class="time-pill" data-option-id="${opt.id}" data-status="${status}">
-                                                <input type="hidden" name="pill_${opt.id}" value="${status}">
-                                                <span class="pill-label">${time}</span>
-                                                <div class="pill-icon">
-                                                    ${status === 1 ? '<span class="chk-icon-outline">○</span>' : '<span class="veto-icon">❌</span>'}
-                                                </div>
-                                            </div>
-                                        `;
-            }).join('')}
-                                </div>
-                            </div>
-                        `;
-        }).join('')}
-                </div>
-
-                <hr>
-
-                <div class="submit-container">
-                    <button type="submit" id="submit-vote-btn" class="primary save-btn">
-                        ${userResponse ? 'Update Response' : 'Save Response'}
-                    </button>
-                </div>
-            </form>
-        `;
-    }
-
-    function renderGroupMatrix() {
-        // Group options by day for the top-tier header
-        const dayGroups = [];
-        let currentDayLabel = null;
-        let currentGroup = null;
-
-        poll.options.forEach((opt, idx) => {
-            const { weekday, date } = formatDate(opt.start_time);
-            const label = `${weekday}, ${date}`;
-            if (label !== currentDayLabel) {
-                currentDayLabel = label;
-                currentGroup = { label, options: [], startIndex: idx };
-                dayGroups.push(currentGroup);
-            }
-            currentGroup.options.push(opt);
-        });
-
-        // Pre-calculate option to day-group index for zebra striping
-        const optionToDayIdx = {};
-        dayGroups.forEach((group, idx) => {
-            group.options.forEach(opt => {
-                optionToDayIdx[opt.id] = idx;
-            });
-        });
-
-        // Helper to check if an option is the last in its day group
-        const isLastInDay = (optionId) => {
-            return dayGroups.some(group => group.options[group.options.length - 1].id === optionId);
-        };
-
-        const matrixContent = poll.responses.length === 0
-            ? `
-                <div class="empty-state fade-in">
-                    <div class="empty-state-icon">🗓️</div>
-                    <h3>No responses yet</h3>
-                    <p class="empty-state-text">Share the link above with your group to start finding the perfect time.</p>
-                </div>
-            `
-            : `
-                <div class="matrix-table-wrapper">
-                    <table class="matrix-table">
-                        <thead>
-                            <tr>
-                                <th rowspan="2" class="sticky-column participants-header">Respondents</th>
-                                ${dayGroups.map((group, groupIdx) => {
-                const [weekday, datePart] = group.label.split(', ');
-                return `
-                                    <th colspan="${group.options.length}" class="day-group-header ${groupIdx % 2 === 0 ? 'striped-day' : ''} ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
-                                        <span style="white-space: nowrap">${weekday},</span> <span style="white-space: nowrap">${datePart}</span>
-                                    </th>
-                                `;
-            }).join('')}
-                            </tr>
-                            <tr>
-                                ${poll.options.map(opt => {
-                const { time } = formatDate(opt.start_time);
-                const isBoundary = isLastInDay(opt.id);
-                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
-                return `
-                                        <th class="${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''} time-header">
-                                            <div class="header-stack">
-                                                <div class="time">${time}</div>
-                                            </div>
-                                        </th>
-                                    `;
-            }).join('')}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${poll.responses.map(res => `
-                                <tr class="matrix-row">
-                                    <td class="sticky-column voter-name-cell">
-                                        <span class="name-full"><strong>${res.voter_name}</strong></span>
-                                        <span class="name-initial"><strong>${res.voter_name.charAt(0).toUpperCase()}</strong></span>
-                                    </td>
-                                    ${poll.options.map(opt => {
-                const vote = res.votes.find(v => v.option_id === opt.id);
-                const status = vote ? vote.status : 1;
-                const isBoundary = isLastInDay(opt.id);
-                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
-                return `
-                                            <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''}">
-                                                <div class="matrix-block" data-status="${status}">
-                                                    ${status === 0 ? '❌' : ''}
-                                                </div>
-                                            </td>
-                                        `;
-            }).join('')}
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                        <tfoot class="score-row">
-                            <tr>
-                                <td class="sticky-column voter-name-cell"><strong>Scores</strong></td>
-                                ${poll.options.map(opt => {
-                const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
-                const isBoundary = isLastInDay(opt.id);
-                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
-                return `<td class="${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
-            }).join('')}
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            `;
-
-        return `
-            <div class="read-only-matrix fade-in">
-                <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
-                ${matrixContent}
-            </div>
-        `;
-    }
-
     function attachListeners() {
-        // Tooltips Initialization
-        if (window.tippy) {
-            // Standard tooltips
-            window.tippy(container.querySelectorAll('[data-tippy-content]'), {
-                arrow: true,
-                theme: 'translucent',
-            });
+        // Initialize icons
+        if (window.lucide) window.lucide.createIcons();
 
-            // Special handling for dynamic "Copied" feedback
+        // Mode toggle
+        container.querySelectorAll('.mode-toggle button').forEach(btn => {
+            btn.onclick = () => {
+                currentMode = btn.dataset.mode;
+                renderPage();
+            };
+        });
+
+        // Tooltips
+        if (window.tippy) {
             const shareBtnEl = container.querySelector('#share-link-btn');
             const copyEditBtnEl = container.querySelector('#copy-edit-link-btn');
 
@@ -285,7 +110,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     }
                 });
             }
-
             if (copyEditBtnEl) {
                 window.tippy(copyEditBtnEl, {
                     content: 'Copy Private Edit Link',
@@ -302,34 +126,21 @@ export async function renderPollView(container, pollId, urlEditToken) {
             }
         }
 
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
-
-
-        const toggleBtns = container.querySelectorAll('.mode-toggle button');
-        toggleBtns.forEach(btn => {
-            btn.onclick = () => {
-                currentMode = btn.dataset.mode;
-                renderPage();
-            };
-        });
-
+        // Share / copy buttons
         const shareBtn = container.querySelector('#share-link-btn');
-        shareBtn.onclick = () => {
-            const pollUrl = `${window.location.origin}?id=${pollId}`;
-            navigator.clipboard.writeText(pollUrl);
-            if (shareBtn._tippy) {
-                shareBtn._tippy.setContent('Poll Link Copied!');
-                shareBtn._tippy.show();
-            }
-        };
-
+        if (shareBtn) {
+            shareBtn.onclick = () => {
+                navigator.clipboard.writeText(`${window.location.origin}?id=${pollId}`);
+                if (shareBtn._tippy) {
+                    shareBtn._tippy.setContent('Poll Link Copied!');
+                    shareBtn._tippy.show();
+                }
+            };
+        }
         const copyEditBtn = container.querySelector('#copy-edit-link-btn');
         if (copyEditBtn) {
             copyEditBtn.onclick = () => {
-                const editUrl = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
-                navigator.clipboard.writeText(editUrl);
+                navigator.clipboard.writeText(`${window.location.origin}?id=${pollId}&edit=${activeEditToken}`);
                 if (copyEditBtn._tippy) {
                     copyEditBtn._tippy.setContent('Edit Link Copied!');
                     copyEditBtn._tippy.show();
@@ -337,28 +148,30 @@ export async function renderPollView(container, pollId, urlEditToken) {
             };
         }
 
+        // Availability form interactions
         if (currentMode === 'availability') {
             const availabilityForm = container.querySelector('#availability-form');
+            if (!availabilityForm) return;
+
             const submitBtn = availabilityForm.querySelector('#submit-vote-btn');
 
+            // Pill toggle
             availabilityForm.querySelectorAll('.time-pill').forEach(pill => {
                 pill.onclick = () => {
                     const input = pill.querySelector('input');
-                    const currentStatus = parseInt(input.value);
-                    const newStatus = currentStatus === 1 ? 0 : 1;
-                    updatePillUI(pill, newStatus);
+                    updatePillUI(pill, parseInt(input.value) === 1 ? 0 : 1);
                 };
             });
 
+            // Form submission
             availabilityForm.onsubmit = async (e) => {
                 e.preventDefault();
                 window.clearFieldErrors(availabilityForm);
 
                 const voterNameInput = availabilityForm.querySelector('#voter-name');
                 const voterName = voterNameInput.value.trim();
-
                 if (!voterName) {
-                    window.showFieldError(voterNameInput, "Please enter your name to save your response.");
+                    window.showFieldError(voterNameInput, 'Please enter your name to save your response.');
                     return;
                 }
 
@@ -376,22 +189,20 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         result = await API.updateResponse(pollId, activeEditToken, { voter_name: voterName, votes });
                     } else {
                         result = await API.submitVote(pollId, { voter_name: voterName, votes });
-                        activeEditToken = result.edit_token; // Update the session token
+                        activeEditToken = result.edit_token;
                         localStorage.setItem('polls_map', JSON.stringify({ ...pollsMap, [pollId]: activeEditToken }));
                     }
 
-                    // CRITICAL: Re-fetch the full poll object with cache-busting to get updated votes/consensus
+                    // Re-fetch with cache-bust to get updated votes
                     const updatedPoll = await API.getPoll(`${pollId}?cb=${Date.now()}`);
                     Object.assign(poll, updatedPoll);
 
-                    // Update userResponse from the fresh, confirmed server data
-                    userResponse = poll.responses.find(r => r.edit_token === activeEditToken) ||
-                        poll.responses.find(r => r.voter_name === voterName);
+                    userResponse = poll.responses.find(r => r.edit_token === activeEditToken)
+                        || poll.responses.find(r => r.voter_name === voterName);
 
-                    // Transition to Group mode
                     currentMode = 'group';
                     renderPage();
-                    window.showToast("Response Saved. Viewing group consensus.");
+                    window.showToast('Response saved. Viewing group consensus.');
                 } catch (err) {
                     console.error(err);
                     alert('Submission failed: ' + err.message);
@@ -405,23 +216,18 @@ export async function renderPollView(container, pollId, urlEditToken) {
     function updatePillUI(pill, status) {
         const input = pill.querySelector('input');
         const iconContainer = pill.querySelector('.pill-icon');
-
         pill.dataset.status = status;
         input.value = status;
-
-        if (status === 1) {
-            iconContainer.innerHTML = '<span class="chk-icon-outline">○</span>';
-        } else {
-            iconContainer.innerHTML = '<span class="veto-icon">❌</span>';
-        }
+        iconContainer.innerHTML = status === 1
+            ? '<span class="chk-icon-outline">○</span>'
+            : '<span class="veto-icon">❌</span>';
     }
-
 
     function showSuccessReceipt(votes, editToken) {
         const conflicts = votes.filter(v => v.status === 0).length;
         const available = votes.length - conflicts;
 
-        const container_receipt = container.querySelector('#success-receipt-container');
+        const containerReceipt = container.querySelector('#success-receipt-container');
         const submitBtn = container.querySelector('#submit-vote-btn');
         const pills = container.querySelectorAll('.time-pill');
 
@@ -431,7 +237,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
             p.style.opacity = '0.7';
         });
 
-        container_receipt.innerHTML = `
+        containerReceipt.innerHTML = `
             <div class="success-receipt fade-in">
                 <h3>✅ Response Saved!</h3>
                 <p>You flagged ${conflicts} conflict${conflicts !== 1 ? 's' : ''}. ${available} slot${available !== 1 ? 's' : ''} are marked as available.
@@ -440,7 +246,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
         `;
 
         container.querySelector('#edit-response-link').onclick = () => {
-            container_receipt.innerHTML = '';
+            containerReceipt.innerHTML = '';
             submitBtn.style.display = 'block';
             submitBtn.removeAttribute('aria-busy');
             submitBtn.disabled = false;
@@ -451,7 +257,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
             });
         };
 
-        // Scroll to top of form
         window.scrollTo({ top: container.querySelector('#availability-form').offsetTop - 20, behavior: 'smooth' });
     }
 
