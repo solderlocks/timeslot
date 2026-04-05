@@ -46,7 +46,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         </div>
                         <div class="header-actions">
                             ${activeEditToken ? `
-                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
+                                <button class="clear-btn icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
                                     <i data-lucide="link" style="width: 16px; height: 16px;"></i>
                                 </button>
                             ` : ''}
@@ -121,30 +121,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
             if (shareBtnEl) {
                 window.tippy(shareBtnEl, {
                     content: 'Copy Shareable Poll Link',
-                    hideOnClick: false,
-                    onShow(instance) {
-                        if (instance.props.content === 'Poll Link Copied!') {
-                            setTimeout(() => {
-                                instance.hide();
-                                setTimeout(() => instance.setContent('Copy Shareable Poll Link'), 500);
-                            }, 2000);
-                        }
-                    }
+                    placement: 'top'
                 });
             }
             if (copyEditBtnEl) {
-                window.tippy(copyEditBtnEl, {
-                    content: 'Copy Private Edit Link',
-                    hideOnClick: false,
-                    onShow(instance) {
-                        if (instance.props.content === 'Edit Link Copied!') {
-                            setTimeout(() => {
-                                instance.hide();
-                                setTimeout(() => instance.setContent('Copy Private Edit Link'), 500);
-                            }, 2000);
-                        }
-                    }
-                });
+                // window.tippy(copyEditBtnEl, {
+                //     content: 'Copy Private Edit Link',
+                //     placement: 'top'
+                // });
             }
         }
 
@@ -152,20 +136,32 @@ export async function renderPollView(container, pollId, urlEditToken) {
         const shareBtn = container.querySelector('#share-link-btn');
         if (shareBtn) {
             shareBtn.onclick = () => {
-                navigator.clipboard.writeText(`${window.location.origin}?id=${pollId}`);
-                if (shareBtn._tippy) {
-                    shareBtn._tippy.setContent('Poll Link Copied!');
-                    shareBtn._tippy.show();
+                const url = `${window.location.origin}?id=${pollId}`;
+                navigator.clipboard.writeText(url);
+                const tip = shareBtn._tippy;
+                if (tip) {
+                    tip.setContent('Poll Link Copied!');
+                    tip.show();
+                    setTimeout(() => {
+                        tip.hide();
+                        setTimeout(() => tip.setContent('Copy Shareable Poll Link'), 500);
+                    }, 2000);
                 }
             };
         }
         const copyEditBtn = container.querySelector('#copy-edit-link-btn');
         if (copyEditBtn) {
             copyEditBtn.onclick = () => {
-                navigator.clipboard.writeText(`${window.location.origin}?id=${pollId}&edit=${activeEditToken}`);
-                if (copyEditBtn._tippy) {
-                    copyEditBtn._tippy.setContent('Edit Link Copied!');
-                    copyEditBtn._tippy.show();
+                const url = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
+                navigator.clipboard.writeText(url);
+                const tip = copyEditBtn._tippy;
+                if (tip) {
+                    tip.setContent('Edit Link Copied!');
+                    tip.show();
+                    setTimeout(() => {
+                        tip.hide();
+                        setTimeout(() => tip.setContent('Copy Private Edit Link'), 500);
+                    }, 2000);
                 }
             };
         }
