@@ -54,7 +54,6 @@ export async function renderSuccessView(container, pollId) {
 
         // Hover tooltip on button
         window.tippy(copyBtn, {
-            content: 'Copy Link',
             placement: 'top'
         });
     }
