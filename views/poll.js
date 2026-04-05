@@ -125,10 +125,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 });
             }
             if (copyEditBtnEl) {
-                // window.tippy(copyEditBtnEl, {
-                //     content: 'Copy Private Edit Link',
-                //     placement: 'top'
-                // });
+                window.tippy(copyEditBtnEl, {
+                    content: 'Copy Private Edit Link',
+                    placement: 'top'
+                });
             }
         }
 
