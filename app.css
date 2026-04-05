@@ -81,14 +81,13 @@ h1,
 }
 
 .poll-title-compact {
-
-    font-size: 1.5rem !important;
+    font-size: 1.5rem;
 }
 
 .poll-description-muted {
-    margin: 0 !important;
-    font-size: 0.9rem !important;
-    color: var(--muted-color) !important;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted-color);
 }
 
 h2,
@@ -103,13 +102,13 @@ h6 {
 
 article,
 .day-card {
-    background-color: var(--matrix-bg) !important;
-    color: var(--text-main) !important;
-    border: 1px solid var(--muted-border-color) !important;
+    background-color: var(--matrix-bg);
+    color: var(--text-main);
+    border: 1px solid var(--muted-border-color);
 }
 
 [data-theme="light"] .day-card {
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 article,
@@ -128,6 +127,7 @@ nav ul:last-of-type {
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
 }
 
 [data-theme="dark"] article,
@@ -174,17 +174,17 @@ a:hover {
 }
 
 .no-margin {
-    margin-bottom: 0 !important;
+    margin-bottom: 0;
 }
 
 .voter-input-group {
     margin-bottom: 1.5rem;
 }
 
-.voter-name-input {
+/* Raise specificity over Pico's input rule */
+input.voter-name-input {
     max-width: 400px;
-    height: 48px !important;
-    /* Standardize with datetime-local */
+    height: 48px;
 }
 
 
@@ -201,39 +201,38 @@ a:hover {
     font-size: 1.1rem;
 }
 
-.philosophy-trigger {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    vertical-align: middle !important;
-    background: transparent !important;
-    border: none !important;
+/* button.philosophy-trigger beats Pico's button selector */
+button.philosophy-trigger,
+a.philosophy-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    background: transparent;
+    border: none;
     cursor: pointer;
     line-height: 1;
     opacity: 0.6;
     transition: opacity 0.2s;
-    box-shadow: none !important;
-    padding: 0 !important;
+    box-shadow: none;
+    padding: 0;
 }
 
 .philosophy-icon {
-    width: 18px !important;
-    height: 18px !important;
-    margin: 0 0 0 4px !important;
+    width: 18px;
+    height: 18px;
+    margin: 0 0 0 4px;
 }
 
-.philosophy-trigger:hover {
+button.philosophy-trigger:hover,
+a.philosophy-trigger:hover {
     opacity: 1;
+    background: var(--highlight-color);
 }
 
 .philosophy-trigger svg {
     width: 16px;
     height: 16px;
-}
-
-.philosophy-trigger:hover {
-    opacity: 1;
-    background: var(--highlight-color) !important;
 }
 
 /* Primary Global Button Style */
@@ -274,43 +273,44 @@ a.button.primary:hover,
 }
 
 /* Outline/Secondary Button Style */
-button.outline,
-.button.outline,
-a.button.outline,
-.icon-btn.secondary,
-.share-btn.secondary {
-    background: transparent !important;
-    color: var(--primary-color) !important;
-    border: 1px solid var(--primary-color) !important;
-    box-shadow: none !important;
-    font-weight: 600 !important;
-    padding: 0.6rem 1.2rem !important;
-    border-radius: 6px !important;
-    transition: all 0.2s ease !important;
+/* body prefix raises specificity over Pico's [role=button], button rule */
+body button.outline,
+body .button.outline,
+body a.button.outline,
+body .icon-btn.secondary,
+body .share-btn.secondary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    box-shadow: none;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
 }
 
-button.outline:hover,
-.button.outline:hover,
-a.button.outline:hover {
-    background: rgba(26, 29, 35, 0.05) !important;
+body button.outline:hover,
+body .button.outline:hover,
+body a.button.outline:hover {
+    background: rgba(26, 29, 35, 0.05);
     transform: translateY(-1px);
 }
 
-[data-theme="dark"] button.outline,
-[data-theme="dark"] .button.outline,
-[data-theme="dark"] a.button.outline {
-    color: var(--text-main) !important;
-    border-color: var(--text-main) !important;
+[data-theme="dark"] body button.outline,
+[data-theme="dark"] body .button.outline,
+[data-theme="dark"] body a.button.outline {
+    color: var(--text-main);
+    border-color: var(--text-main);
 }
 
-[data-theme="dark"] button.outline:hover,
-[data-theme="dark"] .button.outline:hover,
-[data-theme="dark"] a.button.outline:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
+[data-theme="dark"] body button.outline:hover,
+[data-theme="dark"] body .button.outline:hover,
+[data-theme="dark"] body a.button.outline:hover {
+    background: rgba(255, 255, 255, 0.1);
 }
 
 @media (max-width: 600px) {
-    .voter-name-input {
+    input.voter-name-input {
         max-width: 100%;
         width: 100%;
     }
@@ -319,9 +319,9 @@ a.button.outline:hover {
     button.primary,
     .button.primary,
     a.button.primary {
-        width: 100% !important;
-        text-align: center !important;
-        justify-content: center !important;
+        width: 100%;
+        text-align: center;
+        justify-content: center;
     }
 
     .success-link-row {
@@ -330,22 +330,17 @@ a.button.outline:hover {
     }
 
     .success-view-poll-btn {
-        width: 100% !important;
+        width: 100%;
     }
 
-    .success-view-poll-btn {
-        width: 100% !important;
-    }
-
+    /* Hide "Respondents" text at mobile widths; keep the cell for layout */
     .participants-header {
-        font-size: 0 !important;
-        /* Hide text */
-        color: transparent !important;
+        font-size: 0;
+        color: transparent;
     }
 
     .participants-header::after {
         content: "";
-        /* Ensure it remains empty */
     }
 }
 
@@ -423,7 +418,7 @@ a.button.outline:hover {
 }
 
 .day-card {
-    border-radius: 16px;
+    border-radius: var(--pico-border-radius);
     padding: 1.0rem;
 }
 
@@ -523,32 +518,29 @@ a.button.outline:hover {
     min-width: 80px;
 }
 
+/* .matrix-table td already more specific than Pico's td rule */
 .matrix-table td {
-    border-bottom: 1px solid var(--muted-border-color) !important;
+    border-bottom: 1px solid var(--muted-border-color);
 }
 
-/* .matrix-table th:not(:last-child):not(.day-group-header),
-.matrix-table td:not(:last-child) {
-    border-right: 1px solid var(--muted-border-color) !important;
-} */
-
 .striped-day {
-    background-color: var(--striped-day-bg) !important;
+    background-color: var(--striped-day-bg);
 }
 
 .matrix-table .sticky-column {
-    border-right: 1px solid var(--muted-border-color) !important;
-    box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.10) !important;
+    border-right: 1px solid var(--muted-border-color);
+    box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.10);
 }
 
 /* Sticky Columns */
+/* .matrix-table .sticky-column already specific; plain .sticky-column uses body prefix */
 .sticky-column {
     position: sticky;
     left: 0;
     z-index: 10;
-    background: var(--matrix-bg) !important;
-    min-width: 120px !important;
-    text-align: left !important;
+    background: var(--matrix-bg);
+    min-width: 120px;
+    text-align: left;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -570,27 +562,27 @@ a.button.outline:hover {
     }
 
     .sticky-column {
-        min-width: 40px !important;
-        max-width: 40px !important;
-        text-align: center !important;
+        min-width: 40px;
+        max-width: 40px;
+        text-align: center;
     }
 }
 
 [data-theme="light"] .sticky-column {
-    background: #ffffff !important;
-    /* Force full opacity on sticky column */
+    background: #ffffff;
 }
 
 .participants-header {
     vertical-align: middle;
-    border-bottom: 1px solid var(--muted-border-color) !important;
+    border-bottom: 1px solid var(--muted-border-color);
 }
 
 
 /* Matrix Abstract Cells */
-.matrix-cell {
+/* .matrix-table .matrix-cell beats Pico's td padding rule */
+.matrix-table .matrix-cell {
     height: 48px;
-    padding: 0 !important;
+    padding: 0;
     vertical-align: middle;
 }
 
@@ -640,10 +632,11 @@ a.button.outline:hover {
     gap: 2px;
 }
 
-th.time-header {
-    padding: 12px 8px !important;
+/* .matrix-table th.time-header beats Pico's th rule */
+.matrix-table th.time-header {
+    padding: 12px 8px;
     white-space: nowrap;
-    border-bottom: 1px solid var(--muted-border-color) !important;
+    border-bottom: 1px solid var(--muted-border-color);
 }
 
 .time-header .time {
@@ -653,7 +646,7 @@ th.time-header {
 }
 
 .score-row {
-    display: none !important;
+    display: none;
 }
 
 .day-group-header {
@@ -666,7 +659,7 @@ th.time-header {
 }
 
 .matrix-controls {
-    margin-bottom: 2rem !important;
+    margin-bottom: 2rem;
 }
 
 .empty-state {
@@ -713,13 +706,13 @@ th.time-header {
     justify-content: center;
     gap: 0.75rem;
     font-size: 0.8rem;
-    flex-wrap: nowrap !important;
+    flex-wrap: nowrap;
 }
 
 .footer-content a,
 .footer-content span {
-    white-space: nowrap !important;
-    display: inline-block !important;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 .footer-content a {
@@ -753,35 +746,37 @@ th.time-header {
 }
 
 /* Creation View Fixes */
+/* .slot-row is a custom class — no Pico rule to fight */
 .slot-row {
-    display: flex !important;
-    align-items: flex-start !important;
-    gap: 0.5rem !important;
-    flex-wrap: nowrap !important;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
     margin-bottom: 0.5rem;
 }
 
 @media (max-width: 600px) {
     .slot-row {
-        gap: 0 !important;
+        gap: 0;
     }
 }
 
+/* .slot-row input raises specificity over Pico's input rule */
 .slot-row input {
-    flex: 1 !important;
-    margin-bottom: 0 !important;
+    flex: 1;
+    margin-bottom: 0;
 }
 
+/* button.remove-btn beats Pico's button rule */
 .slot-row button.remove-btn {
-    width: 48px !important;
-    height: 48px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex: 0 0 auto !important;
-    border: none !important;
-    /* Eliminate border */
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    border: none;
 }
 
 /* Embedded Input Buttons (Success View) */
@@ -792,36 +787,36 @@ th.time-header {
     width: 100%;
 }
 
+/* .input-with-button input beats Pico's input rule */
 .input-with-button input {
-    padding-right: 48px !important;
-    /* Make room for icon */
-    margin-bottom: 0 !important;
+    padding-right: 48px;
+    margin-bottom: 0;
 }
 
-.embedded-icon-btn {
+/* .input-with-button button.embedded-icon-btn beats Pico's button rule */
+.input-with-button button.embedded-icon-btn {
     position: absolute;
     right: 4px;
     top: 4px;
-    /* Align within input height */
-    width: 40px !important;
-    height: 40px !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
-    font-size: 1.2rem !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    color: var(--muted-color) !important;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-color);
     opacity: 0.6;
     transition: opacity 0.2s;
-    box-shadow: none !important;
+    box-shadow: none;
     margin-top: 0.25rem;
 }
 
-.embedded-icon-btn:hover {
+.input-with-button button.embedded-icon-btn:hover {
     opacity: 1;
-    transform: none !important;
+    transform: none;
 }
 
 /* Subtle Action Buttons */
@@ -830,10 +825,11 @@ th.time-header {
     gap: 0.5rem;
 }
 
+/* .header-actions button beats Pico's button rule via descendant combinator */
 .header-actions button {
-    padding: 0.3rem 0.6rem !important;
-    font-size: 0.8rem !important;
-    border-radius: 6px !important;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: 6px;
     opacity: 0.7;
     transition: opacity 0.2s;
 }
@@ -848,7 +844,7 @@ th.time-header {
 }
 
 .header-actions .icon-btn {
-    padding: 0.3rem 0.5rem !important;
+    padding: 0.3rem 0.5rem;
 }
 
 /* Form Errors */
@@ -917,13 +913,15 @@ th.time-header {
 }
 
 .success-view-poll-btn {
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-    width: auto !important;
-    margin-top: 0 !important;
-    text-align: center !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    flex: 0 0 auto;
+    text-align: center;
 }
 
 .success-link-row {
@@ -942,26 +940,11 @@ th.time-header {
     line-height: 1;
 }
 
-.chevron-right {
-    font-size: 1.2rem;
-    line-height: 1;
-}
-
 /* Transitions */
 .fade-out {
     opacity: 0;
     transform: translateX(-50%) translateY(10px);
     transition: all 0.3s ease;
-}
-
-.success-link-display {
-    flex: 1;
-}
-
-.success-view-poll-btn {
-    margin-bottom: 0 !important;
-    flex: 0 0 auto !important;
-    margin-top: 0 !important;
 }
 
 /* Landing Page Styles */
@@ -990,14 +973,15 @@ th.time-header {
     animation-delay: 300ms;
 }
 
-.landing-hero {
+/* article.landing-hero beats Pico's article rule — no !important needed */
+article.landing-hero {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 80vh;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+    background: transparent;
+    border: none;
+    box-shadow: none;
 }
 
 .hero-content {
@@ -1027,10 +1011,11 @@ th.time-header {
     gap: 1.5rem;
 }
 
-.hero-cta {
-    padding: 1.0rem 4.5rem !important;
-    font-size: 1.25rem !important;
-    margin-top: 0 !important;
+/* a.button.primary.hero-cta beats Pico's button rule */
+a.button.primary.hero-cta {
+    padding: 1.0rem 4.5rem;
+    font-size: 1.25rem;
+    margin-top: 0;
 }
 
 
