@@ -38,7 +38,10 @@ window.showToast = function(message) {
 
 window.openPhilosophyModal = function() {
     const modal = document.getElementById('philosophy-modal');
-    if (modal) modal.showModal();
+    if (modal) {
+        modal.showModal();
+        if (window.lucide) window.lucide.createIcons();
+    }
 };
 
 window.closePhilosophyModal = function() {

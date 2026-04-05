@@ -117,4 +117,4 @@ To deploy to your own Cloudflare Pages account:
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) for details. (Note: Ensure a LICENSE file exists in the repository).
+GNU GPL v3.0 - See [LICENSE](LICENSE) for details.

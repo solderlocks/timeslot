@@ -44,7 +44,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         <div class="header-actions">
                             ${activeEditToken ? `
                                 <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
-                                    <i data-lucide="link-2" style="width: 16px; height: 16px;"></i>
+                                    <i data-lucide="link" style="width: 16px; height: 16px;"></i>
                                 </button>
                             ` : ''}
                             <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">

@@ -8,7 +8,7 @@ export function renderLandingView(container) {
             <div class="hero-content">
                 <h1 class="hero-headline animate-rise-in">Subtractive group scheduling. 🐝</h1>
                 <p class="hero-subheadline animate-rise-in delay-150">
-                    Open-source utility for group scheduling. Propose times, let participants eliminate conflicts, and see the remaining gaps. No accounts required.
+                    Open-source utility for group scheduling. Propose times, let participants eliminate conflicts, and view the remaining gaps. No accounts required.
                 </p>
                 
                 <div class="hero-actions animate-rise-in delay-300">
