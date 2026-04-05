@@ -39,7 +39,7 @@ export async function renderCreateView(container) {
                         </div>
                     </div>
                     <footer class="slot-footer">
-                        <button type="button" id="add-slot-btn" class="new-poll-btn">+ Add another slot</button>
+                        <button type="button" id="add-slot-btn" class="clear-btn">+ Add another slot</button>
                     </footer>
                 </fieldset>
                 

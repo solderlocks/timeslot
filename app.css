@@ -144,24 +144,33 @@ nav ul:last-of-type {
     /* Tighter */
 }
 
-.new-poll-btn {
-    padding: 0.2rem 0 !important;
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    color: var(--text-main) !important;
-    text-decoration: underline !important;
-    border: none !important;
-    background: transparent !important;
+a {
+    color: var(--text-main);
+    text-decoration: underline;
+    transition: opacity 0.2s;
+    text-underline-offset: 4px;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+.clear-btn {
+    padding: 0.2rem 0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-main);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    border: none;
+    background: transparent;
     cursor: pointer;
+    box-shadow: none;
     transition: opacity 0.2s;
 }
 
-.new-poll-btn:hover {
-    opacity: 0.7;
-}
-
-[data-theme="dark"] .new-poll-btn {
-    color: var(--text-main) !important;
+.clear-btn:hover {
+    opacity: 0.8;
 }
 
 .no-margin {
@@ -188,6 +197,10 @@ nav ul:last-of-type {
     align-items: center;
 }
 
+#open-philosophy-link {
+    font-size: 1.1rem;
+}
+
 .philosophy-trigger {
     display: inline-flex !important;
     align-items: center !important;
@@ -195,7 +208,6 @@ nav ul:last-of-type {
     vertical-align: middle !important;
     background: transparent !important;
     border: none !important;
-    color: var(--muted-color) !important;
     cursor: pointer;
     line-height: 1;
     opacity: 0.6;
@@ -224,26 +236,25 @@ nav ul:last-of-type {
     background: var(--highlight-color) !important;
 }
 
-/* Primary Global Button Style (Overriding Pico.css) */
+/* Primary Global Button Style */
 button.primary,
 .button.primary,
 a.button.primary,
 .save-btn {
-    width: auto !important;
-    padding: 0.8rem 2.5rem !important;
-    border-radius: 6px !important;
-    font-weight: 700 !important;
-    background-color: var(--tab-active-bg) !important;
-    color: var(--tab-active-text) !important;
-    border: none !important;
+    width: auto;
+    padding: 0.8rem 2.5rem;
+    border-radius: 6px;
+    font-weight: 700;
+    background-color: var(--tab-active-bg);
+    color: var(--tab-active-text);
+    border: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s, box-shadow 0.2s !important;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
     margin-top: 1rem;
     cursor: pointer;
     display: inline-block;
     text-decoration: none;
     line-height: normal;
-    /* Pico override */
 }
 
 button.primary:hover,
@@ -259,7 +270,7 @@ a.button.primary:hover,
 [data-theme="light"] .button.primary:hover,
 [data-theme="light"] a.button.primary:hover,
 [data-theme="light"] .save-btn:hover {
-    filter: brightness(0.9);
+    filter: brightness(0.85);
 }
 
 /* Outline/Secondary Button Style */
@@ -364,7 +375,6 @@ a.button.outline:hover {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: var(--muted-color);
     margin-bottom: 0;
 }
 
@@ -687,13 +697,7 @@ th.time-header {
     margin-bottom: 0.5rem;
 }
 
-.edit-link {
-    color: var(--primary-color);
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: 700;
-    margin-left: 0.5rem;
-}
+
 
 /* Footer Toggles */
 .app-footer {
@@ -708,7 +712,6 @@ th.time-header {
     justify-content: center;
     gap: 0.75rem;
     font-size: 0.8rem;
-    color: var(--muted-color);
     flex-wrap: nowrap !important;
 }
 
@@ -719,8 +722,6 @@ th.time-header {
 }
 
 .footer-content a {
-    color: var(--muted-color);
-    text-decoration: none;
     transition: color 0.2s;
 }
 
@@ -736,7 +737,6 @@ th.time-header {
 .footer-theme-toggle {
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--muted-color);
     cursor: pointer;
     opacity: 0.8;
     transition: opacity 0.2s;
@@ -1031,21 +1031,15 @@ th.time-header {
     margin-top: 0 !important;
 }
 
-.philosophy-link {
-    color: var(--muted-color);
-    text-decoration: underline;
-    font-size: 0.95rem;
-    transition: color 0.2s;
-    white-space: nowrap;
-}
 
-.philosophy-link:hover {
-    color: var(--text-main);
-}
 
 dialog article>header .close,
 dialog article>header :is(a, button)[rel=prev] {
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+dialog article>header h3 {
+    font-size: 1.25rem;
 }
 
 .modal-footer {
@@ -1055,21 +1049,4 @@ dialog article>header :is(a, button)[rel=prev] {
     gap: 1rem;
     padding-top: 1rem;
     border-top: 1px solid var(--muted-border-color);
-}
-
-.github-modal-link {
-    color: var(--muted-color);
-    text-decoration: underline;
-    font-size: 0.9rem;
-    transition: color 0.2s;
-}
-
-.github-modal-link:hover {
-    color: var(--text-main);
-    text-decoration: underline;
-}
-
-.github-modal-link svg {
-    width: 20px;
-    height: 20px;
 }

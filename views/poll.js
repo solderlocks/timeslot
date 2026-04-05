@@ -432,7 +432,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
             <div class="success-receipt fade-in">
                 <h3>✅ Response Saved!</h3>
                 <p>You flagged ${conflicts} conflict${conflicts !== 1 ? 's' : ''}. ${available} slot${available !== 1 ? 's' : ''} are marked as available.
-                <span class="edit-link" id="edit-response-link">Edit Response</span></p>
+                <span class="clear-btn" id="edit-response-link" style="margin-left: 0.5rem;">Edit Response</span></p>
             </div>
         `;
 
