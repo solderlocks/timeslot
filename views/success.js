@@ -11,7 +11,7 @@ export async function renderSuccessView(container, pollId) {
                 <div class="poll-header-row">
                     <div>
                         <h2 class="poll-title poll-title-compact">Poll Created</h2>
-                        <p class="poll-description-muted">Your stateless poll is live. Shared with your group to start collecting responses.</p>
+                        <p class="poll-description-muted">Your poll is live. Share it with your group to start collecting responses.</p>
                     </div>
                 </div>
             </header>
