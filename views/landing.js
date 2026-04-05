@@ -6,12 +6,12 @@ export function renderLandingView(container) {
     container.innerHTML = `
         <article class="fade-in landing-hero">
             <div class="hero-content">
-                <h1 class="hero-headline">Subtractive group scheduling. 🐝</h1>
-                <p class="hero-subheadline">
-                    Open-source utility for group scheduling. Mark schedule conflicts, find the viable gaps, and skip the negotiation. No accounts required.
+                <h1 class="hero-headline animate-rise-in">Subtractive group scheduling. 🐝</h1>
+                <p class="hero-subheadline animate-rise-in" style="animation-delay: 150ms;">
+                    Open-source utility for group scheduling. Propose times, let participants eliminate conflicts, and see the remaining gaps. No accounts required.
                 </p>
                 
-                <div class="hero-actions">
+                <div class="hero-actions animate-rise-in" style="animation-delay: 300ms;">
                     <a href="/create" class="button primary hero-cta" data-link>Create a Poll</a>
                     <a href="#" id="open-philosophy-link" class="philosophy-link">
                         How it works

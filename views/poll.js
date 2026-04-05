@@ -90,7 +90,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <div id="success-receipt-container"></div>
                 <p class="instruction-text">
                     Select the times that conflict with your schedule.
-                    <button type="button" class="outline secondary philosophy-trigger" id="open-philosophy-btn-poll" title="Subtractive Scheduling">
+                    <button type="button" class="philosophy-trigger" id="open-philosophy-btn-poll" title="Subtractive Scheduling">
                         <i data-lucide="info"></i>
                     </button>
                 </p>
@@ -286,10 +286,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     }
                 });
             }
+        }
 
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
+        if (window.lucide) {
+            window.lucide.createIcons();
         }
 
         const philBtn = container.querySelector('#open-philosophy-btn-poll');

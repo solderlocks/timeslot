@@ -180,25 +180,27 @@ nav ul:last-of-type {
 }
 
 .philosophy-trigger {
-    width: 24px !important;
-    height: 24px !important;
-    padding: 0 !important;
-    border-radius: 50% !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    margin-left: 0.5rem;
-    opacity: 0.5;
+    vertical-align: middle !important;
+    width: 18px !important;
+    height: 18px !important;
+    padding: 0 !important;
+    margin: 0 0 0 4px !important;
     background: transparent !important;
-    border: 1px solid var(--muted-color) !important;
+    border: none !important;
     color: var(--muted-color) !important;
     cursor: pointer;
     line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    box-shadow: none !important;
 }
 
 .philosophy-trigger svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
 }
 
 .philosophy-trigger:hover {
@@ -498,8 +500,8 @@ a.button.outline:hover {
     border-right: 1px solid var(--muted-border-color) !important;
 }
 
-.matrix-table th:last-child,
-.matrix-table td:last-child {
+.matrix-table th,
+.matrix-table td {
     border: none;
 }
 
@@ -908,6 +910,23 @@ th.time-header {
 }
 
 /* Landing Page Styles */
+@keyframes rise-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-rise-in {
+    opacity: 0;
+    animation: rise-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
 .landing-hero {
     display: flex;
     align-items: center;
