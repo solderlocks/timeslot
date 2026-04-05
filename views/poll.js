@@ -44,16 +44,6 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             <h2 class="poll-title poll-title-compact">${poll.title}</h2>
                             <p class="poll-description-muted">${poll.description || ''}</p>
                         </div>
-                        <div class="header-actions">
-                            ${activeEditToken ? `
-                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
-                                    <i data-lucide="link" style="width: 16px; height: 16px;"></i>
-                                </button>
-                            ` : ''}
-                            <button class="outline secondary share-btn" id="share-link-btn" title="Copy Shareable Poll Link">
-                                <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
-                            </button>
-                        </div>
                     </div>
 
                     <div class="mode-toggle">
@@ -70,8 +60,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
                 <div id="view-content">
                     ${currentMode === 'availability'
-                        ? renderAvailabilityDashboard(poll, userResponse)
-                        : renderGroupMatrix(poll)}
+                ? renderAvailabilityDashboard(poll, userResponse)
+                : renderGroupMatrix(poll)}
                 </div>
             </article>
         `;

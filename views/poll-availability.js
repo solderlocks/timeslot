@@ -56,12 +56,7 @@ export function renderAvailabilityDashboard(poll, userResponse) {
     return `
         <form id="availability-form" class="fade-in">
             <div id="success-receipt-container"></div>
-            <p class="instruction-text">
-                Select the times that conflict with your schedule.
-                <button type="button" class="philosophy-trigger philosophy-icon" id="open-philosophy-btn-poll" title="About Timeslot">
-                    <i data-lucide="info"></i>
-                </button>
-            </p>
+           
             <div class="voter-input-group">
                 <label for="voter-name">Your Name</label>
                 <input type="text" id="voter-name" name="voter_name"
@@ -69,7 +64,12 @@ export function renderAvailabilityDashboard(poll, userResponse) {
                        placeholder="Enter your name" required
                        class="voter-name-input">
             </div>
-
+            <p class="instruction-text">
+                Select the times that conflict with your schedule.
+                <button type="button" class="philosophy-trigger philosophy-icon" id="open-philosophy-btn-poll" title="About Timeslot">
+                    <i data-lucide="info"></i>
+                </button>
+            </p>
             <div class="dashboard-grid">${dayCards}</div>
 
             <hr>
