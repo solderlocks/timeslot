@@ -187,10 +187,6 @@ nav ul:last-of-type {
     align-items: center !important;
     justify-content: center !important;
     vertical-align: middle !important;
-    width: 18px !important;
-    height: 18px !important;
-    padding: 0 !important;
-    margin: 0 0 0 4px !important;
     background: transparent !important;
     border: none !important;
     color: var(--muted-color) !important;
@@ -199,6 +195,17 @@ nav ul:last-of-type {
     opacity: 0.6;
     transition: opacity 0.2s;
     box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.philosophy-icon {
+    width: 18px !important;
+    height: 18px !important;
+    margin: 0 0 0 4px !important;
+}
+
+.philosophy-trigger:hover {
+    opacity: 1;
 }
 
 .philosophy-trigger svg {
@@ -329,13 +336,13 @@ a.button.outline:hover {
 .mode-toggle {
     display: flex;
     /* background: rgba(0, 0, 0, 0.05); */
-    background: #f6f6f6;
     /* Subtle background */
     padding: 0.25rem;
     border-radius: 8px;
     width: fit-content;
     margin-right: auto;
     border: 1px solid var(--muted-border-color);
+    background: #f6f6f6;
 }
 
 [data-theme="dark"] .mode-toggle {
@@ -365,8 +372,10 @@ a.button.outline:hover {
 }
 
 .mode-toggle button[data-active="true"] {
-    background: var(--tab-active-bg);
-    color: var(--tab-active-text);
+    /* background: var(--tab-active-bg); */
+    /* color: var(--tab-active-text); */
+    background: white;
+    color: var(--primary-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -692,6 +701,26 @@ th.time-header {
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--muted-color);
+    flex-wrap: nowrap !important;
+}
+
+.footer-content a,
+.footer-content span {
+    white-space: nowrap !important;
+    display: inline-block !important;
+}
+
+.footer-content a {
+    color: var(--muted-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-content a:hover {
+    color: var(--text-main);
+    text-decoration: underline;
 }
 
 .footer-separator {
@@ -939,6 +968,14 @@ th.time-header {
     animation: rise-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.delay-150 {
+    animation-delay: 150ms;
+}
+
+.delay-300 {
+    animation-delay: 300ms;
+}
+
 .landing-hero {
     display: flex;
     align-items: center;
@@ -987,6 +1024,7 @@ th.time-header {
     text-decoration: underline;
     font-size: 0.95rem;
     transition: color 0.2s;
+    white-space: nowrap;
 }
 
 .philosophy-link:hover {

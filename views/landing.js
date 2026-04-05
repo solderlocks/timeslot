@@ -7,25 +7,15 @@ export function renderLandingView(container) {
         <article class="fade-in landing-hero">
             <div class="hero-content">
                 <h1 class="hero-headline animate-rise-in">Subtractive group scheduling. 🐝</h1>
-                <p class="hero-subheadline animate-rise-in" style="animation-delay: 150ms;">
+                <p class="hero-subheadline animate-rise-in delay-150">
                     Open-source utility for group scheduling. Propose times, let participants eliminate conflicts, and see the remaining gaps. No accounts required.
                 </p>
                 
-                <div class="hero-actions animate-rise-in" style="animation-delay: 300ms;">
+                <div class="hero-actions animate-rise-in delay-300">
                     <a href="/create" class="button primary hero-cta" data-link>Get Started</a>
-                    <a href="#" id="open-philosophy-link" class="philosophy-link">
-                        How it works
-                    </a>
+                    <a href="#" id="open-philosophy-link" class="philosophy-link philosophy-trigger">How it works</a>
                 </div>
             </div>
         </article>
     `;
-
-    const philLink = document.getElementById('open-philosophy-link');
-    if (philLink) {
-        philLink.onclick = (e) => {
-            e.preventDefault();
-            if (window.openPhilosophyModal) window.openPhilosophyModal();
-        };
-    }
 }

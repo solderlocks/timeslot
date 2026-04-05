@@ -141,6 +141,12 @@ document.addEventListener('click', e => {
         }
     }
 
+    // Global Philosophy Modal Trigger
+    if (e.target.closest('.philosophy-trigger')) {
+        e.preventDefault();
+        window.openPhilosophyModal();
+    }
+
     // Global Theme Toggle
     if (e.target.closest('#theme-toggle')) {
         const currentTheme = document.documentElement.getAttribute('data-theme');
