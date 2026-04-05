@@ -757,6 +757,7 @@ th.time-header {
     align-items: flex-start !important;
     gap: 0.5rem !important;
     flex-wrap: nowrap !important;
+    margin-bottom: 0.5rem;
 }
 
 @media (max-width: 600px) {
