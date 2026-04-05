@@ -44,6 +44,13 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             <h2 class="poll-title poll-title-compact">${poll.title}</h2>
                             <p class="poll-description-muted">${poll.description || ''}</p>
                         </div>
+                        <div class="header-actions">
+                            ${activeEditToken ? `
+                                <button class="outline secondary icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
+                                    <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
 
                     <div class="mode-toggle">
