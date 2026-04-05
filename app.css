@@ -545,6 +545,7 @@ button.margin-0 {
         background: transparent;
         border: none;
         padding: 0;
+        display: none;
     }
 
     .matrix-minimap-container summary.minimap-summary {
