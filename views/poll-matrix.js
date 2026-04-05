@@ -107,8 +107,7 @@ export function renderGroupMatrix(poll) {
         return `
             <tr class="matrix-row">
                 <td class="sticky-column voter-name-cell">
-                    <span class="name-full"><strong>${res.voter_name}</strong></span>
-                    <span class="name-initial"><strong>${res.voter_name.charAt(0).toUpperCase()}</strong></span>
+                    <strong>${res.voter_name}</strong>
                 </td>
                 ${cells}
             </tr>`;
