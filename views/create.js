@@ -45,7 +45,7 @@ export async function renderCreateView(container) {
                 
                 <hr>
                 
-                <button type="submit" id="submit-poll-btn" class="primary">Create Poll</button>
+                <button type="submit" id="submit-poll-btn" class="primary margin-0">Create Poll</button>
             </form>
         </article>
     `;
@@ -113,7 +113,7 @@ export async function renderCreateView(container) {
      */
     form.onsubmit = async (e) => {
         e.preventDefault();
-        
+
         // 1. Clear previous errors
         window.clearFieldErrors(form);
 

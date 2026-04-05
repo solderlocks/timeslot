@@ -37,8 +37,8 @@ export function renderAvailabilityDashboard(poll, userResponse) {
                     <span class="pill-label">${time}</span>
                     <div class="pill-icon">
                         ${status === 1
-                            ? '<span class="chk-icon-outline">○</span>'
-                            : '<span class="veto-icon">❌</span>'}
+                    ? '<span class="chk-icon-outline">○</span>'
+                    : '<span class="veto-icon">❌</span>'}
                     </div>
                 </div>`;
         }).join('');
@@ -75,7 +75,7 @@ export function renderAvailabilityDashboard(poll, userResponse) {
             <hr>
 
             <div class="submit-container">
-                <button type="submit" id="submit-vote-btn" class="primary save-btn">
+                <button type="submit" id="submit-vote-btn" class="primary save-btn margin-0">
                     ${userResponse ? 'Update Response' : 'Save Response'}
                 </button>
             </div>
