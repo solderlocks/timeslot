@@ -23,6 +23,7 @@
     --conflict-text: #991b1b;
     --tab-active-bg: #1a1d23;
     --tab-active-text: #ffffff;
+    --striped-day-bg: #f9f9f9;
 }
 
 /* Dark Mode: High Contrast Slate */
@@ -37,6 +38,7 @@
     --conflict-text: #fca5a5;
     --tab-active-bg: #f8fafc;
     --tab-active-text: #1a1d23;
+    --striped-day-bg: rgba(255, 255, 255, 0.025);
 }
 
 /* Force Light Theme */
@@ -104,7 +106,8 @@ article,
     border: 1px solid rgba(0, 0, 0, 0.05) !important;
 }
 
-article {
+article,
+header.container {
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
@@ -325,7 +328,8 @@ a.button.outline:hover {
 /* Dual-Mode Toggle (Segmented Control) */
 .mode-toggle {
     display: flex;
-    background: rgba(0, 0, 0, 0.05);
+    /* background: rgba(0, 0, 0, 0.05); */
+    background: #f6f6f6;
     /* Subtle background */
     padding: 0.25rem;
     border-radius: 8px;
@@ -496,6 +500,15 @@ a.button.outline:hover {
     border-bottom: 1px solid var(--muted-border-color) !important;
 }
 
+/* .matrix-table th:not(:last-child):not(.day-group-header),
+.matrix-table td:not(:last-child) {
+    border-right: 1px solid var(--muted-border-color) !important;
+} */
+
+.striped-day {
+    background-color: var(--striped-day-bg) !important;
+}
+
 .matrix-table .sticky-column {
     border-right: 1px solid var(--muted-border-color) !important;
 }
@@ -579,7 +592,8 @@ a.button.outline:hover {
 }
 
 .matrix-block[data-status="1"] {
-    background-color: var(--highlight-color);
+    /* background-color: var(--highlight-color); */
+    background-color: rgba(0, 0, 0, 0.1);
     opacity: 0.3;
 }
 

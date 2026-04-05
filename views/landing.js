@@ -12,7 +12,7 @@ export function renderLandingView(container) {
                 </p>
                 
                 <div class="hero-actions animate-rise-in" style="animation-delay: 300ms;">
-                    <a href="/create" class="button primary hero-cta" data-link>Create a Poll</a>
+                    <a href="/create" class="button primary hero-cta" data-link>Get Started</a>
                     <a href="#" id="open-philosophy-link" class="philosophy-link">
                         How it works
                     </a>

@@ -161,6 +161,14 @@ export async function renderPollView(container, pollId, urlEditToken) {
             currentGroup.options.push(opt);
         });
 
+        // Pre-calculate option to day-group index for zebra striping
+        const optionToDayIdx = {};
+        dayGroups.forEach((group, idx) => {
+            group.options.forEach(opt => {
+                optionToDayIdx[opt.id] = idx;
+            });
+        });
+
         // Helper to check if an option is the last in its day group
         const isLastInDay = (optionId) => {
             return dayGroups.some(group => group.options[group.options.length - 1].id === optionId);
@@ -180,8 +188,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         <thead>
                             <tr>
                                 <th rowspan="2" class="sticky-column participants-header">Participants</th>
-                                ${dayGroups.map(group => `
-                                    <th colspan="${group.options.length}" class="day-group-header ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
+                                ${dayGroups.map((group, groupIdx) => `
+                                    <th colspan="${group.options.length}" class="day-group-header ${groupIdx % 2 === 0 ? 'striped-day' : ''} ${isLastInDay(group.options[group.options.length - 1].id) ? 'day-boundary' : ''}">
                                         ${group.label}
                                     </th>
                                 `).join('')}
@@ -190,8 +198,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 ${poll.options.map(opt => {
                 const { time } = formatDate(opt.start_time);
                 const isBoundary = isLastInDay(opt.id);
+                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
                 return `
-                                        <th class="${isBoundary ? 'day-boundary' : ''} time-header">
+                                        <th class="${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''} time-header">
                                             <div class="header-stack">
                                                 <div class="time">${time}</div>
                                             </div>
@@ -211,8 +220,9 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 const vote = res.votes.find(v => v.option_id === opt.id);
                 const status = vote ? vote.status : 1;
                 const isBoundary = isLastInDay(opt.id);
+                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
                 return `
-                                            <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''}">
+                                            <td class="matrix-cell ${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''}">
                                                 <div class="matrix-block" data-status="${status}">
                                                     ${status === 0 ? '❌' : ''}
                                                 </div>
@@ -228,7 +238,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                                 ${poll.options.map(opt => {
                 const rank = poll.metadata.rankings.find(r => r.option_id === opt.id);
                 const isBoundary = isLastInDay(opt.id);
-                return `<td class="${isBoundary ? 'day-boundary' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
+                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
+                return `<td class="${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''} score-cell"><strong>${rank ? rank.score : 0}</strong></td>`;
             }).join('')}
                             </tr>
                         </tfoot>
