@@ -4,11 +4,11 @@
 
 ## Core Philosophy
 
-1.  **No Accounts, Ever**: Identity is managed via unguessable URL tokens (NanoID). No logins, no tracking, no passwords.
-2.  **Privacy First**: Security is achieved through obscure tokens, not authentication.
-3.  **UTC Truth**: All times are stored in UTC ISO 8601 string format. Rendering to local time is handled entirely by the browser's `Intl` API.
-4.  **Zero Build Steps (Frontend)**: The frontend uses vanilla ES6 modules, HTML5, and Pico.css via CDN. No Webpack, Vite, or transpilation required.
-5.  **Cloudflare Native**: Built to run on Cloudflare Pages (Frontend), Cloudflare Workers via Hono (Edge API), and Cloudflare D1 (SQL storage).
+**No Accounts, Ever**: Identity is managed via unguessable URL tokens (NanoID). No logins, no tracking, no passwords.
+**Privacy First**: Security is achieved through obscure tokens, not authentication.
+**UTC Truth**: All times are stored in UTC ISO 8601 string format. Rendering to local time is handled entirely by the browser's `Intl` API.
+**Zero Build Steps (Frontend)**: The frontend uses vanilla ES6 modules, HTML5, and Pico.css via CDN. No Webpack, Vite, or transpilation required.
+**Cloudflare Native**: Built to run on Cloudflare Pages (Frontend), Cloudflare Workers via Hono (Edge API), and Cloudflare D1 (SQL storage).
 
 ---
 
