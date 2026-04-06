@@ -1,11 +1,34 @@
-# Stateless Group Scheduling
+# Stateless Group Scheduling 🐝
 
-**timeslot.ink** is a stateless, serverless, and accountless group scheduling utility designed as a lightweight, open-source alternative to Doodle's core functionality.
+**[Try it live at timeslot.ink](https://timeslot.ink)**
+
+**timeslot.ink** is a stateless, serverless, and accountless group scheduling utility designed as a lightweight, open-source alternative to Doodle's core functionality. 
+
+## The Subtractive Method
+
+Traditional group scheduling breaks down when treating availability as a spectrum of preferences, creating a messy negotiation. Timeslot operates on **subtractive triage**:
+1. A marked conflict is a hard block.
+2. An unmarked slot defaults to viable. 
+
+By surveying only the impossibilities, the overlapping viable times naturally emerge in the empty space. No weighting, no negotiation, just data.
+
+## Visuals
+
+![Timeslot Landing Page](timeslot-screenshot-1.png)
+*Schedule by elimination. No accounts required.*
+
+![Availability Dashboard](timeslot-screenshot-6.jpg)
+*Participants only interact with times that conflict with their schedule.*
+
+![Consensus Matrix](timeslot-screenshot-8.jpg)
+*The optimal time reveals itself in the empty space.*
+
+---
 
 ## Core Philosophy
 
--   **No Accounts, Ever**: Identity is managed via unguessable URL tokens (NanoID). No logins, no tracking, no passwords.
--   **Privacy First**: Security is achieved through obscure tokens, not authentication.
+-   **No Accounts, Ever**: Identity is managed via unguessable URL tokens (NanoID). No logins and no passwords.
+-   **Privacy First**: Security is achieved through obscure tokens, not authentication. We use GoatCounter for cookieless, privacy-preserving basic analytics. Absolutely no invasive data harvesting.
 -   **UTC Truth**: All times are stored in UTC ISO 8601 string format. Rendering to local time is handled entirely by the browser's `Intl` API.
 -   **Zero Build Steps (Frontend)**: The frontend uses vanilla ES6 modules, HTML5, and Pico.css via CDN. No Webpack, Vite, or transpilation required.
 -   **Cloudflare Native**: Built to run on Cloudflare Pages (Frontend), Cloudflare Workers via Hono (Edge API), and Cloudflare D1 (SQL storage).
@@ -33,7 +56,7 @@
 Clone the repository and install the development dependencies:
 
 ```bash
-git clone https://github.com/solderlocks/timeslot.git
+git clone [https://github.com/solderlocks/timeslot.git](https://github.com/solderlocks/timeslot.git)
 cd timeslot
 npm install
 ```
@@ -114,6 +137,11 @@ To deploy to your own Cloudflare Pages account:
 -   `/wrangler.toml`: Cloudflare Pages configuration.
 
 ---
+
+## Author
+
+Created and maintained by Scott Kuehnert. 
+More projects at [jscottk.net](https://jscottk.net).
 
 ## License
 
