@@ -32,6 +32,7 @@ By surveying only the impossibilities, the overlapping viable times naturally em
 
 <br/>
 <br/>
+
 ---
 
 ## Core Philosophy
