@@ -20,13 +20,14 @@ By surveying only the impossibilities, the overlapping viable times naturally em
 <br/>
 <br/>
 
-<img width="633" height="600" alt="timeslot-screenshot-B" src="https://github.com/user-attachments/assets/ae119bc4-1d9f-4257-8f28-303935d9899c" /><br/>
+<img width="665" height="600" alt="timeslot-screenshot-A" src="https://github.com/user-attachments/assets/05eee982-b4cd-446e-b179-ee824182d151" /><br/>
 *Participants only interact with times that conflict with their schedule.*
 
 <br/>
 <br/>
 
-<img width="665" height="600" alt="timeslot-screenshot-A" src="https://github.com/user-attachments/assets/05eee982-b4cd-446e-b179-ee824182d151" /><br/>
+
+<img width="633" height="600" alt="timeslot-screenshot-B" src="https://github.com/user-attachments/assets/ae119bc4-1d9f-4257-8f28-303935d9899c" /><br/>
 *The optimal time reveals itself in the empty space.*
 
 <br/>
