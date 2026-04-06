@@ -16,7 +16,7 @@ export async function renderCreateView(container) {
                 <div class="poll-header-row">
                     <div>
                         <h2 class="poll-title poll-title-compact">Create a Poll</h2>
-                        <p class="poll-description-muted">Propose time slots and share the link.</p>
+                        <p class="poll-description-muted">Propose times and share the link.</p>
                     </div>
                 </div>
             </header>
@@ -31,7 +31,7 @@ export async function renderCreateView(container) {
                 </label>
                 
                 <fieldset>
-                    <legend>Proposed Time Slots</legend>
+                    <legend>Proposed Times</legend>
                     <div id="slots-container">
                         <div class="slot-row">
                             <input type="datetime-local" class="slot-input" min="${minDate}" required>
