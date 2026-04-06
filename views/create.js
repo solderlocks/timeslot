@@ -27,7 +27,7 @@ export async function renderCreateView(container) {
                 </label>
                 
                 <label for="description">Description (Optional)
-                    <textarea id="description" name="description" placeholder="Where and why..."></textarea>
+                    <textarea id="description" name="description" placeholder="Where, why, Duration..."></textarea>
                 </label>
                 
                 <fieldset>
