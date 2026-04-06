@@ -14,13 +14,14 @@ By surveying only the impossibilities, the overlapping viable times naturally em
 
 ## Visuals
 
-![Timeslot Landing Page](timeslot-screenshot-1.png)
+<img width="665" height="600" alt="timeslot-screenshot-A" src="https://github.com/user-attachments/assets/05eee982-b4cd-446e-b179-ee824182d151" />
 *Schedule by elimination. No accounts required.*
 
-![Availability Dashboard](timeslot-screenshot-6.jpg)
+<img width="633" height="600" alt="timeslot-screenshot-B" src="https://github.com/user-attachments/assets/ae119bc4-1d9f-4257-8f28-303935d9899c" />
 *Participants only interact with times that conflict with their schedule.*
 
-![Consensus Matrix](timeslot-screenshot-8.jpg)
+
+<img width="690" height="600" alt="timeslot-screenshot-C" src="https://github.com/user-attachments/assets/cf00306e-8d0e-4432-a957-5d06531c1aa5" />
 *The optimal time reveals itself in the empty space.*
 
 ---
