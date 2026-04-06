@@ -27,7 +27,11 @@ export async function renderCreateView(container) {
                 </label>
                 
                 <label for="description">Description (Optional)
-                    <textarea id="description" name="description" placeholder="Where, why, duration..."></textarea>
+                    <textarea id="description" name="description" placeholder="Where, why, duration, etc."></textarea>
+                </label>
+                
+                <label for="duration" style="display: none;">Duration (Optional)
+                    <input type="text" id="duration" name="duration" placeholder="e.g., 1 hour, 45 mins">
                 </label>
                 
                 <fieldset>
@@ -158,6 +162,7 @@ export async function renderCreateView(container) {
             const payload = {
                 title: titleInput.value,
                 description: form.querySelector('#description').value,
+                duration: form.querySelector('#duration').value,
                 options
             };
 

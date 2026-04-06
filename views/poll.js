@@ -42,7 +42,13 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     <div class="poll-header-row">
                         <div>
                             <h2 class="poll-title poll-title-compact">${poll.title}</h2>
-                            <p class="poll-description-muted">${poll.description || ''}</p>
+                            ${poll.description ? `<p class="poll-description-muted">${poll.description}</p>` : ''}
+                            ${poll.duration ? `
+                                <p class="poll-duration-tag">
+                                    <i data-lucide="clock" style="width: 14px; height: 14px; vertical-align: middle; margin-right: 4px;"></i>
+                                    <span>${poll.duration}</span>
+                                </p>
+                            ` : ''}
                         </div>
                         <div class="header-actions">
                             ${activeEditToken ? `

@@ -5,6 +5,7 @@ CREATE TABLE polls (
     id TEXT PRIMARY KEY,               -- Prefixed p_[nanoid]
     title TEXT NOT NULL,
     description TEXT,
+    duration TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

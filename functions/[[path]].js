@@ -36,7 +36,7 @@ app.use('/polls/*', rateLimit);
  * Creates a new poll with p_ prefixed IDs.
  */
 api.post('/polls', async (c) => {
-    const { title, description, options } = await c.req.json();
+    const { title, description, duration, options } = await c.req.json();
     
     if (!title || !options || options.length === 0) {
         return c.json({ error: 'Title and options are required' }, 400);
@@ -47,8 +47,8 @@ api.post('/polls', async (c) => {
 
     try {
         const statements = [
-            db.prepare('INSERT INTO polls (id, title, description) VALUES (?, ?, ?)')
-              .bind(pollId, title, description || null)
+            db.prepare('INSERT INTO polls (id, title, description, duration) VALUES (?, ?, ?, ?)')
+              .bind(pollId, title, description || null, duration || null)
         ];
 
         // Add options

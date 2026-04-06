@@ -90,6 +90,15 @@ h1,
     color: var(--muted-color);
 }
 
+.poll-duration-tag {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.85rem;
+    color: var(--muted-color);
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
 h2,
 h3,
 h4,
