@@ -292,27 +292,25 @@ function initGridSelectorUI() {
 
         const minDateAttr = slotsContainer.querySelector('input')?.getAttribute('min') || '';
 
-        // Sort selections by time
+        // Sort all selections by time
         const sortedUTCs = Array.from(gridState.selectedUTCs).sort();
 
-        sortedUTCs.forEach(utc => {
-            const date = new Date(utc);
-            const localValue = toLocalISO(date);
+        if (sortedUTCs.length > 0) {
+            // Clear existing slots to replace them with the sorted set
+            slotsContainer.innerHTML = '';
 
-            const newRow = document.createElement('div');
-            newRow.className = 'slot-row';
-            newRow.innerHTML = `
-                <input type="datetime-local" class="slot-input" value="${localValue}" min="${minDateAttr}" required>
-                <button type="button" class="outline secondary remove-btn">×</button>
-            `;
-            slotsContainer.appendChild(newRow);
-        });
+            sortedUTCs.forEach(utc => {
+                const date = new Date(utc);
+                const localValue = toLocalISO(date);
 
-        // Clean up first empty slot if we added others
-        const firstRow = slotsContainer.querySelector('.slot-row');
-        const firstInput = firstRow?.querySelector('input');
-        if (firstInput && !firstInput.value && sortedUTCs.length > 0) {
-            firstRow.remove();
+                const newRow = document.createElement('div');
+                newRow.className = 'slot-row';
+                newRow.innerHTML = `
+                    <input type="datetime-local" class="slot-input" value="${localValue}" min="${minDateAttr}" required>
+                    <button type="button" class="outline secondary remove-btn">×</button>
+                `;
+                slotsContainer.appendChild(newRow);
+            });
         }
 
         gridState.selectedUTCs.clear();
