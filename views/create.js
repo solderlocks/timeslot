@@ -44,6 +44,7 @@ export async function renderCreateView(container) {
                     </div>
                     <footer class="slot-footer">
                         <button type="button" id="add-slot-btn" class="clear-btn">+ Add another slot</button>
+                        <button type="button" id="open-grid-btn" class="clear-btn float-right">🗓️ Grid View</button>
                     </footer>
                 </fieldset>
                 
@@ -57,6 +58,9 @@ export async function renderCreateView(container) {
     const form = container.querySelector('#create-poll-form');
     const slotsContainer = container.querySelector('#slots-container');
     const addSlotBtn = container.querySelector('#add-slot-btn');
+    const openGridBtn = container.querySelector('#open-grid-btn');
+
+    if (openGridBtn) openGridBtn.onclick = window.openGridModal;
 
     /**
      * Smart Slot Logic: New slot = Previous slot + 1 hour.

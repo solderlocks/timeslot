@@ -13,7 +13,7 @@
 /* Light Mode: Warm Glass */
 [data-theme="light"] {
     --bg-color: #f4f3f1;
-    --matrix-bg: rgba(255, 255, 255, 0.85);
+    --matrix-bg: rgba(255, 255, 255, 1.0);
     --text-main: #1a1d23;
     /* Off-black */
     --muted-color: #64748b;
@@ -24,6 +24,7 @@
     --tab-active-bg: #1a1d23;
     --tab-active-text: #ffffff;
     --striped-day-bg: #f7f7f7;
+    --selected-grid-time: rgba(0, 200, 0, 0.1);
 }
 
 /* Dark Mode: High Contrast Slate */
@@ -189,6 +190,7 @@ a:hover {
 
 .clear-btn:hover {
     opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 .no-margin {
@@ -1202,8 +1204,6 @@ a.button.primary.hero-cta {
     margin-top: 0;
 }
 
-
-
 dialog article>header .close,
 dialog article>header :is(a, button)[rel=prev] {
     margin-top: 0.25rem;
@@ -1213,11 +1213,249 @@ dialog article>header h3 {
     font-size: 1.25rem;
 }
 
+dialog article>footer,
+dialog article>header {
+    margin: 0 !important;
+}
+
+dialog article>header {
+    border-bottom: var(--muted-border-color) !important;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
+    z-index: 9;
+}
+
 .modal-footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
+    /* Standard footer alignment */
     gap: 1rem;
-    padding-top: 1rem;
+    padding: 1.5rem;
+    /* Equal padding on all sides as requested */
     border-top: 1px solid var(--muted-border-color);
+    background: var(--matrix-bg);
+    flex-shrink: 0;
+}
+
+/* Grid Selector Modal */
+.grid-modal-article {
+    max-width: 95vw;
+    width: 1200px;
+    height: 90vh;
+    /* Fixed height for consistency */
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    /* Prevent article itself from scrolling */
+}
+
+dialog article.grid-modal-article>header {
+    padding: 1.5rem 2rem !important;
+    /* Force comfortable padding */
+    border-bottom: 1px solid var(--muted-border-color);
+}
+
+.grid-modal-header-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.grid-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2.0rem;
+    padding: 0.5rem 0;
+}
+
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.toolbar-group.week-nav {
+    gap: 0;
+}
+
+.toolbar-group.boundaries {
+    gap: 0.25rem;
+}
+
+.week-range-text {
+    font-weight: 700;
+    font-size: 0.95rem;
+    min-width: 160px;
+    text-align: center;
+}
+
+.compact-btn {
+    padding: 2px 8px !important;
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+    height: 32px;
+    text-decoration: none;
+}
+
+.mode-toggle.compact {
+    padding: 2px;
+}
+
+.mode-toggle.compact button {
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    height: 28px;
+}
+
+.compact-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.compact-select {
+    width: auto !important;
+    height: 32px !important;
+    padding: 0 1.5rem 0 0.5rem !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+    background-position: right 0.4rem center !important;
+}
+
+.to-separator {
+    color: var(--muted-color);
+    font-size: 0.85rem;
+}
+
+/* Bulk Grid Layout */
+.bulk-grid-container {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    /* padding: 1rem; */
+    padding: 0;
+    gap: 0;
+    background: var(--bg-color);
+    user-select: none;
+}
+
+.bulk-grid-day {
+    flex: 1;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--muted-border-color);
+}
+
+.bulk-grid-day:last-child {
+    border-right: none;
+}
+
+.grid-day-header {
+    padding: 0.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--muted-border-color);
+    background: var(--matrix-bg);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.grid-day-weekday {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.grid-day-date {
+    font-size: 0.75rem;
+    color: var(--muted-color);
+}
+
+.bulk-grid-cell {
+    height: 48px;
+    min-height: 40px;
+    border-bottom: 1px solid var(--muted-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    /* Slightly larger */
+    color: var(--text-main);
+    /* Darker for accessibility */
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+    background: var(--matrix-bg);
+}
+
+/* .bulk-grid-day::after {
+    content: "";
+    display: block;
+    height: 1rem;
+    flex-shrink: 0;
+} */
+
+.bulk-grid-cell:hover {
+    background: var(--highlight-color);
+}
+
+.bulk-grid-cell.selected {
+    /* background-color: var(--tab-active-bg) !important;
+    color: var(--tab-active-text) !important; */
+    background-color: var(--selected-grid-time);
+    border-bottom-color: transparent;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.grid-cell-label {
+    opacity: 0.75;
+}
+
+.bulk-grid-cell.selected .grid-cell-label {
+    opacity: 1;
+}
+
+/* Modal Footer - Handled above in consolidated rule */
+
+.modal-footer button {
+    margin: 0;
+}
+
+@media (max-width: 800px) {
+    .grid-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.25rem;
+    }
+
+    .toolbar-group {
+        width: 100%;
+        justify-content: left;
+    }
+
+    .toolbar-group.week-nav {
+        justify-content: left;
+    }
+
+    .bulk-grid-day {
+        min-width: 120px;
+    }
+}
+
+.slot-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.float-right {
+    margin-left: auto;
 }

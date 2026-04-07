@@ -70,11 +70,14 @@
                 <h3 class="no-margin">About Timeslot</h3>
             </header>
             <p>
-                This tool was inspired by the realization that finding a good meeting time is largely about working around schedule conflicts. By surveying the conflicts, the overlapping open times become visible in the empty space.
+                This tool was inspired by the realization that finding a good meeting time is largely about working
+                around schedule conflicts. By surveying the conflicts, the overlapping open times become visible in the
+                empty space.
 
             </p>
             <p>
-                Participants view the poll, select timeslots that don't work for them, and submit their responses. The best times to
+                Participants view the poll, select timeslots that don't work for them, and submit their responses. The
+                best times to
                 meet naturally emerge as the group responds to the poll.
             </p>
             <p>
@@ -92,6 +95,59 @@
             </p>
             <footer class="modal-footer" style="justify-content: flex-end">
                 <button class="primary" id="close-philosophy-btn" style="margin: 0">Got it</button>
+            </footer>
+        </article>
+    </dialog>
+
+    <!-- Grid Selector Modal -->
+    <dialog id="grid-selector-modal">
+        <article class="grid-modal-article">
+            <header>
+                <button aria-label="Close" rel="prev" id="close-grid-modal"></button>
+                <div class="grid-modal-header-content">
+                    <h3 class="no-margin">Select Proposed Times</h3>
+
+                    <div class="grid-toolbar">
+                        <!-- Week Navigation -->
+                        <div class="toolbar-group week-nav">
+                            <button type="button" id="prev-week-btn" class="clear-btn compact-btn">❮</button>
+                            <span id="current-week-range" class="week-range-text">Apr 6 - Apr 12</span>
+                            <button type="button" id="next-week-btn" class="clear-btn compact-btn">❯</button>
+                        </div>
+
+                        <!-- Granularity Toggle -->
+                        <div class="toolbar-group granularity-toggle">
+                            <div class="mode-toggle compact">
+                                <button type="button" data-granularity="15">15m</button>
+                                <button type="button" data-granularity="30">30m</button>
+                                <button type="button" data-granularity="60" data-active="true">60m</button>
+                            </div>
+                        </div>
+
+                        <!-- Boundary Controls -->
+                        <div class="toolbar-group boundaries">
+                            <label class="compact-label" aria-label="Start Time">
+                                <select id="grid-start-hour" class="compact-select">
+                                    <!-- Options injected by JS -->
+                                </select>
+                            </label>
+                            <span class="to-separator">to</span>
+                            <label class="compact-label" aria-label="End Time">
+                                <select id="grid-end-hour" class="compact-select">
+                                    <!-- Options injected by JS -->
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div id="bulk-grid-container" class="bulk-grid-container">
+                <!-- JS will render the grid here -->
+            </div>
+
+            <footer class="modal-footer">
+                <button class="primary" id="add-selected-times-btn">Add Selected Times</button>
             </footer>
         </article>
     </dialog>
