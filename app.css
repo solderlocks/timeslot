@@ -42,6 +42,10 @@
     --striped-day-bg: rgba(255, 255, 255, 0.025);
 }
 
+html {
+    background-color: var(--bg-color);
+}
+
 /* Force Light Theme */
 body {
     background-color: var(--bg-color);
@@ -1289,16 +1293,24 @@ dialog article.grid-modal-article>header {
 .week-range-text {
     font-weight: 700;
     font-size: 0.95rem;
-    min-width: 160px;
-    text-align: center;
+    /* min-width: 160px;
+    text-align: center; */
+    text-align: left;
 }
 
 .compact-btn {
-    padding: 2px 8px !important;
-    font-size: 0.8rem !important;
-    margin: 0 !important;
+    padding: 2px 8px;
+    font-size: 0.8rem;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
     height: 32px;
     text-decoration: none;
+}
+
+.compact-btn:first-of-type {
+    margin-left: 0;
 }
 
 .mode-toggle.compact {
@@ -1413,6 +1425,13 @@ dialog article.grid-modal-article>header {
     border-bottom-color: transparent;
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     z-index: 2;
+}
+
+.bulk-grid-cell.past {
+    opacity: 0.3;
+    pointer-events: none;
+    background-color: #eee;
+    cursor: default;
 }
 
 .grid-cell-label {

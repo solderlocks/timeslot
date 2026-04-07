@@ -10,7 +10,7 @@ import { renderSuccessView } from './views/success.js';
 /**
  * Global Utilities
  */
-window.showToast = function(message) {
+window.showToast = function (message) {
     const existing = document.querySelector('.toast-notification');
     if (existing) existing.remove();
 
@@ -21,7 +21,7 @@ window.showToast = function(message) {
         <button class="toast-close" aria-label="Close">×</button>
     `;
     document.body.appendChild(toast);
-    
+
     const closeBtn = toast.querySelector('.toast-close');
     closeBtn.onclick = () => {
         toast.classList.add('fade-out');
@@ -36,7 +36,7 @@ window.showToast = function(message) {
     }, 4000);
 };
 
-window.openPhilosophyModal = function() {
+window.openPhilosophyModal = function () {
     const modal = document.getElementById('philosophy-modal');
     if (modal) {
         modal.showModal();
@@ -44,7 +44,7 @@ window.openPhilosophyModal = function() {
     }
 };
 
-window.closePhilosophyModal = function() {
+window.closePhilosophyModal = function () {
     const modal = document.getElementById('philosophy-modal');
     if (modal) modal.close();
 };
@@ -52,7 +52,7 @@ window.closePhilosophyModal = function() {
 /**
  * Reusable Form Validation Helpers
  */
-window.showFieldError = function(input, message) {
+window.showFieldError = function (input, message) {
     // Prevent duplicate errors for the same input
     const existing = input.parentNode.querySelector(`.form-error[data-for="${input.id || input.name}"]`);
     if (existing) return;
@@ -71,7 +71,7 @@ window.showFieldError = function(input, message) {
     }
 };
 
-window.clearFieldErrors = function(form) {
+window.clearFieldErrors = function (form) {
     form.querySelectorAll('.form-error').forEach(el => el.remove());
     form.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
 };
@@ -82,6 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeBtn2 = document.getElementById('close-philosophy-btn');
     if (closeBtn) closeBtn.onclick = window.closePhilosophyModal;
     if (closeBtn2) closeBtn2.onclick = window.closePhilosophyModal;
+
+    // Close modals on backdrop click
+    document.querySelectorAll('dialog').forEach(modal => {
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.close();
+            }
+        };
+    });
 });
 
 const app = document.getElementById('app');
@@ -135,7 +144,7 @@ document.addEventListener('click', e => {
     if (e.target.matches('[data-link]') || e.target.closest('#nav-create')) {
         const target = e.target.matches('[data-link]') ? e.target : e.target.closest('#nav-create');
         if (target.pathname === window.location.pathname && target.search === window.location.search) {
-             // Already here
+            // Already here
         } else {
             e.preventDefault();
             const href = target.getAttribute('href');
@@ -184,10 +193,10 @@ function toLocalISO(date) {
     return localDate.toISOString().slice(0, 16);
 }
 
-window.openGridModal = function() {
+window.openGridModal = function () {
     const modal = document.getElementById('grid-selector-modal');
     if (!modal) return;
-    
+
     // Sync existing selections from the form
     gridState.selectedUTCs.clear();
     const existingSlots = document.querySelectorAll('.slot-input');
@@ -205,13 +214,13 @@ window.openGridModal = function() {
     // Round to start of today local
     now.setHours(0, 0, 0, 0);
     gridState.currentWeekStart = now;
-    
+
     initGridSelectorUI();
     renderBulkGrid();
     modal.showModal();
 };
 
-window.closeGridModal = function() {
+window.closeGridModal = function () {
     const modal = document.getElementById('grid-selector-modal');
     if (modal) modal.close();
 };
@@ -237,7 +246,7 @@ function initGridSelectorUI() {
         startSelect.insertAdjacentHTML('beforeend', opt);
         endSelect.insertAdjacentHTML('beforeend', opt);
     }
-    
+
     startSelect.value = gridState.startHour;
     endSelect.value = gridState.endHour;
 
@@ -289,7 +298,7 @@ function initGridSelectorUI() {
         sortedUTCs.forEach(utc => {
             const date = new Date(utc);
             const localValue = toLocalISO(date);
-            
+
             const newRow = document.createElement('div');
             newRow.className = 'slot-row';
             newRow.innerHTML = `
@@ -315,10 +324,21 @@ function initGridSelectorUI() {
 function renderBulkGrid() {
     const container = document.getElementById('bulk-grid-container');
     const rangeText = document.getElementById('current-week-range');
+    const prevBtn = document.getElementById('prev-week-btn');
     if (!container) return;
 
     container.innerHTML = '';
-    
+
+    const now = new Date();
+    const todayMidnight = new Date(now);
+    todayMidnight.setHours(0, 0, 0, 0);
+
+    // Hide Previous Button if we're at or before today's week
+    if (prevBtn) {
+        // prevBtn.style.visibility = (gridState.currentWeekStart <= todayMidnight) ? 'hidden' : 'visible';
+        prevBtn.style.display = (gridState.currentWeekStart <= todayMidnight) ? 'none' : 'inline-block';
+    }
+
     // Update Week Range Display
     const weekStart = new Date(gridState.currentWeekStart);
     const weekEnd = new Date(weekStart);
@@ -330,7 +350,7 @@ function renderBulkGrid() {
     for (let i = 0; i < 7; i++) {
         const dayDate = new Date(weekStart);
         dayDate.setDate(dayDate.getDate() + i);
-        
+
         const dayCol = document.createElement('div');
         dayCol.className = 'bulk-grid-day';
         dayCol.innerHTML = `
@@ -343,35 +363,38 @@ function renderBulkGrid() {
         // Generate Slots
         let startMins = gridState.startHour * 60;
         let endMins = gridState.endHour * 60;
-        if (endMins <= startMins) endMins += 24 * 60; 
+        if (endMins <= startMins) endMins += 24 * 60;
 
         for (let m = startMins; m <= endMins; m += gridState.granularity) {
             const slotDate = new Date(dayDate);
             slotDate.setHours(Math.floor(m / 60) % 24, m % 60, 0, 0);
-            
+
             const utcStr = slotDate.toISOString();
             const isSelected = gridState.selectedUTCs.has(utcStr);
-            
+            const isPast = slotDate < now;
+
             const cell = document.createElement('div');
-            cell.className = `bulk-grid-cell ${isSelected ? 'selected' : ''}`;
+            cell.className = `bulk-grid-cell ${isSelected ? 'selected' : ''} ${isPast ? 'past' : ''}`;
             cell.dataset.utc = utcStr;
-            
+
             const displayTime = slotDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
             cell.innerHTML = `<span class="grid-cell-label">${displayTime.toLowerCase().replace(' ', '')}</span>`;
-            
-            cell.onclick = () => {
-                if (gridState.selectedUTCs.has(utcStr)) {
-                    gridState.selectedUTCs.delete(utcStr);
-                    cell.classList.remove('selected');
-                } else {
-                    gridState.selectedUTCs.add(utcStr);
-                    cell.classList.add('selected');
-                }
-            };
-            
+
+            if (!isPast) {
+                cell.onclick = () => {
+                    if (gridState.selectedUTCs.has(utcStr)) {
+                        gridState.selectedUTCs.delete(utcStr);
+                        cell.classList.remove('selected');
+                    } else {
+                        gridState.selectedUTCs.add(utcStr);
+                        cell.classList.add('selected');
+                    }
+                };
+            }
+
             dayCol.appendChild(cell);
         }
-        
+
         container.appendChild(dayCol);
     }
 }
