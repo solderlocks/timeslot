@@ -1463,10 +1463,6 @@ dialog article.grid-modal-article>header {
     .bulk-grid-day {
         min-width: 120px;
     }
-    .bulk-grid-cell:hover {
-        background: var(--matrix-bg);
-    }
-
 }
 
 .slot-footer {
