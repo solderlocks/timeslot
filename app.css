@@ -70,10 +70,10 @@ fieldset>legend {
     font-weight: bold;
 }
 
-:focus-visible {
-    border: 1px solid #AAA !important;
-    outline: 1px solid white !important;
-    box-shadow: 0 0 0 3px var(--primary-color) !important;
+html[data-theme] :focus-visible {
+    border: 1px solid #AAA;
+    outline: 1px solid white;
+    box-shadow: 0 0 0 3px var(--primary-color);
     border-radius: 4px;
 }
 
@@ -428,7 +428,6 @@ body a.button.outline:hover {
 
 @media (max-width: 600px) {
     .dashboard-grid {
-        /* grid-template-columns: repeat(2, 1fr) !important; */
         gap: 0.75rem;
     }
 
@@ -566,23 +565,22 @@ button.margin-0 {
     .matrix-minimap-container summary.minimap-summary {
         display: block;
         /* Hard reset from flex/pico */
-        list-style: none !important;
-        appearance: none !important;
+        list-style: none;
+        appearance: none;
         cursor: pointer;
         padding: 0;
         margin-bottom: 0.5rem;
         user-select: none;
-        background: none !important;
+        background: none;
     }
 
-    /* Total blackout of all native/pico markers and icons */
-    .matrix-minimap-container summary::-webkit-details-marker,
-    .matrix-minimap-container summary::marker,
-    .matrix-minimap-container summary::before,
-    .matrix-minimap-container summary::after {
-        display: none !important;
-        content: none !important;
-        background: none !important;
+    .matrix-minimap-container summary.minimap-summary::-webkit-details-marker,
+    .matrix-minimap-container summary.minimap-summary::marker,
+    .matrix-minimap-container summary.minimap-summary::before,
+    .matrix-minimap-container summary.minimap-summary::after {
+        display: none;
+        content: none;
+        background: none;
     }
 
     .matrix-minimap-container .summary-content {
@@ -717,7 +715,7 @@ button.margin-0 {
     border-bottom: 1px solid var(--muted-border-color);
 }
 
-/* 0,2,0 beats .matrix-table td's 0,1,1 — no !important needed */
+
 .matrix-table .striped-day {
     background-color: var(--striped-day-bg);
 }
@@ -1163,7 +1161,7 @@ th.day-group-header {
     animation-delay: 300ms;
 }
 
-/* article.landing-hero beats Pico's article rule — no !important needed */
+
 article.landing-hero {
     display: flex;
     align-items: center;
@@ -1217,13 +1215,13 @@ dialog article>header h3 {
     font-size: 1.25rem;
 }
 
-dialog article>footer,
-dialog article>header {
-    margin: 0 !important;
+dialog article.grid-modal-article>footer,
+dialog article.grid-modal-article>header {
+    margin: 0;
 }
 
-dialog article>header {
-    border-bottom: var(--muted-border-color) !important;
+dialog article.grid-modal-article>header {
+    border-bottom: 1px solid var(--muted-border-color);
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
     z-index: 9;
 }
@@ -1257,7 +1255,7 @@ dialog article>header {
 }
 
 dialog article.grid-modal-article>header {
-    padding: 1.5rem 2rem !important;
+    padding: 1.5rem 2rem;
     /* Force comfortable padding */
     border-bottom: 1px solid var(--muted-border-color);
 }
@@ -1332,13 +1330,13 @@ dialog article.grid-modal-article>header {
     font-weight: 600;
 }
 
-.compact-select {
-    width: auto !important;
-    height: 32px !important;
-    padding: 0 1.5rem 0 0.5rem !important;
-    font-size: 0.85rem !important;
-    margin: 0 !important;
-    background-position: right 0.4rem center !important;
+.grid-toolbar .compact-select {
+    width: auto;
+    height: 32px;
+    padding: 0 1.5rem 0 0.5rem;
+    font-size: 0.85rem;
+    margin: 0;
+    background-position: right 0.4rem center;
 }
 
 .to-separator {
@@ -1419,8 +1417,6 @@ dialog article.grid-modal-article>header {
 }
 
 .bulk-grid-cell.selected {
-    /* background-color: var(--tab-active-bg) !important;
-    color: var(--tab-active-text) !important; */
     background-color: var(--selected-grid-time);
     border-bottom-color: transparent;
     /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
