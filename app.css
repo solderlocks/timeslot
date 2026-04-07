@@ -1230,7 +1230,7 @@ dialog article>header {
     justify-content: flex-end;
     /* Standard footer alignment */
     gap: 1rem;
-    padding: 1.5rem;
+    padding: 1.0rem;
     /* Equal padding on all sides as requested */
     border-top: 1px solid var(--muted-border-color);
     background: var(--matrix-bg);
