@@ -1264,6 +1264,7 @@ dialog article.grid-modal-article>header {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
 }
 
 .grid-toolbar {
@@ -1412,8 +1413,10 @@ dialog article.grid-modal-article>header {
     flex-shrink: 0;
 } */
 
-.bulk-grid-cell:hover {
-    background: var(--highlight-color);
+@media (hover: hover) {
+    .bulk-grid-cell:hover {
+        background: var(--highlight-color);
+    }
 }
 
 .bulk-grid-cell.selected {
@@ -1426,7 +1429,6 @@ dialog article.grid-modal-article>header {
 .bulk-grid-cell.past {
     opacity: 0.3;
     pointer-events: none;
-    background-color: #eee;
     cursor: default;
 }
 
@@ -1453,11 +1455,35 @@ dialog article.grid-modal-article>header {
 
     .toolbar-group {
         width: 100%;
-        justify-content: left;
     }
 
     .toolbar-group.week-nav {
-        justify-content: left;
+        justify-content: flex-start;
+    }
+
+    .mode-toggle.compact {
+        width: 100%;
+        display: flex;
+    }
+
+    .mode-toggle.compact button {
+        flex: 1;
+    }
+
+    .toolbar-group.boundaries {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .toolbar-group.boundaries .compact-label {
+        flex: 1;
+        margin: 0;
+    }
+
+    .toolbar-group.boundaries .compact-select {
+        width: 100%;
     }
 
     .bulk-grid-day {
