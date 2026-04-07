@@ -1469,7 +1469,7 @@ dialog article.grid-modal-article>header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 0.5rem;
     padding-right: 3rem;
 }
 
