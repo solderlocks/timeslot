@@ -179,7 +179,7 @@ a:hover {
     font-size: 0.9rem;
     font-weight: 700;
     color: var(--text-main);
-    text-decoration: underline;
+    /* text-decoration: underline; */
     text-underline-offset: 4px;
     border: none;
     background: transparent;
@@ -1344,6 +1344,7 @@ dialog article.grid-modal-article>header {
     gap: 0;
     background: var(--bg-color);
     user-select: none;
+    border-top: 1px solid var(--muted-border-color);
 }
 
 .bulk-grid-day {
@@ -1381,7 +1382,7 @@ dialog article.grid-modal-article>header {
 .bulk-grid-cell {
     height: 48px;
     min-height: 40px;
-    border-bottom: 1px solid var(--muted-border-color);
+    border-bottom: 2px solid var(--muted-border-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1410,7 +1411,7 @@ dialog article.grid-modal-article>header {
     color: var(--tab-active-text) !important; */
     background-color: var(--selected-grid-time);
     border-bottom-color: transparent;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
     z-index: 2;
 }
 
@@ -1454,6 +1455,7 @@ dialog article.grid-modal-article>header {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
+    padding-right: 3rem;
 }
 
 .float-right {

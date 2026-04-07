@@ -345,7 +345,7 @@ function renderBulkGrid() {
         let endMins = gridState.endHour * 60;
         if (endMins <= startMins) endMins += 24 * 60; 
 
-        for (let m = startMins; m < endMins; m += gridState.granularity) {
+        for (let m = startMins; m <= endMins; m += gridState.granularity) {
             const slotDate = new Date(dayDate);
             slotDate.setHours(Math.floor(m / 60) % 24, m % 60, 0, 0);
             
