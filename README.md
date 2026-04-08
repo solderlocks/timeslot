@@ -153,6 +153,8 @@ To deploy to your own Cloudflare Pages account:
 Created and maintained by Scott Kuehnert. 
 More projects at [jscottk.net](https://jscottk.net).
 
+**AI Disclosure:** This repository and its associated tools were developed with assistance from AI coding agents (Antigravity) to accelerate implementation, documentation, and logic refinement.
+
 ## License
 
 GNU GPL v3.0 - See [LICENSE](LICENSE) for details.
