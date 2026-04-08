@@ -13,7 +13,7 @@ export async function renderSuccessView(container, pollId, editToken, isEdit = f
                 <div class="poll-header-row">
                     <div>
                         <h2 class="poll-title poll-title-compact">${isEdit ? 'Poll Edited' : 'Poll Created'}</h2>
-                        <p class="poll-description-muted">${isEdit ? 'Your changes have been saved.' : 'Your poll is live. Share it with your group to start collecting responses.'}</p>
+                        <p class="poll-description-muted">${isEdit ? 'Your changes have been saved.' : `Your poll is live. Share it with your group to start collecting responses. <br/>Copy your <a href="${editUrl}" target="_blank">Edit Link</a> to make changes to the poll later.`}</p>
                     </div>
                 </div>
             </header>
@@ -32,19 +32,6 @@ export async function renderSuccessView(container, pollId, editToken, isEdit = f
                 </div>
                 <p class="instruction-text hint-text">Anyone with this link can view the poll and add their response.</p>
             </section>
-
-            ${editUrl ? `
-            <section class="success-link-section" style="margin-top: 2rem;">
-                <label class="success-link-label">Private Edit Link</label>
-                <div class="success-link-row">
-                    <div class="input-with-button success-link-display">
-                        <input type="text" id="edit-url-display" value="${editUrl}" readonly>
-                        <button type="button" id="copy-edit-btn" class="embedded-icon-btn" title="Copy Edit Link">📋</button>
-                    </div>
-                </div>
-                <p class="instruction-text hint-text warning-text">⚠️ This link allows you to edit the poll or delete it.</p>
-            </section>
-            ` : ''}
         </article>
     `;
 

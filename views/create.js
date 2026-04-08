@@ -55,13 +55,13 @@ export async function renderCreateView(container, pollId = null, adminToken = nu
             poll.options.map(opt => `
                                 <div class="slot-row">
                                     <input type="datetime-local" class="slot-input" value="${toLocal(opt.start_time)}" min="${minDate}" required>
-                                    <button type="button" class="outline secondary remove-btn">×</button>
+                                    <button type="button" class="clear-btn remove-btn" title="Remove Timeslot">×</button>
                                 </div>
                             `).join('')
             : `
                                 <div class="slot-row">
                                     <input type="datetime-local" class="slot-input" min="${minDate}" required>
-                                    <button type="button" class="outline secondary remove-btn">×</button>
+                                    <button type="button" class="clear-btn remove-btn" title="Remove Timeslot">×</button>
                                 </div>
                             `
         }
@@ -108,9 +108,12 @@ export async function renderCreateView(container, pollId = null, adminToken = nu
         newRow.className = 'slot-row';
         newRow.innerHTML = `
             <input type="datetime-local" class="slot-input" value="${nextValue}" min="${minDate}" required>
-            <button type="button" class="outline secondary remove-btn">×</button>
+            <button type="button" class="clear-btn remove-btn" title="Remove Timeslot">×</button>
         `;
         slotsContainer.appendChild(newRow);
+
+        // Re-initialize icons for the new row
+        if (window.lucide) window.lucide.createIcons();
 
         // Focus the new input
         newRow.querySelector('input').focus();
@@ -206,7 +209,6 @@ export async function renderCreateView(container, pollId = null, adminToken = nu
             }
         } catch (err) {
             console.error(err);
-            alert('Failed to create poll: ' + err.message);
         }
     };
 }

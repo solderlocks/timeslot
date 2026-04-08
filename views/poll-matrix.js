@@ -104,7 +104,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 return `
                     <td class="${classes}">
                         <div class="matrix-block" data-status="${status}">
-                            ${status === 0 ? '❌' : ''}
+                            ${status === 0 ? '<i data-lucide="x" class="x-icon"></i>' : ''}
                         </div>
                     </td>`;
             }).join('');
@@ -184,7 +184,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 return `
                     <td class="${classes}">
                         <div class="matrix-block" data-status="${status}">
-                            ${status === 0 ? '❌' : ''}
+                            ${status === 0 ? '<i data-lucide="x" class="x-icon"></i>' : ''}
                         </div>
                     </td>`;
             }).join('');
@@ -192,8 +192,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
             return `
                 <tr class="matrix-row">
                     <td class="sticky-column voter-name-cell" title="${res.voter_name}">
-                        <span class="full-name">${res.voter_name}</span>
-                        <span class="initials">${getInitials(res.voter_name)}</span>
+                        ${res.voter_name}
                     </td>
                     ${cells}
                 </tr>`;

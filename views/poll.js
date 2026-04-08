@@ -29,7 +29,8 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
             userResponse = await API.getResponse(pollId, activeEditToken);
         } catch (e) {
             console.warn('Invalid or expired edit token');
-            tokenError = true;
+            // Only show the warning if the user explicitly provided an edit token in the URL
+            tokenError = !!urlEditToken;
             activeEditToken = null;
         }
     }
@@ -37,6 +38,16 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
     // 3. UI state
     let currentMode = userResponse ? 'group' : 'availability';
     let isFlipped = window.innerWidth <= 600;
+
+    // 4. Persistence State (Unsaved local changes)
+    let localVoterName = userResponse ? userResponse.voter_name : '';
+    let localVotes = poll.options.map(opt => {
+        const existingVote = userResponse?.votes?.find(v => v.option_id === opt.id);
+        return {
+            option_id: opt.id,
+            status: existingVote ? existingVote.status : 1
+        };
+    });
 
     function renderPage() {
         container.innerHTML = `
@@ -55,7 +66,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                         </div>
                         <div class="header-actions">
                             ${(activeEditToken || activeAdminToken) ? `
-                                <button class="clear-btn icon-btn private-edit-link" id="copy-edit-link-btn" title="Copy Private Edit Link">
+                                <button class="clear-btn icon-btn private-edit-link" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
                                     <i data-lucide="link" style="width: 16px; height: 16px;"></i>
                                 </button>
                             ` : ''}
@@ -79,7 +90,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
                 <div id="view-content">
                     ${currentMode === 'availability'
-                ? renderAvailabilityDashboard(poll, userResponse)
+                ? renderAvailabilityDashboard(poll, localVoterName, localVotes, !!userResponse)
                 : renderGroupMatrix(poll, isFlipped)}
                 </div>
             </article>
@@ -135,19 +146,11 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
         // Tooltips
         if (window.tippy) {
-            const shareBtnEl = container.querySelector('#share-link-btn');
             const copyEditBtnEl = container.querySelector('#copy-edit-link-btn');
-
-            if (shareBtnEl) {
-                window.tippy(shareBtnEl, {
-                    content: 'Copy Shareable Poll Link',
-                    placement: 'top'
-                });
-            }
             if (copyEditBtnEl) {
                 window.tippy(copyEditBtnEl, {
-                    content: 'Copy Private Edit Link',
-                    placement: 'top'
+                    placement: 'top',
+                    appendTo: 'parent'
                 });
             }
         }
@@ -195,14 +198,30 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
             if (!availabilityForm) return;
 
             const submitBtn = availabilityForm.querySelector('#submit-vote-btn');
+            const voterNameInput = availabilityForm.querySelector('#voter-name');
 
             // Pill toggle
             availabilityForm.querySelectorAll('.time-pill').forEach(pill => {
                 pill.onclick = () => {
+                    const optionId = pill.dataset.optionId;
                     const input = pill.querySelector('input');
-                    updatePillUI(pill, parseInt(input.value) === 1 ? 0 : 1);
+                    const newStatus = parseInt(input.value) === 1 ? 0 : 1;
+
+                    updatePillUI(pill, newStatus);
+
+                    // Sync to local state
+                    const vote = localVotes.find(v => v.option_id === optionId);
+                    if (vote) vote.status = newStatus;
                 };
             });
+
+            // Name sync
+            if (voterNameInput) {
+                voterNameInput.oninput = () => {
+                    localVoterName = voterNameInput.value;
+                    window.clearFieldErrors(availabilityForm);
+                };
+            }
 
             // Form submission
             availabilityForm.onsubmit = async (e) => {
@@ -216,10 +235,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                     return;
                 }
 
-                const votes = poll.options.map(opt => ({
-                    option_id: opt.id,
-                    status: parseInt(availabilityForm.querySelector(`[name="pill_${opt.id}"]`).value)
-                }));
+                const votes = localVotes;
 
                 try {
                     submitBtn.setAttribute('aria-busy', 'true');
@@ -248,7 +264,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                     window.showToast('Response saved. Viewing group consensus.');
                 } catch (err) {
                     console.error(err);
-                    alert('Submission failed: ' + err.message);
+                    window.showToast('Failed to save response. Please try again.');
                     submitBtn.removeAttribute('aria-busy');
                     submitBtn.disabled = false;
                 }
@@ -262,8 +278,15 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
         pill.dataset.status = status;
         input.value = status;
         iconContainer.innerHTML = status === 1
-            ? '<span class="chk-icon-outline">○</span>'
-            : '<span class="veto-icon">❌</span>';
+            ? '<i data-lucide="circle" style="width: 14px; height: 14px;"></i>'
+            : '<i data-lucide="x" class="x-icon"></i>';
+
+        // Re-initialize icons for this specific container
+        if (window.lucide) window.lucide.createIcons({
+            attrs: { 'class': 'lucide-icon' },
+            nameAttr: 'data-lucide',
+            icons: undefined
+        });
     }
 
     function showSuccessReceipt(votes, editToken) {

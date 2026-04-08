@@ -8,10 +8,12 @@ import { formatDate } from '../api.js';
 
 /**
  * @param {object} poll       - Full poll object from API
- * @param {object|null} userResponse - Existing response or null
+ * @param {string} voterName  - Local voter name state
+ * @param {Array} localVotes  - Local unsaved votes state
+ * @param {boolean} isEdit    - Whether we are updating an existing response
  * @returns {string} HTML string
  */
-export function renderAvailabilityDashboard(poll, userResponse) {
+export function renderAvailabilityDashboard(poll, voterName, localVotes, isEdit) {
     // Group options by date label
     const dayGroups = {};
     poll.options.forEach(opt => {
@@ -20,14 +22,11 @@ export function renderAvailabilityDashboard(poll, userResponse) {
         dayGroups[date].push(opt);
     });
 
-    const voterName = userResponse ? userResponse.voter_name : '';
-
     const dayCards = Object.entries(dayGroups).map(([dateLabel, options]) => {
         const { weekday } = formatDate(options[0].start_time);
 
         const pills = options.map(opt => {
-            const votes = userResponse?.votes ?? [];
-            const vote = votes.find(v => v.option_id === opt.id);
+            const vote = localVotes.find(v => v.option_id === opt.id);
             const status = (vote && vote.status === 0) ? 0 : 1;
             const { time } = formatDate(opt.start_time);
 
@@ -37,8 +36,8 @@ export function renderAvailabilityDashboard(poll, userResponse) {
                     <span class="pill-label">${time}</span>
                     <div class="pill-icon">
                         ${status === 1
-                    ? '<span class="chk-icon-outline">○</span>'
-                    : '<span class="veto-icon">❌</span>'}
+                    ? '<i data-lucide="circle" style="width: 14px; height: 14px;"></i>'
+                    : '<i data-lucide="x" class="x-icon"></i>'}
                     </div>
                 </div>`;
         }).join('');
@@ -76,7 +75,7 @@ export function renderAvailabilityDashboard(poll, userResponse) {
 
             <div class="submit-container">
                 <button type="submit" id="submit-vote-btn" class="primary save-btn margin-0">
-                    ${userResponse ? 'Update Response' : 'Save Response'}
+                    ${isEdit ? 'Update Response' : 'Save Response'}
                 </button>
             </div>
         </form>`;
