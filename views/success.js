@@ -2,18 +2,18 @@
  * views/success.js: The "Poll Created" success view logic.
  */
 
-export async function renderSuccessView(container, pollId, editToken) {
+export async function renderSuccessView(container, pollId, editToken, isEdit = false) {
     const origin = window.location.origin;
     const participantUrl = `${origin}?id=${pollId}`;
-    const editUrl = editToken ? `${origin}?id=${pollId}&edit=${editToken}` : null;
+    const editUrl = editToken ? `${origin}?id=${pollId}&admin=${editToken}` : null;
 
     container.innerHTML = `
         <article class="fade-in">
             <header>
                 <div class="poll-header-row">
                     <div>
-                        <h2 class="poll-title poll-title-compact">Poll Created</h2>
-                        <p class="poll-description-muted">Your poll is live. Share it with your group to start collecting responses.</p>
+                        <h2 class="poll-title poll-title-compact">${isEdit ? 'Poll Edited' : 'Poll Created'}</h2>
+                        <p class="poll-description-muted">${isEdit ? 'Your changes have been saved.' : 'Your poll is live. Share it with your group to start collecting responses.'}</p>
                     </div>
                 </div>
             </header>

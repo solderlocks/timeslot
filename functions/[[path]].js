@@ -43,12 +43,13 @@ api.post('/polls', async (c) => {
     }
 
     const pollId = `p_${nanoid(16)}`;
+    const pollEditToken = `e_${nanoid(32)}`;
     const db = c.env.DB;
 
     try {
         const statements = [
-            db.prepare('INSERT INTO polls (id, title, description, duration) VALUES (?, ?, ?, ?)')
-              .bind(pollId, title, description || null, duration || null)
+            db.prepare('INSERT INTO polls (id, title, description, duration, edit_token) VALUES (?, ?, ?, ?, ?)')
+              .bind(pollId, title, description || null, duration || null, pollEditToken)
         ];
 
         // Add options
@@ -61,7 +62,7 @@ api.post('/polls', async (c) => {
         }
 
         await db.batch(statements);
-        return c.json({ id: pollId }, 201);
+        return c.json({ id: pollId, edit_token: pollEditToken }, 201);
     } catch (err) {
         console.error('D1 Error:', err.message, err.cause);
         return c.json({ error: 'Failed to create poll', details: err.message }, 500);
@@ -166,6 +167,49 @@ api.get('/polls/:id', async (c) => {
     } catch (e) {
         console.error(e);
         return c.json({ error: 'Internal Server Error' }, 500);
+    }
+});
+
+/**
+ * PUT /api/polls/:id
+ * Updates poll metadata and options. Requires admin_token.
+ */
+api.put('/polls/:id', async (c) => {
+    const pollId = c.req.param('id');
+    const adminToken = c.req.query('admin');
+    const { title, description, duration, options } = await c.req.json();
+    const db = c.env.DB;
+
+    if (!adminToken) return c.json({ error: 'Admin token required' }, 401);
+
+    try {
+        // 1. Verify Ownership
+        const poll = await db.prepare('SELECT id FROM polls WHERE id = ? AND edit_token = ?').bind(pollId, adminToken).first();
+        if (!poll) return c.json({ error: 'Unauthorized' }, 401);
+
+        const statements = [
+            db.prepare('UPDATE polls SET title = ?, description = ?, duration = ? WHERE id = ?')
+              .bind(title, description || null, duration || null, pollId),
+            // Reset options (CASCADE handles votes)
+            db.prepare('DELETE FROM poll_options WHERE poll_id = ?').bind(pollId),
+            // Clear all participants (rows)
+            db.prepare('DELETE FROM responses WHERE poll_id = ?').bind(pollId)
+        ];
+
+        // 2. Insert New Options
+        for (const opt of options) {
+            const optId = `o_${nanoid(16)}`;
+            statements.push(
+                db.prepare('INSERT INTO poll_options (id, poll_id, start_time, end_time) VALUES (?, ?, ?, ?)')
+                  .bind(optId, pollId, opt.start_time, opt.end_time ?? null)
+            );
+        }
+
+        await db.batch(statements);
+        return c.json({ success: true });
+    } catch (err) {
+        console.error('Update Error:', err);
+        return c.json({ error: 'Failed to update poll' }, 500);
     }
 });
 

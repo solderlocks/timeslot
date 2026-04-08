@@ -6,6 +6,7 @@ CREATE TABLE polls (
     title TEXT NOT NULL,
     description TEXT,
     duration TEXT,
+    edit_token TEXT,                   -- Prefixed e_[nanoid], for poll creator access
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

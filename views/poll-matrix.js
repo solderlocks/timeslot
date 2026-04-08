@@ -80,7 +80,11 @@ export function renderGroupMatrix(poll, isFlipped = false) {
         // --- FLIPPED VIEW: Timeslots are Rows, Participants are Columns ---
         const participantHeaders = poll.responses.map(res => {
             const initials = getInitials(res.voter_name);
-            return `<th class="participant-col-header" title="${res.voter_name}">${initials}</th>`;
+            return `
+                <th class="participant-col-header" title="${res.voter_name}">
+                    <span class="full-name">${res.voter_name}</span>
+                    <span class="initials">${initials}</span>
+                </th>`;
         }).join('');
 
         const gridRows = poll.options.map(opt => {
@@ -107,7 +111,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
 
             return `
                 <tr class="matrix-row ${isStriped ? 'striped-day' : ''}">
-                    <td class="sticky-column timeslot-row-label ${isBoundary ? 'day-boundary' : ''}">
+                    <td class="sticky-column timeslot-row-label ${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''}">
                         <div class="row-label-content">
                             <span class="row-weekday">${weekday}, ${date}</span>
                             <span class="row-time">${time}</span>
@@ -187,8 +191,9 @@ export function renderGroupMatrix(poll, isFlipped = false) {
 
             return `
                 <tr class="matrix-row">
-                    <td class="sticky-column voter-name-cell">
-                        <strong>${res.voter_name}</strong>
+                    <td class="sticky-column voter-name-cell" title="${res.voter_name}">
+                        <span class="full-name">${res.voter_name}</span>
+                        <span class="initials">${getInitials(res.voter_name)}</span>
                     </td>
                     ${cells}
                 </tr>`;
@@ -225,7 +230,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
     }).join('');
 
     let suggestedSlotHtml = '';
-    if (bestOption && maxAvailable > 0) {
+    if (bestOption && maxAvailable > 0 && poll.responses.length >= 2) {
         const { weekday, date, time } = formatDate(bestOption.start_time);
         const totalRespondents = poll.responses.length;
 
@@ -270,7 +275,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 <p class="instruction-text">Times shown in ${timezoneLabel}</p>
                 <button type="button" class="clear-btn icon-btn axis-flip-btn" id="axis-flip-btn" title="Flip Table Axes">
                     <i data-lucide="arrow-right-left" style="width: 16px; height: 16px; ${isFlipped ? 'transform: rotate(90deg)' : ''}"></i>
-                    Flip
+                    Flip Table
                 </button>
             </div>
             ${matrixInnerHtml}

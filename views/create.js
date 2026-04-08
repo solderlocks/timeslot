@@ -2,9 +2,23 @@
  * views/create.js: The "Create Poll" view logic.
  */
 
-import { API, toUTC, isPastDate } from '../api.js';
+import { API, toUTC, toLocal, isPastDate } from '../api.js';
 
-export async function renderCreateView(container) {
+export async function renderCreateView(container, pollId = null, adminToken = null) {
+    let poll = null;
+    let isEdit = !!(pollId && adminToken);
+
+    if (isEdit) {
+        container.innerHTML = `<article aria-busy="true"></article>`;
+        try {
+            poll = await API.getPoll(pollId);
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = `<article><h3>Error</h3><p>Could not load poll for editing.</p></article>`;
+            return;
+        }
+    }
+
     // Current local time for min attribute
     const now = new Date();
     const offset = now.getTimezoneOffset() * 60000;
@@ -15,32 +29,42 @@ export async function renderCreateView(container) {
             <header>
                 <div class="poll-header-row">
                     <div>
-                        <h2 class="poll-title poll-title-compact">Create a Poll</h2>
-                        <p class="poll-description-muted">Propose times and share the link.</p>
+                        <h2 class="poll-title poll-title-compact">${isEdit ? 'Edit Poll' : 'Create a Poll'}</h2>
+                        <p class="poll-description-muted">${isEdit ? 'Update your poll details and timeslots.' : 'Propose times and share the link.'}</p>
                     </div>
                 </div>
             </header>
-            
+            ${isEdit ? `<p class="instruction-text hint-text" style="color: #d97706; margin-top: 1rem;">⚠️ Saving changes will permanently reset the poll and delete all current responses.</p>` : ''}
             <form id="create-poll-form">
                 <label for="title">Poll Title
-                    <input type="text" id="title" name="title" placeholder="e.g., Launch Party" required>
+                    <input type="text" id="title" name="title" placeholder="e.g., Launch Party" required value="${isEdit ? poll.title : ''}">
                 </label>
                 
                 <label for="description">Description (Optional)
-                    <textarea id="description" name="description" placeholder="Where, why, duration, etc."></textarea>
+                    <textarea id="description" name="description" placeholder="Where, why, duration, etc.">${isEdit ? (poll.description || '') : ''}</textarea>
                 </label>
                 
                 <label for="duration" style="display: none;">Duration (Optional)
-                    <input type="text" id="duration" name="duration" placeholder="e.g., 1 hour, 45 mins">
+                    <input type="text" id="duration" name="duration" placeholder="e.g., 1 hour, 45 mins" value="${isEdit ? (poll.duration || '') : ''}">
                 </label>
                 
                 <fieldset>
                     <legend>Proposed Times</legend>
                     <div id="slots-container">
-                        <div class="slot-row">
-                            <input type="datetime-local" class="slot-input" min="${minDate}" required>
-                            <button type="button" class="outline secondary remove-btn">×</button>
-                        </div>
+                        ${isEdit ?
+            poll.options.map(opt => `
+                                <div class="slot-row">
+                                    <input type="datetime-local" class="slot-input" value="${toLocal(opt.start_time)}" min="${minDate}" required>
+                                    <button type="button" class="outline secondary remove-btn">×</button>
+                                </div>
+                            `).join('')
+            : `
+                                <div class="slot-row">
+                                    <input type="datetime-local" class="slot-input" min="${minDate}" required>
+                                    <button type="button" class="outline secondary remove-btn">×</button>
+                                </div>
+                            `
+        }
                     </div>
                     <footer class="slot-footer">
                         <button type="button" id="add-slot-btn" class="clear-btn">+ Add another slot</button>
@@ -50,8 +74,9 @@ export async function renderCreateView(container) {
                 
                 <hr>
                 
-                <button type="submit" id="submit-poll-btn" class="primary margin-0">Create Poll</button>
+                <button type="submit" id="submit-poll-btn" class="primary margin-0">${isEdit ? 'Save Changes' : 'Create Poll'}</button>
             </form>
+            
         </article>
     `;
 
@@ -170,10 +195,15 @@ export async function renderCreateView(container) {
                 options
             };
 
-            const poll = await API.createPoll(payload);
-
-            // Navigate to Success view
-            window.location.search = `?success=${poll.id}&edit=${poll.edit_token}`;
+            if (isEdit) {
+                await API.updatePoll(pollId, adminToken, payload);
+                // Redirect back to edit success view
+                window.location.search = `?success=${pollId}&admin=${adminToken}&edited=true`;
+            } else {
+                const newPoll = await API.createPoll(payload);
+                // Navigate to Success view
+                window.location.search = `?success=${newPoll.id}&admin=${newPoll.edit_token}`;
+            }
         } catch (err) {
             console.error(err);
             alert('Failed to create poll: ' + err.message);

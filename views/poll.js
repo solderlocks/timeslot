@@ -9,7 +9,7 @@ import { API, formatDate } from '../api.js';
 import { renderAvailabilityDashboard } from './poll-availability.js';
 import { renderGroupMatrix } from './poll-matrix.js';
 
-export async function renderPollView(container, pollId, urlEditToken) {
+export async function renderPollView(container, pollId, urlEditToken, urlAdminToken) {
     // 1. Loading state
     container.innerHTML = `<article aria-busy="true"></article>`;
     const poll = await API.getPoll(pollId);
@@ -18,11 +18,13 @@ export async function renderPollView(container, pollId, urlEditToken) {
     // 2. Resolve edit token (URL param takes priority over localStorage)
     const pollsMap = JSON.parse(localStorage.getItem('polls_map') || '{}');
     const storedEditToken = pollsMap[pollId];
+    const activeAdminToken = urlAdminToken;
     let activeEditToken = urlEditToken || storedEditToken;
 
     let userResponse = null;
     let tokenError = false;
-    if (activeEditToken) {
+    // Only validate activeEditToken if it's NOT the admin token (different tables)
+    if (activeEditToken && activeEditToken !== activeAdminToken) {
         try {
             userResponse = await API.getResponse(pollId, activeEditToken);
         } catch (e) {
@@ -52,7 +54,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                             ` : ''}
                         </div>
                         <div class="header-actions">
-                            ${activeEditToken ? `
+                            ${(activeEditToken || activeAdminToken) ? `
                                 <button class="clear-btn icon-btn" id="copy-edit-link-btn" title="Copy Private Edit Link">
                                     <i data-lucide="link" style="width: 16px; height: 16px;"></i>
                                 </button>
@@ -70,8 +72,8 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 </header>
 
                 ${tokenError ? `
-                    <div class="p-4 mb-4 border border-red-300 bg-red-50 text-red-700 rounded-md">
-                        <strong>⚠️ Invalid Edit Link:</strong> This link is no longer valid. You can still add a new response below.
+                    <div class="instruction-text hint-text warning-text">
+                        ⚠️ This link is no longer valid. You can still add a new response below.
                     </div>
                 ` : ''}
 
@@ -170,7 +172,10 @@ export async function renderPollView(container, pollId, urlEditToken) {
         const copyEditBtn = container.querySelector('#copy-edit-link-btn');
         if (copyEditBtn) {
             copyEditBtn.onclick = () => {
-                const url = `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
+                const url = activeAdminToken
+                    ? `${window.location.origin}?id=${pollId}&admin=${activeAdminToken}`
+                    : `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
+
                 navigator.clipboard.writeText(url);
                 const tip = copyEditBtn._tippy;
                 if (tip) {
@@ -237,6 +242,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                         || poll.responses.find(r => r.voter_name === voterName);
 
                     currentMode = 'group';
+                    tokenError = false;
                     renderPage();
                     window.showToast('Response saved. Viewing group consensus.');
                 } catch (err) {

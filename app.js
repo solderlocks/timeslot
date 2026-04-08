@@ -102,7 +102,9 @@ async function router() {
     const params = new URLSearchParams(window.location.search);
     const pollId = params.get('id');
     const successId = params.get('success');
-    const editToken = params.get('edit');
+    const editToken = params.get('edit');   // respondent edit token
+    const adminToken = params.get('admin'); // poll creator admin token
+    const edited = params.get('edited') === 'true';
     const path = window.location.pathname;
 
     // Clear main container
@@ -110,7 +112,10 @@ async function router() {
 
     try {
         if (successId) {
-            await renderSuccessView(app, successId, editToken);
+            await renderSuccessView(app, successId, adminToken, edited);
+        } else if (pollId && adminToken) {
+            // Admin link lands on the "Original Creation View" to Edit the poll
+            await renderCreateView(app, pollId, adminToken);
         } else if (pollId) {
             await renderPollView(app, pollId, editToken);
         } else if (path === '/create') {

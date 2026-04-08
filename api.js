@@ -100,6 +100,16 @@ export const API = {
         if (!res.ok) throw new Error('Poll not found');
         return res.json();
     },
+    
+    async updatePoll(id, adminToken, payload) {
+        const res = await fetch(`${BASE_URL}/polls/${id}?admin=${adminToken}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Failed to update poll');
+        return res.json();
+    },
 
     async submitVote(pollId, payload) {
         const res = await fetch(`${BASE_URL}/polls/${pollId}/vote`, {
