@@ -825,7 +825,7 @@ button.margin-0 {
 }
 
 .suggested-time-label {
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 /* Suggested Time Slot Card */
@@ -1031,6 +1031,7 @@ th.participants-header {
 
 th.day-group-header {
     padding-top: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .matrix-controls {
@@ -1689,6 +1690,11 @@ dialog article.grid-modal-article>header {
 
     .bulk-grid-day {
         min-width: 85px;
+    }
+
+    .matrix-table th,
+    .matrix-table td {
+        min-width: unset;
     }
 }
 

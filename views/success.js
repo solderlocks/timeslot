@@ -30,7 +30,7 @@ export async function renderSuccessView(container, pollId, editToken, isEdit = f
                         <span class="chevron-right">›</span>
                     </a>
                 </div>
-                <p class="instruction-text hint-text">Anyone with this link can view the poll and add their response.</p>
+                <p class="instruction-text hint-text">Anyone with this link can view your poll and add their response.</p>
             </section>
         </article>
     `;
