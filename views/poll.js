@@ -260,6 +260,12 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                     currentMode = 'group';
                     tokenError = false;
 
+                    // Clear stale tokens from URL to prevent warning from persisting
+                    const url = new URL(window.location.href);
+                    url.searchParams.delete('edit');
+                    url.searchParams.delete('admin');
+                    window.history.replaceState({}, '', url.toString());
+
                     renderPage();
                     window.showToast('Response saved. Viewing group consensus.');
                 } catch (err) {
