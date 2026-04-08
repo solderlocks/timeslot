@@ -530,6 +530,10 @@ button.margin-0 {
     color: var(--text-main);
 }
 
+.time-pill[data-status="1"] .pill-icon {
+    color: var(--muted-border-color);
+}
+
 .time-pill[data-status="1"] .chk-icon-outline {
     color: var(--muted-border-color);
 }
