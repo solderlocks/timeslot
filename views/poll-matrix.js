@@ -230,7 +230,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
     }).join('');
 
     let suggestedSlotHtml = '';
-    if (bestOption && maxAvailable > 0 && poll.responses.length >= 2) {
+    if (bestOption && maxAvailable === poll.responses.length && poll.responses.length >= 2) {
         const { weekday, date, time } = formatDate(bestOption.start_time);
         const totalRespondents = poll.responses.length;
 
@@ -275,7 +275,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 <p class="instruction-text">Times shown in ${timezoneLabel}</p>
                 <button type="button" class="clear-btn icon-btn axis-flip-btn" id="axis-flip-btn" title="Flip Table Axes">
                     <i data-lucide="arrow-right-left" style="width: 16px; height: 16px; ${isFlipped ? 'transform: rotate(90deg)' : ''}"></i>
-                    Flip Table
+
                 </button>
             </div>
             ${matrixInnerHtml}

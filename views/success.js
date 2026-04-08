@@ -42,7 +42,7 @@ export async function renderSuccessView(container, pollId, editToken, isEdit = f
                         <button type="button" id="copy-edit-btn" class="embedded-icon-btn" title="Copy Edit Link">📋</button>
                     </div>
                 </div>
-                <p class="instruction-text hint-text" style="color: #d97706;">⚠️ Keep this private! This link allows anyone to edit the poll options or delete it.</p>
+                <p class="instruction-text hint-text warning-text">⚠️ This link allows you to edit the poll or delete it.</p>
             </section>
             ` : ''}
         </article>
