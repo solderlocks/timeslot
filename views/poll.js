@@ -38,6 +38,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
     // 3. UI state
     let currentMode = userResponse ? 'group' : 'availability';
     let isFlipped = window.innerWidth <= 600;
+    let selectedOptionId = null;
 
     // 4. Persistence State (Unsaved local changes)
     let localVoterName = userResponse ? userResponse.voter_name : '';
@@ -91,7 +92,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                 <div id="view-content">
                     ${currentMode === 'availability'
                 ? renderAvailabilityDashboard(poll, localVoterName, localVotes, !!userResponse)
-                : renderGroupMatrix(poll, isFlipped)}
+                : renderGroupMatrix(poll, isFlipped, selectedOptionId)}
                 </div>
             </article>
         `;
@@ -118,6 +119,16 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                 renderPage();
             };
         }
+
+        // Timeslot header clicks (for highlighting)
+        const headerSelector = isFlipped ? '.timeslot-row-label' : '.time-header';
+        container.querySelectorAll(headerSelector).forEach(el => {
+            el.onclick = () => {
+                const optId = el.dataset.optionId;
+                selectedOptionId = (selectedOptionId === optId) ? null : optId;
+                renderPage();
+            };
+        });
 
         // Minimap scroll-sync (mobile)
         const minimapCols = container.querySelectorAll('.minimap-cols .minimap-col');

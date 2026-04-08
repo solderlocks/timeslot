@@ -9,9 +9,10 @@ import { formatDate } from '../api.js';
 /**
  * @param {object} poll - Full poll object from API
  * @param {boolean} isFlipped - Whether to flip axes (Timeslots as rows)
+ * @param {string|null} selectedOptionId - ID of the manually selected timeslot
  * @returns {string} HTML string
  */
-export function renderGroupMatrix(poll, isFlipped = false) {
+export function renderGroupMatrix(poll, isFlipped = false, selectedOptionId = null) {
     if (poll.responses.length === 0) {
         return `
             <div class="read-only-matrix fade-in">
@@ -58,21 +59,12 @@ export function renderGroupMatrix(poll, isFlipped = false) {
     const isLastInDay = (optionId) =>
         dayGroups.some(g => g.options[g.options.length - 1].id === optionId);
 
-    // Final Consensus: Find the slot with the most availability
-    let bestOption = null;
-    let maxAvailable = -1;
-
-    poll.options.forEach(opt => {
-        const availableCount = poll.responses.reduce((sum, res) => {
-            const vote = res.votes.find(v => v.option_id === opt.id);
+    const getAvailableCount = (optionId) => {
+        return poll.responses.reduce((sum, res) => {
+            const vote = res.votes.find(v => v.option_id === optionId);
             return sum + ((vote ? vote.status : 1) !== 0 ? 1 : 0);
         }, 0);
-
-        if (availableCount > maxAvailable) {
-            maxAvailable = availableCount;
-            bestOption = opt;
-        }
-    });
+    };
 
     let matrixInnerHtml = '';
 
@@ -91,6 +83,7 @@ export function renderGroupMatrix(poll, isFlipped = false) {
             const { weekday, date, time } = formatDate(opt.start_time);
             const isStriped = optionToDayIdx[opt.id] % 2 === 0;
             const isBoundary = isLastInDay(opt.id);
+            const isSelected = selectedOptionId === opt.id;
 
             const cells = poll.responses.map(res => {
                 const vote = res.votes.find(v => v.option_id === opt.id);
@@ -98,7 +91,8 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 const classes = [
                     'matrix-cell',
                     isBoundary ? 'day-boundary' : '',
-                    isStriped ? 'striped-day' : ''
+                    isStriped ? 'striped-day' : '',
+                    isSelected ? 'highlight-cell' : ''
                 ].filter(Boolean).join(' ');
 
                 return `
@@ -110,8 +104,8 @@ export function renderGroupMatrix(poll, isFlipped = false) {
             }).join('');
 
             return `
-                <tr class="matrix-row ${isStriped ? 'striped-day' : ''}">
-                    <td class="sticky-column timeslot-row-label ${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''}">
+                <tr class="matrix-row ${isStriped ? 'striped-day' : ''} ${isSelected ? 'highlight-active' : ''}">
+                    <td class="sticky-column timeslot-row-label ${isBoundary ? 'day-boundary' : ''} ${isStriped ? 'striped-day' : ''} ${isSelected ? 'highlight-active' : ''}" data-option-id="${opt.id}">
                         <div class="row-label-content">
                             <span class="row-weekday">${weekday}, ${date}</span>
                             <span class="row-time">${time}</span>
@@ -155,14 +149,16 @@ export function renderGroupMatrix(poll, isFlipped = false) {
             const { time } = formatDate(opt.start_time);
             const isBoundary = isLastInDay(opt.id);
             const isStriped = optionToDayIdx[opt.id] % 2 === 0;
+            const isSelected = selectedOptionId === opt.id;
             const classes = [
                 'time-header',
                 isBoundary ? 'day-boundary' : '',
-                isStriped ? 'striped-day' : ''
+                isStriped ? 'striped-day' : '',
+                isSelected ? 'highlight-active' : ''
             ].filter(Boolean).join(' ');
 
             return `
-                <th class="${classes}">
+                <th class="${classes}" data-option-id="${opt.id}">
                     <div class="header-stack">
                         <div class="time">${time}</div>
                     </div>
@@ -175,10 +171,12 @@ export function renderGroupMatrix(poll, isFlipped = false) {
                 const status = vote ? vote.status : 1;
                 const isBoundary = isLastInDay(opt.id);
                 const isStriped = optionToDayIdx[opt.id] % 2 === 0;
+                const isSelected = selectedOptionId === opt.id;
                 const classes = [
                     'matrix-cell',
                     isBoundary ? 'day-boundary' : '',
-                    isStriped ? 'striped-day' : ''
+                    isStriped ? 'striped-day' : '',
+                    isSelected ? 'highlight-cell' : ''
                 ].filter(Boolean).join(' ');
 
                 return `
@@ -229,23 +227,27 @@ export function renderGroupMatrix(poll, isFlipped = false) {
     }).join('');
 
     let suggestedSlotHtml = '';
-    if (bestOption && maxAvailable === poll.responses.length && poll.responses.length >= 2) {
-        const { weekday, date, time } = formatDate(bestOption.start_time);
-        const totalRespondents = poll.responses.length;
+    const activeOption = selectedOptionId ? poll.options.find(o => o.id === selectedOptionId) : null;
 
-        const startDate = new Date(bestOption.start_time);
+    if (activeOption) {
+        const { weekday, date, time } = formatDate(activeOption.start_time);
+        const totalRespondents = poll.responses.length;
+        const availableCount = getAvailableCount(activeOption.id);
+        const isWarning = availableCount < totalRespondents / 2;
+
+        const startDate = new Date(activeOption.start_time);
         const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Default 1 hour
         const fmtDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
         const calUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(poll.title)}&dates=${fmtDate(startDate)}/${fmtDate(endDate)}&details=${encodeURIComponent('Scheduled via timeslot.ink')}`;
 
         suggestedSlotHtml = `
-            <label class="suggested-time-label">Suggested Time</label>
-            <div class="suggested-slot-card fade-in">
+            <label class="suggested-time-label">Selected Time Slot</label>
+            <div class="suggested-slot-card fade-in ${isWarning ? 'warning' : ''}">
                 <div class="suggested-slot-left">
-                    <i data-lucide="check-circle" class="consensus-check-icon"></i>
+                    <i data-lucide="${isWarning ? 'alert-triangle' : 'check-circle'}" class="consensus-check-icon"></i>
                     <div class="suggested-slot-meta">
                         <div class="suggested-time">${weekday}, ${date} @ ${time}</div>
-                        <div class="suggested-consensus">${maxAvailable} / ${totalRespondents} respondents available</div>
+                        <div class="suggested-consensus">${availableCount} / ${totalRespondents} respondents available</div>
                     </div>
                 </div>
                 <div class="calendar-btn-row">

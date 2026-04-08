@@ -733,6 +733,23 @@ button.margin-0 {
     border-bottom: 1px solid var(--muted-border-color);
 }
 
+.matrix-table th.highlight-active,
+.matrix-table td.highlight-active {
+    background-color: #EEE !important;
+    cursor: pointer;
+    border-top: 5px solid #AAA;
+}
+
+.flipped-matrix .matrix-table td.highlight-active,
+.flipped-matrix .matrix-table th.highlight-active {
+    border-left: 5px solid #AAA;
+    border-top: 0;
+}
+
+.matrix-table td.highlight-cell {
+    background-color: #EEE !important;
+}
+
 
 .matrix-table .striped-day {
     background-color: var(--striped-day-bg);
@@ -764,6 +781,7 @@ button.margin-0 {
     text-align: right;
     padding: 0.5rem 0.5rem;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .flipped-matrix .row-label-content {
@@ -855,6 +873,15 @@ button.margin-0 {
     height: 30px;
     color: #10b981;
     flex-shrink: 0;
+}
+
+.suggested-slot-card.warning {
+    background-color: rgba(255, 165, 0, 0.08);
+    border-color: rgba(217, 119, 6, 0.5);
+}
+
+.suggested-slot-card.warning .consensus-check-icon {
+    color: #d97706;
 }
 
 .suggested-slot-meta {
@@ -1008,6 +1035,7 @@ th.participants-header {
     padding: 12px 8px;
     white-space: nowrap;
     border-bottom: 1px solid var(--muted-border-color);
+    cursor: pointer;
 }
 
 .time-header .time {
