@@ -13,7 +13,7 @@ export async function renderSuccessView(container, pollId, editToken, isEdit = f
                 <div class="poll-header-row">
                     <div>
                         <h2 class="poll-title poll-title-compact">${isEdit ? 'Poll Edited' : 'Poll Created'}</h2>
-                        <p class="poll-description-muted">${isEdit ? 'Your changes have been saved.' : `Your poll is live. Share it with your group to start collecting responses. <br/>Copy your <a href="${editUrl}" target="_blank">Edit Link</a> to make changes to the poll later.`}</p>
+                        <p class="poll-description-muted">${isEdit ? 'Your changes have been saved.' : `Your poll is live. Share it with your group to start collecting responses. <br/>Copy your <a href="${editUrl}" target="_blank">Edit Link</a> to make changes to the poll.`}</p>
                     </div>
                 </div>
             </header>
