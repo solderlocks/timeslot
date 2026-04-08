@@ -53,6 +53,13 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                                 </p>
                             ` : ''}
                         </div>
+                        <div class="header-actions">
+                            ${(activeEditToken || activeAdminToken) ? `
+                                <button class="clear-btn icon-btn private-edit-link" id="copy-edit-link-btn" title="Copy Private Edit Link">
+                                    <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
 
                     <div class="mode-toggle">
@@ -236,10 +243,6 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
                     currentMode = 'group';
                     tokenError = false;
-
-                    // Update URL with edit token so user can bookmark/copy-paste
-                    const newUrl = `${window.location.origin}${window.location.pathname}?id=${pollId}&edit=${activeEditToken}`;
-                    window.history.replaceState({ pollId, activeEditToken }, '', newUrl);
 
                     renderPage();
                     window.showToast('Response saved. Viewing group consensus.');

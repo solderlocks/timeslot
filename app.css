@@ -1216,6 +1216,11 @@ th.day-group-header {
     margin-right: 1rem;
 }
 
+.private-edit-link {
+    font-weight: 500;
+    opacity: 1;
+}
+
 /* Form Errors */
 .form-error {
     color: #991b1b;
