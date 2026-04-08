@@ -1467,7 +1467,7 @@ dialog article.grid-modal-article>header {
 }
 
 .toolbar-group.boundaries {
-    gap: 0.25rem;
+    gap: 0.5rem;
 }
 
 .week-range-text {
