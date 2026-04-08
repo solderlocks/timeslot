@@ -17,7 +17,7 @@
     --text-main: #1a1d23;
     /* Off-black */
     --muted-color: #64748b;
-    --muted-border-color: rgba(0, 0, 0, 0.08);
+    --muted-border-color: rgba(0, 0, 0, 0.12);
     --highlight-color: rgba(0, 0, 0, 0.05);
     --conflict-bg: #fef2f2;
     --conflict-text: #991b1b;
@@ -40,6 +40,7 @@
     --tab-active-bg: #f8fafc;
     --tab-active-text: #1a1d23;
     --striped-day-bg: rgba(255, 255, 255, 0.025);
+    --selected-grid-time: rgba(0, 50, 0, 1.0);
 }
 
 html {
@@ -61,6 +62,7 @@ body {
 
 input[type="text"],
 input[type="datetime-local"],
+select,
 textarea {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -121,9 +123,10 @@ article,
     border: 1px solid var(--muted-border-color);
 }
 
+/* 
 [data-theme="light"] .day-card {
     border: 1px solid rgba(0, 0, 0, 0.05);
-}
+} */
 
 /* Single source of truth for page-width containers.
    header.container, main.container, footer.container all inherit this. */
@@ -374,14 +377,14 @@ body a.button.outline:hover {
 /* Dual-Mode Toggle (Segmented Control) */
 .mode-toggle {
     display: flex;
-    /* background: rgba(0, 0, 0, 0.05); */
-    /* Subtle background */
+    width: 100%;
     padding: 0.25rem;
-    border-radius: 8px;
-    width: fit-content;
-    margin-right: auto;
+    border-radius: 6px;
+    box-sizing: border-box;
     border: 1px solid var(--muted-border-color);
     background: #f6f6f6;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 [data-theme="dark"] .mode-toggle {
@@ -389,16 +392,18 @@ body a.button.outline:hover {
 }
 
 .mode-toggle button {
+    flex: 1;
     border: none;
     background: transparent;
     padding: 0.5rem 1.2rem;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     margin-bottom: 0;
     color: var(--muted-color);
+    text-align: center;
 }
 
 .mode-toggle button:hover:not([data-active="true"]) {
@@ -411,11 +416,10 @@ body a.button.outline:hover {
 }
 
 .mode-toggle button[data-active="true"] {
-    /* background: var(--tab-active-bg); */
-    /* color: var(--tab-active-text); */
     background: white;
     color: var(--primary-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
 }
 
 /* Dashboard Grid */
@@ -431,14 +435,7 @@ body a.button.outline:hover {
         gap: 0.75rem;
     }
 
-    .mode-toggle {
-        width: 100%;
-        display: flex;
-    }
-
     .mode-toggle button {
-        flex: 1;
-        text-align: center;
         padding: 0.5rem 0.25rem;
     }
 }
@@ -720,6 +717,171 @@ button.margin-0 {
     background-color: var(--striped-day-bg);
 }
 
+.matrix-utility-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.matrix-utility-row .instruction-text {
+    margin: 0;
+}
+
+/* Flipped Matrix Specifics */
+.flipped-matrix .participant-col-header {
+    min-width: 48px;
+    max-width: 80px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-width: 1px;
+}
+
+.flipped-matrix .timeslot-row-label {
+    text-align: right;
+    padding: 0.5rem 0.5rem;
+    white-space: nowrap;
+}
+
+.flipped-matrix .row-label-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.flipped-matrix .row-weekday {
+    font-size: 0.80rem;
+
+    font-weight: 700;
+}
+
+.flipped-matrix .row-time {
+    font-size: 0.7rem;
+    color: var(--muted-color);
+    margin-top: 0.25rem;
+}
+
+/* Axis Toggle Button */
+.axis-flip-btn {
+    padding: 6px;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+}
+
+.axis-flip-btn:hover {
+    opacity: 1;
+    background: var(--muted-border-color);
+}
+
+.axis-flip-btn i {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.poll-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+
+
+.mode-toggle .main-modes {
+    display: flex;
+    flex: 1;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+.mode-toggle .main-modes button {
+    flex: 1;
+}
+
+.suggested-time-label {
+    margin-top: 2rem;
+}
+
+/* Suggested Time Slot Card */
+.suggested-slot-card {
+    padding: 1rem 1.25rem;
+    background: var(--matrix-bg);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background-color: rgba(50, 200, 0, 0.1);
+    border: 1px solid rgba(0, 175, 0, 0.5);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+    /* Success green */
+}
+
+.suggested-slot-left {
+    display: flex;
+    align-items: center;
+    gap: 1.0rem;
+}
+
+.consensus-check-icon {
+    width: 30px;
+    height: 30px;
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+.suggested-slot-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.suggested-time {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.suggested-consensus {
+    font-size: 0.8rem;
+    color: var(--muted-color);
+    font-weight: 500;
+}
+
+.calendar-btn-row {
+    margin-top: 0;
+    flex-shrink: 0;
+}
+
+.compact-button {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.85rem !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .suggested-slot-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .calendar-btn-row {
+        width: 100%;
+    }
+
+    .compact-button {
+        justify-content: center;
+    }
+}
+
 .matrix-table .sticky-column {
     border-right: 1px solid var(--muted-border-color);
     box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.10);
@@ -756,6 +918,7 @@ th.participants-header {
     border-bottom: 1px solid var(--muted-border-color);
     vertical-align: bottom;
     padding-bottom: 0.5rem;
+    text-align: right;
 }
 
 
@@ -1116,7 +1279,7 @@ th.day-group-header {
     display: flex;
     gap: 1rem;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0.25rem;
 }
 
 .success-link-display {
@@ -1314,12 +1477,18 @@ dialog article.grid-modal-article>header {
 
 .mode-toggle.compact {
     padding: 2px;
+    width: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 6px;
 }
 
 .mode-toggle.compact button {
+    flex: none;
     padding: 4px 12px;
     font-size: 0.8rem;
     height: 28px;
+    border-radius: 4px;
 }
 
 .compact-label {
@@ -1355,7 +1524,6 @@ dialog article.grid-modal-article>header {
     gap: 0;
     background: var(--bg-color);
     user-select: none;
-    border-top: 1px solid var(--muted-border-color);
 }
 
 .bulk-grid-day {
@@ -1393,7 +1561,7 @@ dialog article.grid-modal-article>header {
 .bulk-grid-cell {
     height: 48px;
     min-height: 40px;
-    border-bottom: 2px solid var(--muted-border-color);
+    border-bottom: 1px solid var(--muted-border-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1487,7 +1655,7 @@ dialog article.grid-modal-article>header {
     }
 
     .bulk-grid-day {
-        min-width: 120px;
+        min-width: 85px;
     }
 }
 

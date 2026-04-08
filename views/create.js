@@ -173,7 +173,7 @@ export async function renderCreateView(container) {
             const poll = await API.createPoll(payload);
 
             // Navigate to Success view
-            window.location.search = `?success=${poll.id}`;
+            window.location.search = `?success=${poll.id}&edit=${poll.edit_token}`;
         } catch (err) {
             console.error(err);
             alert('Failed to create poll: ' + err.message);

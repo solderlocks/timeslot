@@ -8,9 +8,10 @@ import { formatDate } from '../api.js';
 
 /**
  * @param {object} poll - Full poll object from API
+ * @param {boolean} isFlipped - Whether to flip axes (Timeslots as rows)
  * @returns {string} HTML string
  */
-export function renderGroupMatrix(poll) {
+export function renderGroupMatrix(poll, isFlipped = false) {
     if (poll.responses.length === 0) {
         return `
             <div class="read-only-matrix fade-in">
@@ -22,6 +23,15 @@ export function renderGroupMatrix(poll) {
                 </div>
             </div>`;
     }
+
+    const getInitials = (name) => {
+        return name
+            .split(' ')
+            .filter(n => n.length > 0)
+            .map(n => n[0].toUpperCase())
+            .join('')
+            .slice(0, 3); // Max 3 initials
+    };
 
     // Group options by day
     const dayGroups = [];
@@ -48,72 +58,159 @@ export function renderGroupMatrix(poll) {
     const isLastInDay = (optionId) =>
         dayGroups.some(g => g.options[g.options.length - 1].id === optionId);
 
-    // Build day-group header row
-    const dayHeaders = dayGroups.map((group, groupIdx) => {
-        const [weekday, datePart] = group.label.split(', ');
-        const isLast = isLastInDay(group.options[group.options.length - 1].id);
-        const classes = [
-            'day-group-header',
-            groupIdx % 2 === 0 ? 'striped-day' : '',
-            isLast ? 'day-boundary' : ''
-        ].filter(Boolean).join(' ');
+    // Final Consensus: Find the slot with the most availability
+    let bestOption = null;
+    let maxAvailable = -1;
 
-        return `
-            <th colspan="${group.options.length}" class="${classes}">
-                <span style="white-space: nowrap">${weekday},</span> <span style="white-space: nowrap">${datePart}</span>
-            </th>`;
-    }).join('');
-
-    // Build time sub-header row
-    const timeHeaders = poll.options.map(opt => {
-        const { time } = formatDate(opt.start_time);
-        const isBoundary = isLastInDay(opt.id);
-        const isStriped = optionToDayIdx[opt.id] % 2 === 0;
-        const classes = [
-            'time-header',
-            isBoundary ? 'day-boundary' : '',
-            isStriped ? 'striped-day' : ''
-        ].filter(Boolean).join(' ');
-
-        return `
-            <th class="${classes}">
-                <div class="header-stack">
-                    <div class="time">${time}</div>
-                </div>
-            </th>`;
-    }).join('');
-
-    // Build response rows
-    const responseRows = poll.responses.map(res => {
-        const cells = poll.options.map(opt => {
+    poll.options.forEach(opt => {
+        const availableCount = poll.responses.reduce((sum, res) => {
             const vote = res.votes.find(v => v.option_id === opt.id);
-            const status = vote ? vote.status : 1;
+            return sum + ((vote ? vote.status : 1) !== 0 ? 1 : 0);
+        }, 0);
+
+        if (availableCount > maxAvailable) {
+            maxAvailable = availableCount;
+            bestOption = opt;
+        }
+    });
+
+    let matrixInnerHtml = '';
+
+    if (isFlipped) {
+        // --- FLIPPED VIEW: Timeslots are Rows, Participants are Columns ---
+        const participantHeaders = poll.responses.map(res => {
+            const initials = getInitials(res.voter_name);
+            return `<th class="participant-col-header" title="${res.voter_name}">${initials}</th>`;
+        }).join('');
+
+        const gridRows = poll.options.map(opt => {
+            const { weekday, date, time } = formatDate(opt.start_time);
+            const isStriped = optionToDayIdx[opt.id] % 2 === 0;
+            const isBoundary = isLastInDay(opt.id);
+
+            const cells = poll.responses.map(res => {
+                const vote = res.votes.find(v => v.option_id === opt.id);
+                const status = vote ? vote.status : 1;
+                const classes = [
+                    'matrix-cell',
+                    isBoundary ? 'day-boundary' : '',
+                    isStriped ? 'striped-day' : ''
+                ].filter(Boolean).join(' ');
+
+                return `
+                    <td class="${classes}">
+                        <div class="matrix-block" data-status="${status}">
+                            ${status === 0 ? '❌' : ''}
+                        </div>
+                    </td>`;
+            }).join('');
+
+            return `
+                <tr class="matrix-row ${isStriped ? 'striped-day' : ''}">
+                    <td class="sticky-column timeslot-row-label ${isBoundary ? 'day-boundary' : ''}">
+                        <div class="row-label-content">
+                            <span class="row-weekday">${weekday}, ${date}</span>
+                            <span class="row-time">${time}</span>
+                        </div>
+                    </td>
+                    ${cells}
+                </tr>`;
+        }).join('');
+
+        matrixInnerHtml = `
+            <div class="matrix-table-wrapper flipped-matrix">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th class="sticky-column participants-header">Timeslots</th>
+                            ${participantHeaders}
+                        </tr>
+                    </thead>
+                    <tbody>${gridRows}</tbody>
+                </table>
+            </div>
+        `;
+    } else {
+        // --- STANDARD VIEW: Participants are Rows, Timeslots are Columns ---
+        const dayHeaders = dayGroups.map((group, groupIdx) => {
+            const [weekday, datePart] = group.label.split(', ');
+            const isLast = isLastInDay(group.options[group.options.length - 1].id);
+            const classes = [
+                'day-group-header',
+                groupIdx % 2 === 0 ? 'striped-day' : '',
+                isLast ? 'day-boundary' : ''
+            ].filter(Boolean).join(' ');
+
+            return `
+                <th colspan="${group.options.length}" class="${classes}">
+                    <span style="white-space: nowrap">${weekday},</span> <span style="white-space: nowrap">${datePart}</span>
+                </th>`;
+        }).join('');
+
+        const timeHeaders = poll.options.map(opt => {
+            const { time } = formatDate(opt.start_time);
             const isBoundary = isLastInDay(opt.id);
             const isStriped = optionToDayIdx[opt.id] % 2 === 0;
             const classes = [
-                'matrix-cell',
+                'time-header',
                 isBoundary ? 'day-boundary' : '',
                 isStriped ? 'striped-day' : ''
             ].filter(Boolean).join(' ');
 
             return `
-                <td class="${classes}">
-                    <div class="matrix-block" data-status="${status}">
-                        ${status === 0 ? '❌' : ''}
+                <th class="${classes}">
+                    <div class="header-stack">
+                        <div class="time">${time}</div>
                     </div>
-                </td>`;
+                </th>`;
         }).join('');
 
-        return `
-            <tr class="matrix-row">
-                <td class="sticky-column voter-name-cell">
-                    <strong>${res.voter_name}</strong>
-                </td>
-                ${cells}
-            </tr>`;
-    }).join('');
+        const responseRows = poll.responses.map(res => {
+            const cells = poll.options.map(opt => {
+                const vote = res.votes.find(v => v.option_id === opt.id);
+                const status = vote ? vote.status : 1;
+                const isBoundary = isLastInDay(opt.id);
+                const isStriped = optionToDayIdx[opt.id] % 2 === 0;
+                const classes = [
+                    'matrix-cell',
+                    isBoundary ? 'day-boundary' : '',
+                    isStriped ? 'striped-day' : ''
+                ].filter(Boolean).join(' ');
 
-    // Build minimap (mobile bird's-eye view)
+                return `
+                    <td class="${classes}">
+                        <div class="matrix-block" data-status="${status}">
+                            ${status === 0 ? '❌' : ''}
+                        </div>
+                    </td>`;
+            }).join('');
+
+            return `
+                <tr class="matrix-row">
+                    <td class="sticky-column voter-name-cell">
+                        <strong>${res.voter_name}</strong>
+                    </td>
+                    ${cells}
+                </tr>`;
+        }).join('');
+
+        matrixInnerHtml = `
+            <div class="matrix-table-wrapper">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th rowspan="2" class="sticky-column participants-header">Respondents</th>
+                            ${dayHeaders}
+                        </tr>
+                        <tr>${timeHeaders}</tr>
+                    </thead>
+                    <tbody>${responseRows}</tbody>
+                </table>
+            </div>
+        `;
+    }
+
+    // Minimap (standard view logic)
     const minimapRowLabels = poll.responses.map(res =>
         `<div class="minimap-row-label">${res.voter_name.charAt(0).toUpperCase()}</div>`
     ).join('');
@@ -127,21 +224,57 @@ export function renderGroupMatrix(poll) {
         return `<div class="minimap-col" data-col-index="${colIdx}">${cells}</div>`;
     }).join('');
 
+    let suggestedSlotHtml = '';
+    if (bestOption && maxAvailable > 0) {
+        const { weekday, date, time } = formatDate(bestOption.start_time);
+        const totalRespondents = poll.responses.length;
+
+        const startDate = new Date(bestOption.start_time);
+        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // Default 1 hour
+        const fmtDate = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+        const calUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(poll.title)}&dates=${fmtDate(startDate)}/${fmtDate(endDate)}&details=${encodeURIComponent('Scheduled via timeslot.ink')}`;
+
+        suggestedSlotHtml = `
+            <label class="suggested-time-label">Suggested Time</label>
+            <div class="suggested-slot-card fade-in">
+                <div class="suggested-slot-left">
+                    <i data-lucide="check-circle" class="consensus-check-icon"></i>
+                    <div class="suggested-slot-meta">
+                        <div class="suggested-time">${weekday}, ${date} @ ${time}</div>
+                        <div class="suggested-consensus">${maxAvailable} / ${totalRespondents} respondents available</div>
+                    </div>
+                </div>
+                <div class="calendar-btn-row">
+                    <a href="${calUrl}" target="_blank" class="button outline primary margin-0 compact-button" title="Add to Calendar">
+                        <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                        <span>Add to Calendar</span>
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    const tzName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    let tzAbbr = '';
+    try {
+        const parts = Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(new Date());
+        tzAbbr = parts.find(p => p.type === 'timeZoneName')?.value || '';
+    } catch (e) {
+        console.warn('Could not get timezone abbreviation', e);
+    }
+    const timezoneLabel = tzAbbr ? `${tzName} (${tzAbbr})` : tzName;
+
     return `
         <div class="read-only-matrix fade-in">
-            <p class="instruction-text">Times shown in ${Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
-            <div class="matrix-table-wrapper">
-                <table class="matrix-table">
-                    <thead>
-                        <tr>
-                            <th rowspan="2" class="sticky-column participants-header">Respondents</th>
-                            ${dayHeaders}
-                        </tr>
-                        <tr>${timeHeaders}</tr>
-                    </thead>
-                    <tbody>${responseRows}</tbody>
-                </table>
+            <div class="matrix-utility-row">
+                <p class="instruction-text">Times shown in ${timezoneLabel}</p>
+                <button type="button" class="clear-btn icon-btn axis-flip-btn" id="axis-flip-btn" title="Flip Table Axes">
+                    <i data-lucide="arrow-right-left" style="width: 16px; height: 16px; ${isFlipped ? 'transform: rotate(90deg)' : ''}"></i>
+                    Flip
+                </button>
             </div>
+            ${matrixInnerHtml}
+            ${!isFlipped ? `
             <details class="matrix-minimap-container">
                 <summary class="minimap-summary">
                     <span class="summary-content">
@@ -155,5 +288,7 @@ export function renderGroupMatrix(poll) {
                     <div class="minimap-cols">${minimapCols}</div>
                 </div>
             </details>
+            ` : ''}
+            ${suggestedSlotHtml}
         </div>`;
 }

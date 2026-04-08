@@ -110,7 +110,7 @@ async function router() {
 
     try {
         if (successId) {
-            await renderSuccessView(app, successId);
+            await renderSuccessView(app, successId, editToken);
         } else if (pollId) {
             await renderPollView(app, pollId, editToken);
         } else if (path === '/create') {

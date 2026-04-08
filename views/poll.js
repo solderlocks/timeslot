@@ -34,6 +34,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
 
     // 3. UI state
     let currentMode = userResponse ? 'group' : 'availability';
+    let isFlipped = window.innerWidth <= 600;
 
     function renderPage() {
         container.innerHTML = `
@@ -60,8 +61,11 @@ export async function renderPollView(container, pollId, urlEditToken) {
                     </div>
 
                     <div class="mode-toggle">
-                        <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">My Availability</button>
-                        <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Responses</button>
+                        <div class="main-modes">
+                            <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">My Availability</button>
+                            <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Responses</button>
+                        </div>
+                        ${currentMode === 'group' && poll.responses.length > 0 ? '' : ''}
                     </div>
                 </header>
 
@@ -74,7 +78,7 @@ export async function renderPollView(container, pollId, urlEditToken) {
                 <div id="view-content">
                     ${currentMode === 'availability'
                 ? renderAvailabilityDashboard(poll, userResponse)
-                : renderGroupMatrix(poll)}
+                : renderGroupMatrix(poll, isFlipped)}
                 </div>
             </article>
         `;
@@ -87,12 +91,20 @@ export async function renderPollView(container, pollId, urlEditToken) {
         if (window.lucide) window.lucide.createIcons();
 
         // Mode toggle
-        container.querySelectorAll('.mode-toggle button').forEach(btn => {
+        container.querySelectorAll('.mode-toggle .main-modes button').forEach(btn => {
             btn.onclick = () => {
                 currentMode = btn.dataset.mode;
                 renderPage();
             };
         });
+
+        const flipBtn = container.querySelector('#axis-flip-btn');
+        if (flipBtn) {
+            flipBtn.onclick = () => {
+                isFlipped = !isFlipped;
+                renderPage();
+            };
+        }
 
         // Minimap scroll-sync (mobile)
         const minimapCols = container.querySelectorAll('.minimap-cols .minimap-col');
