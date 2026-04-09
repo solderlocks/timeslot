@@ -112,7 +112,12 @@ async function router() {
 
     try {
         if (successId) {
-            await renderSuccessView(app, successId, adminToken, edited);
+            // Resolve the admin token without trusting the URL.
+            // Priority: (1) history.state set by SPA nav, (2) sessionStorage for refreshes.
+            const resolvedToken =
+                history.state?.adminToken ??
+                sessionStorage.getItem(`poll_admin_token_${successId}`);
+            await renderSuccessView(app, successId, resolvedToken, edited);
         } else if (pollId && adminToken) {
             // Admin link lands on the "Original Creation View" to Edit the poll
             await renderCreateView(app, pollId, adminToken);
@@ -142,6 +147,7 @@ async function router() {
 /**
  * Handle navigation without page reloads
  */
+window.router = router;
 window.onpopstate = router;
 
 // Global navigation handler

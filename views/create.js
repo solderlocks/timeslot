@@ -200,12 +200,18 @@ export async function renderCreateView(container, pollId = null, adminToken = nu
 
             if (isEdit) {
                 await API.updatePoll(pollId, adminToken, payload);
-                // Redirect back to edit success view
-                window.location.search = `?success=${pollId}&admin=${adminToken}&edited=true`;
+                // Store token securely — scoped to this poll, survives refresh
+                sessionStorage.setItem(`poll_admin_token_${pollId}`, adminToken);
+                // Navigate to success screen without exposing the token in the URL
+                history.pushState({ adminToken }, '', `?success=${pollId}&edited=true`);
+                window.router();
             } else {
                 const newPoll = await API.createPoll(payload);
-                // Navigate to Success view
-                window.location.search = `?success=${newPoll.id}&admin=${newPoll.edit_token}`;
+                // Store token securely — scoped to this poll, survives refresh
+                sessionStorage.setItem(`poll_admin_token_${newPoll.id}`, newPoll.edit_token);
+                // Navigate to success screen without exposing the token in the URL
+                history.pushState({ adminToken: newPoll.edit_token }, '', `?success=${newPoll.id}`);
+                window.router();
             }
         } catch (err) {
             console.error(err);

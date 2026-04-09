@@ -65,9 +65,6 @@ export function renderAvailabilityDashboard(poll, voterName, localVotes, isEdit)
             </div>
             <p class="instruction-text">
                 Select the times below that conflict with your schedule.
-                <button type="button" class="philosophy-trigger philosophy-icon" id="open-philosophy-btn-poll" title="About Timeslot">
-                    <i data-lucide="info"></i>
-                </button>
             </p>
             <div class="dashboard-grid">${dayCards}</div>
 
