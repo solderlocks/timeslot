@@ -1588,7 +1588,7 @@ dialog article.grid-modal-article>header {
     /* padding: 1rem; */
     padding: 0;
     gap: 0;
-    background: var(--bg-color);
+    /* background: var(--bg-color); */
     user-select: none;
 }
 
@@ -1598,6 +1598,7 @@ dialog article.grid-modal-article>header {
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--muted-border-color);
+    min-height: max-content;
 }
 
 .bulk-grid-day:last-child {

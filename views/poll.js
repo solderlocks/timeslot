@@ -76,8 +76,8 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
                     <div class="mode-toggle">
                         <div class="main-modes">
-                            <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">My Availability</button>
-                            <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Responses</button>
+                            <button type="button" data-mode="availability" data-active="${currentMode === 'availability'}">Your Availability</button>
+                            <button type="button" data-mode="group" data-active="${currentMode === 'group'}">Group Availability</button>
                         </div>
                         ${currentMode === 'group' && poll.responses.length > 0 ? '' : ''}
                     </div>
