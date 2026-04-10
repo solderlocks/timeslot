@@ -1589,6 +1589,7 @@ dialog article.grid-modal-article>header {
     padding: 0;
     gap: 0;
     /* background: var(--bg-color); */
+    border: 1px solid var(--muted-border-color);
     user-select: none;
 }
 
