@@ -385,6 +385,9 @@ function renderBulkGrid() {
         if (endMins <= startMins) endMins += 24 * 60;
 
         for (let m = startMins; m <= endMins; m += gridState.granularity) {
+            // Omit the 12:00 AM slot at the bottom of the grid when midnight is selected as the end boundary
+            if (m === endMins && gridState.endHour === 0) continue;
+
             const slotDate = new Date(dayDate);
             slotDate.setHours(Math.floor(m / 60) % 24, m % 60, 0, 0);
 
