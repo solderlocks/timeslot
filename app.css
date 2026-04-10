@@ -1592,6 +1592,7 @@ dialog article.grid-modal-article>header {
     background: var(--muted-border-color);
     border: 1px solid var(--muted-border-color);
     user-select: none;
+    border-bottom: 0;
 }
 
 .bulk-grid-day {
