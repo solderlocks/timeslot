@@ -250,11 +250,21 @@ function initGridSelectorUI() {
     // Populate selects
     startSelect.innerHTML = '';
     endSelect.innerHTML = '';
+    
+    // Start hour: 12 AM to 11 PM
     for (let i = 0; i < 24; i++) {
         const ampm = i >= 12 ? 'PM' : 'AM';
         const displayHour = i % 12 || 12;
         const opt = `<option value="${i}">${displayHour}:00 ${ampm}</option>`;
         startSelect.insertAdjacentHTML('beforeend', opt);
+    }
+
+    // End hour: 1 AM to 12 AM (midnight)
+    for (let i = 1; i <= 24; i++) {
+        const val = i % 24;
+        const ampm = val >= 12 ? 'PM' : 'AM';
+        const displayHour = val % 12 || 12;
+        const opt = `<option value="${val}">${displayHour}:00 ${ampm}</option>`;
         endSelect.insertAdjacentHTML('beforeend', opt);
     }
 
