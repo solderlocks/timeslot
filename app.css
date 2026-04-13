@@ -1261,6 +1261,7 @@ th.day-group-header {
 .private-edit-link {
     font-weight: 500;
     opacity: 1;
+    display: none;
 }
 
 /* Form Errors */
