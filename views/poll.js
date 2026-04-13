@@ -66,9 +66,12 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                             ` : ''}
                         </div>
                         <div class="header-actions">
+                            <button class="clear-btn icon-btn" id="share-link-btn" data-tippy-content="Copy Shareable Link">
+                                <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
+                            </button>
                             ${(activeEditToken || activeAdminToken) ? `
                                 <button class="clear-btn icon-btn private-edit-link" id="copy-edit-link-btn" data-tippy-content="Copy Private Edit Link">
-                                    <i data-lucide="link" style="width: 16px; height: 16px;"></i>
+                                    <i data-lucide="edit-3" style="width: 16px; height: 16px;"></i>
                                 </button>
                             ` : ''}
                         </div>
@@ -157,6 +160,13 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
         // Tooltips
         if (window.tippy) {
+            const shareBtnEl = container.querySelector('#share-link-btn');
+            if (shareBtnEl) {
+                window.tippy(shareBtnEl, {
+                    placement: 'top',
+                    appendTo: 'parent'
+                });
+            }
             const copyEditBtnEl = container.querySelector('#copy-edit-link-btn');
             if (copyEditBtnEl) {
                 window.tippy(copyEditBtnEl, {
@@ -174,11 +184,11 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                 navigator.clipboard.writeText(url);
                 const tip = shareBtn._tippy;
                 if (tip) {
-                    tip.setContent('Poll Link Copied!');
+                    tip.setContent('Link Copied!');
                     tip.show();
                     setTimeout(() => {
                         tip.hide();
-                        setTimeout(() => tip.setContent('Copy Shareable Poll Link'), 500);
+                        setTimeout(() => tip.setContent('Copy Shareable Link'), 500);
                     }, 2000);
                 }
             };
