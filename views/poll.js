@@ -158,22 +158,14 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
             });
         }
 
-        // Tooltips
+        // Tooltips (Hover hints for desktop)
         if (window.tippy) {
-            const shareBtnEl = container.querySelector('#share-link-btn');
-            if (shareBtnEl) {
-                window.tippy(shareBtnEl, {
+            container.querySelectorAll('[data-tippy-content]').forEach(el => {
+                window.tippy(el, {
                     placement: 'top',
-                    appendTo: 'parent'
+                    touch: ['hold', 500], // Show hint on long-press only on touch; tap will trigger the action
                 });
-            }
-            const copyEditBtnEl = container.querySelector('#copy-edit-link-btn');
-            if (copyEditBtnEl) {
-                window.tippy(copyEditBtnEl, {
-                    placement: 'top',
-                    appendTo: 'parent'
-                });
-            }
+            });
         }
 
         // Share / copy buttons
@@ -181,15 +173,9 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
         if (shareBtn) {
             shareBtn.onclick = () => {
                 const url = `${window.location.origin}?id=${pollId}&view=group`;
-                navigator.clipboard.writeText(url);
-                const tip = shareBtn._tippy;
-                if (tip) {
-                    tip.setContent('Link Copied!');
-                    tip.show();
-                    setTimeout(() => {
-                        tip.hide();
-                        setTimeout(() => tip.setContent('Copy Shareable Link'), 500);
-                    }, 2000);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url);
+                    window.showToast('Link Copied!');
                 }
             };
         }
@@ -200,15 +186,9 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                     ? `${window.location.origin}?id=${pollId}&admin=${activeAdminToken}`
                     : `${window.location.origin}?id=${pollId}&edit=${activeEditToken}`;
 
-                navigator.clipboard.writeText(url);
-                const tip = copyEditBtn._tippy;
-                if (tip) {
-                    tip.setContent('Edit Link Copied!');
-                    tip.show();
-                    setTimeout(() => {
-                        tip.hide();
-                        setTimeout(() => tip.setContent('Copy Private Edit Link'), 500);
-                    }, 2000);
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url);
+                    window.showToast('Personal Edit Link Copied!');
                 }
             };
         }
