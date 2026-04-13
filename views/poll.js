@@ -175,7 +175,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                 const url = `${window.location.origin}?id=${pollId}&view=group`;
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url);
-                    window.showToast('Link Copied!');
+                    window.showToast('Share Link Copied!');
                 }
             };
         }
