@@ -9,7 +9,7 @@ import { API, formatDate } from '../api.js';
 import { renderAvailabilityDashboard } from './poll-availability.js';
 import { renderGroupMatrix } from './poll-matrix.js';
 
-export async function renderPollView(container, pollId, urlEditToken, urlAdminToken) {
+export async function renderPollView(container, pollId, urlEditToken, urlAdminToken, initialView) {
     // 1. Loading state
     container.innerHTML = `<article aria-busy="true"></article>`;
     const poll = await API.getPoll(pollId);
@@ -36,7 +36,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
     }
 
     // 3. UI state
-    let currentMode = userResponse ? 'group' : 'availability';
+    let currentMode = initialView || (userResponse ? 'group' : 'availability');
     let isFlipped = window.innerWidth <= 600;
     let selectedOptionId = null;
 
@@ -180,7 +180,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
         const shareBtn = container.querySelector('#share-link-btn');
         if (shareBtn) {
             shareBtn.onclick = () => {
-                const url = `${window.location.origin}?id=${pollId}`;
+                const url = `${window.location.origin}?id=${pollId}&view=group`;
                 navigator.clipboard.writeText(url);
                 const tip = shareBtn._tippy;
                 if (tip) {

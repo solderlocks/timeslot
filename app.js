@@ -104,6 +104,7 @@ async function router() {
     const successId = params.get('success');
     const editToken = params.get('edit');   // respondent edit token
     const adminToken = params.get('admin'); // poll creator admin token
+    const view = params.get('view');       // initial view selection (e.g. 'group')
     const edited = params.get('edited') === 'true';
     const path = window.location.pathname;
 
@@ -122,7 +123,7 @@ async function router() {
             // Admin link lands on the "Original Creation View" to Edit the poll
             await renderCreateView(app, pollId, adminToken);
         } else if (pollId) {
-            await renderPollView(app, pollId, editToken);
+            await renderPollView(app, pollId, editToken, null, view);
         } else if (path === '/create') {
             await renderCreateView(app);
         } else if (path === '/') {
