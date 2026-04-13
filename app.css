@@ -171,6 +171,8 @@ nav ul:last-of-type {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1rem;
+    gap: 1rem;
+    padding-right: 0.75rem;
 }
 
 a {
@@ -827,13 +829,6 @@ button.margin-0 {
 .axis-flip-btn i {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: block;
-}
-
-.poll-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
 }
 
 
