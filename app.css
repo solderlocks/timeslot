@@ -25,6 +25,8 @@
     --tab-active-text: #ffffff;
     --striped-day-bg: #f7f7f7;
     --selected-grid-time: rgba(0, 200, 0, 0.1);
+    --selected-matrix-timeslot: #EEE;
+    --selected-matrix-timeslot-border: #AAA;
 }
 
 /* Dark Mode: High Contrast Slate */
@@ -39,8 +41,10 @@
     --conflict-text: #fca5a5;
     --tab-active-bg: #f8fafc;
     --tab-active-text: #1a1d23;
-    --striped-day-bg: rgba(255, 255, 255, 0.025);
+    --striped-day-bg: rgba(255, 255, 255, 0.03);
     --selected-grid-time: rgba(0, 50, 0, 1.0);
+    --selected-matrix-timeslot: rgba(255, 255, 255, 0.08);
+    --selected-matrix-timeslot-border: #555;
 }
 
 html {
@@ -739,19 +743,19 @@ button.margin-0 {
 
 .matrix-table th.highlight-active,
 .matrix-table td.highlight-active {
-    background-color: #EEE !important;
+    background-color: var(--selected-matrix-timeslot) !important;
     cursor: pointer;
-    border-top: 5px solid #AAA;
+    border-top: 5px solid var(--selected-matrix-timeslot-border);
 }
 
 .flipped-matrix .matrix-table td.highlight-active,
 .flipped-matrix .matrix-table th.highlight-active {
-    border-left: 5px solid #AAA;
+    border-left: 5px solid var(--selected-matrix-timeslot-border);
     border-top: 0;
 }
 
 .matrix-table td.highlight-cell {
-    background-color: #EEE !important;
+    background-color: var(--selected-matrix-timeslot) !important;
 }
 
 
