@@ -175,7 +175,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
                 const url = `${window.location.origin}?id=${pollId}&view=group`;
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url);
-                    window.showToast('Share Link Copied!');
+                    window.showToast('Share Link Copied');
                 }
             };
         }
@@ -188,7 +188,7 @@ export async function renderPollView(container, pollId, urlEditToken, urlAdminTo
 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(url);
-                    window.showToast('Personal Edit Link Copied!');
+                    window.showToast('Personal Edit Link Copied');
                 }
             };
         }
