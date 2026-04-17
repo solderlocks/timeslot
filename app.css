@@ -402,6 +402,10 @@ body a.button.outline:hover {
     display: flex;
     width: fit-content;
     border-radius: 6px;
+    /* padding: 0.25rem;
+    border-radius: 6px;
+    border: 1px solid var(--muted-border-color);
+    background: #f6f6f6; */
     margin-top: 1.5rem;
     background: transparent;
     border: none;
@@ -444,10 +448,15 @@ body a.button.outline:hover {
 
 .mode-toggle button[data-active="true"] {
     color: var(--primary-color);
+    /* background: white;
+    color: var(--primary-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 4px; */
     background: transparent;
     box-shadow: none;
     border-bottom: 4px solid var(--primary-color);
     border-radius: 0;
+
 }
 
 /* Dashboard Grid */
@@ -1490,13 +1499,16 @@ dialog article.grid-modal-article>header {
 }
 
 dialog article.grid-modal-article>header {
+    /*padding: 1.5rem 2rem;*/
     padding: 1.5rem 2rem 0 2rem;
     /* Force comfortable padding */
     border-bottom: 1px solid var(--muted-border-color);
 }
 
 main>article>header {
+    /*padding-bottom: auto;*/
     padding-bottom: 0;
+    margin-bottom: 2rem;
 }
 
 .grid-modal-header-content {
