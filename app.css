@@ -410,7 +410,12 @@ body a.button.outline:hover {
 }
 
 [data-theme="dark"] .mode-toggle {
-    background: rgba(255, 255, 255, 0.05);
+    background: transparent;
+}
+
+[data-theme="dark"] .mode-toggle button[data-active="true"] {
+    color: white;
+    border-color: white;
 }
 
 .mode-toggle button {
